@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package plantsapi;
+
+option go_package = "github.com/moevm/nosql2h24-plants/server/api/plantsapi;plantsapi";
+
+service PlantsAPI {
+    rpc GetExampleV1 (GetExampleV1Request) returns (GetExampleV1Response);
+}
+
+message GetExampleV1Request{
+
+}
+
+message GetExampleV1Response {
+
+}
