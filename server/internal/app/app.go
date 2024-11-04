@@ -1,37 +1,58 @@
 package app
 
 import (
+	"context"
 	"fmt"
+	"log/slog"
 	"net"
+	"net/http"
+	"plants/internal/config"
+	gw "plants/internal/pb/plantsapi/github.com/moevm/nosql2h24-plants/server/api/plantsapi"
 	"plants/internal/service"
+	"plants/internal/storage"
+
+	"golang.org/x/sync/errgroup"
+
+	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 
 	"google.golang.org/grpc"
 )
 
-type App struct {
-	API  *grpc.Server
-	port string
-}
-
-func New(port string) *App {
+func Run(cfg *config.Config) error {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
 	gRPCServer := grpc.NewServer()
-	plants_api := service.NewAPI(struct{}{})
+	mongoURL := fmt.Sprintf(
+		"%v:%v",
+		cfg.Mongo.Domen,
+		cfg.Mongo.Port,
+	)
+	storage, err := storage.New(ctx, mongoURL, cfg.Mongo.DataBase)
+	if err != nil {
+		return err
+	}
+	plants_api := service.NewAPI(storage)
 	plants_api.Register(gRPCServer)
 
-	return &App{
-		API:  gRPCServer,
-		port: port,
-	}
-}
-
-func (a *App) Run() error {
-	l, err := net.Listen("tcp", fmt.Sprintf(":%v", a.port))
+	mux := runtime.NewServeMux()
+	err = gw.RegisterPlantsAPIHandlerServer(ctx, mux, plants_api)
 	if err != nil {
-		return fmt.Errorf("Dead")
+		return err
 	}
+	var group errgroup.Group
+	l, err := net.Listen("tcp", fmt.Sprintf(":%v", cfg.GRPC.Port))
 
-	if err = a.API.Serve(l); err != nil {
-		return fmt.Errorf("Killed")
+	if err != nil {
+		return err
 	}
-	return nil
+	group.Go(func() error {
+		slog.Info("Started grpc server")
+		return gRPCServer.Serve(l)
+	})
+
+	group.Go(func() error {
+		slog.Info("Started http server")
+		return http.ListenAndServe(":8881", mux)
+	})
+	return group.Wait()
 }

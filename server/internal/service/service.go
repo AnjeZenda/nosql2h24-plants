@@ -1,7 +1,7 @@
 package service
 
 import (
-	"plants/internal/pb/plantsapi"
+	"plants/internal/pb/plantsapi/github.com/moevm/nosql2h24-plants/server/api/plantsapi"
 
 	"google.golang.org/grpc"
 )
