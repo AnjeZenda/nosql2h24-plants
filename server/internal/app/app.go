@@ -1,36 +1,40 @@
 package app
 
 import (
+	"context"
 	"fmt"
 	"net"
+	"plants/internal/config"
 	"plants/internal/service"
+	"plants/internal/storage"
 
 	"google.golang.org/grpc"
 )
 
-type App struct {
-	API  *grpc.Server
-	port string
-}
-
-func New(port string) *App {
+func Run(cfg *config.Config) error {
+	ctx, cancel := context.WithTimeout(context.Background(), cfg.GRPC.Timeout)
+	defer cancel()
 	gRPCServer := grpc.NewServer()
-	plants_api := service.NewAPI(struct{}{})
-	plants_api.Register(gRPCServer)
-
-	return &App{
-		API:  gRPCServer,
-		port: port,
+	mongoURL := fmt.Sprintf(
+		"%v%v:%v@%v:%v",
+		cfg.Mongo.Domen,
+		cfg.Mongo.User,
+		cfg.Mongo.Password,
+		cfg.Mongo.DataBase,
+		cfg.Mongo.Port,
+	)
+	storage, err := storage.New(ctx, mongoURL, cfg.Mongo.DataBase)
+	if err != nil {
+		return err
 	}
-}
-
-func (a *App) Run() error {
-	l, err := net.Listen("tcp", fmt.Sprintf(":%v", a.port))
+	plants_api := service.NewAPI(storage)
+	plants_api.Register(gRPCServer)
+	l, err := net.Listen("tcp", fmt.Sprintf(":%v", cfg.GRPC.Port))
 	if err != nil {
 		return fmt.Errorf("Dead")
 	}
 
-	if err = a.API.Serve(l); err != nil {
+	if err = gRPCServer.Serve(l); err != nil {
 		return fmt.Errorf("Killed")
 	}
 	return nil

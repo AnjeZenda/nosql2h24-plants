@@ -8,9 +8,17 @@ import (
 )
 
 type Config struct {
-	Env         string     `yaml:"env"`
-	StoragePath string     `yaml:"storage_path"`
-	GRPC        GRPCConfig `yaml:"grpc"`
+	Env   string      `yaml:"env"`
+	GRPC  GRPCConfig  `yaml:"grpc"`
+	Mongo MongoConfig `yaml:"mongo"`
+}
+
+type MongoConfig struct {
+	User     string `yaml:"user"`
+	Domen    string `yaml:"domen"`
+	DataBase string `yaml:"database"`
+	Password string `yaml:"password"`
+	Port     string `yaml:"port"`
 }
 
 type GRPCConfig struct {
