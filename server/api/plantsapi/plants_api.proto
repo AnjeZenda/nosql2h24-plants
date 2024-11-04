@@ -4,8 +4,14 @@ package plantsapi;
 
 option go_package = "github.com/moevm/nosql2h24-plants/server/api/plantsapi;plantsapi";
 
+import "google/api/annotations.proto";
+
 service PlantsAPI {
-    rpc GetExampleV1 (GetExampleV1Request) returns (GetExampleV1Response);
+    rpc GetExampleV1 (GetExampleV1Request) returns (GetExampleV1Response) {
+        option (google.api.http) = {
+            get: "/example"
+        };
+    };
 }
 
 message GetExampleV1Request{
