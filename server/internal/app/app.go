@@ -3,6 +3,7 @@ package app
 import (
 	"context"
 	"fmt"
+	"log/slog"
 	"net"
 	"net/http"
 	"plants/internal/config"
@@ -22,11 +23,8 @@ func Run(cfg *config.Config) error {
 	defer cancel()
 	gRPCServer := grpc.NewServer()
 	mongoURL := fmt.Sprintf(
-		"%v%v:%v@%v:%v",
+		"%v:%v",
 		cfg.Mongo.Domen,
-		cfg.Mongo.User,
-		cfg.Mongo.Password,
-		cfg.Mongo.DataBase,
 		cfg.Mongo.Port,
 	)
 	storage, err := storage.New(ctx, mongoURL, cfg.Mongo.DataBase)
@@ -48,10 +46,12 @@ func Run(cfg *config.Config) error {
 		return err
 	}
 	group.Go(func() error {
+		slog.Info("Started grpc server")
 		return gRPCServer.Serve(l)
 	})
 
 	group.Go(func() error {
+		slog.Info("Started http server")
 		return http.ListenAndServe(":8881", mux)
 	})
 	return group.Wait()

@@ -2,6 +2,7 @@ package storage
 
 import (
 	"context"
+	"log/slog"
 
 	"go.mongodb.org/mongo-driver/v2/mongo"
 	"go.mongodb.org/mongo-driver/v2/mongo/options"
@@ -15,10 +16,12 @@ type Storage struct {
 func New(ctx context.Context, uri, db string) (*Storage, error) {
 	client, err := mongo.Connect(options.Client().ApplyURI(uri))
 	if err != nil {
+		slog.Error("unable to connect")
 		return nil, err
 	}
 	err = client.Ping(ctx, nil)
 	if err != nil {
+		slog.Error("ping doesnt work")
 		return nil, err
 	}
 	database := client.Database(db)
