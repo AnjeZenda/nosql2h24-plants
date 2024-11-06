@@ -52,7 +52,7 @@ func local_request_PlantsAPI_GetExampleV1_0(ctx context.Context, marshaler runti
 }
 
 func request_PlantsAPI_GetPlantsWithCareRuleRulesV1_0(ctx context.Context, marshaler runtime.Marshaler, client PlantsAPIClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq GetPlantsWithCareRuleV1Request
+	var protoReq GetPlantsWithCareRulesV1Request
 	var metadata runtime.ServerMetadata
 
 	msg, err := client.GetPlantsWithCareRuleRulesV1(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
@@ -61,7 +61,7 @@ func request_PlantsAPI_GetPlantsWithCareRuleRulesV1_0(ctx context.Context, marsh
 }
 
 func local_request_PlantsAPI_GetPlantsWithCareRuleRulesV1_0(ctx context.Context, marshaler runtime.Marshaler, server PlantsAPIServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq GetPlantsWithCareRuleV1Request
+	var protoReq GetPlantsWithCareRulesV1Request
 	var metadata runtime.ServerMetadata
 
 	msg, err := server.GetPlantsWithCareRuleRulesV1(ctx, &protoReq)

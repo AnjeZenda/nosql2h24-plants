@@ -18,7 +18,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/plantsapiGetPlantsWithCareRuleV1Response"
+              "$ref": "#/definitions/plantsapiGetPlantsWithCareRulesV1Response"
             }
           },
           "default": {
@@ -109,7 +109,7 @@
     }
   },
   "definitions": {
-    "GetPlantsWithCareRuleV1ResponsePlant": {
+    "GetPlantsWithCareRulesV1ResponsePlant": {
       "type": "object",
       "properties": {
         "species": {
@@ -155,13 +155,13 @@
     "plantsapiGetExampleV1Response": {
       "type": "object"
     },
-    "plantsapiGetPlantsWithCareRuleV1Response": {
+    "plantsapiGetPlantsWithCareRulesV1Response": {
       "type": "object",
       "properties": {
         "plants": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/GetPlantsWithCareRuleV1ResponsePlant"
+            "$ref": "#/definitions/GetPlantsWithCareRulesV1ResponsePlant"
           }
         }
       }

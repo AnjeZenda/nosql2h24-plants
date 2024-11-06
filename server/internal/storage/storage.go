@@ -53,3 +53,25 @@ func (s *Storage) GetPlantsWithCareRules(ctx context.Context) ([]*models.Plant, 
 	}
 	return plants, nil
 }
+
+func (s *Storage) CreateNewCareRule(ctx context.Context, rule *models.CareRules) error {
+	collection := s.DataBase.Collection("care_rules")
+	_, err := collection.InsertOne(ctx, rule)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *Storage) GetCareRulesForPlant(ctx context.Context, species string) (*models.CareRules, error) {
+	collection := s.DataBase.Collection("care_rules")
+	filter := bson.M{"species": species}
+	cursor := collection.FindOne(ctx, filter)
+
+	var result models.CareRules
+	err := cursor.Decode(&result)
+	if err != nil {
+		return nil, err
+	}
+	return &result, nil
+}

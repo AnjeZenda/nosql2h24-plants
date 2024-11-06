@@ -13,7 +13,7 @@ service PlantsAPI {
             get: "/example"
         };
     };
-    rpc GetPlantsWithCareRuleRulesV1 (GetPlantsWithCareRuleV1Request) returns (GetPlantsWithCareRuleV1Response) {
+    rpc GetPlantsWithCareRuleRulesV1 (GetPlantsWithCareRulesV1Request) returns (GetPlantsWithCareRulesV1Response) {
         option (google.api.http) = {
             get: "/api/care"
         };
@@ -51,17 +51,18 @@ message CreateNewCareRuleV1Request {
     string image = 4;
     string temperatureRegime = 5;
     string descriptionAddition = 6;
+    string userId = 7;
 }
 
 message CreateNewCareRuleV1Response {
 
 }
 
-message GetPlantsWithCareRuleV1Request {
+message GetPlantsWithCareRulesV1Request {
     
 }
 
-message GetPlantsWithCareRuleV1Response {
+message GetPlantsWithCareRulesV1Response {
     message Plant {
         string species = 1;
         string image = 2;
