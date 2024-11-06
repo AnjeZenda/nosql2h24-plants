@@ -28,6 +28,52 @@ service PlantsAPI {
             get: "/api/care/{species}"
         };
     };
+    rpc GetPlantsV1 (GetPlantsV1Request) returns (GetPlantsV1Response) {
+        option (google.api.http) = {
+            get: "/api/plants"
+        };
+    };
+    rpc CreatePlantV1 (CreatePlantV1Request) returns (CreatePlantV1Response) {
+        option (google.api.http) = {
+            post: "/api/plants/add"
+        };
+    };
+    
+}
+
+message CreatePlantV1Request {
+    string image = 1;
+    string place = 2;
+    string size = 3;
+    float price = 4; 
+    string lightCondition = 5;
+    string wateringFrequency = 6;
+    string temperatureRegime = 7;
+    string care_complexity = 8;
+    string description = 9;
+    string type = 10;
+    string species = 11;
+    string care_rules = 12;
+    google.protobuf.Timestamp createdAt = 13;
+    string userId = 14;
+}
+
+message CreatePlantV1Response {
+
+}
+
+message GetPlantsV1Request {
+    
+}
+message GetPlantsV1Response {
+    message Plant {
+        string image = 1;
+        string species = 2; 
+        float price = 3; 
+        google.protobuf.Timestamp createdAt = 4;
+        string place = 5;
+    }
+    repeated Plant plants = 1;
 }
 
 message GetCareRuleV1Request {
@@ -41,7 +87,7 @@ message GetCareRuleV1Response {
 message CareRule {
     string user = 1;
     string description = 2;
-    google.protobuf.Timestamp created_at = 3;
+    google.protobuf.Timestamp createdAt = 3;
 }
 
 message CreateNewCareRuleV1Request {

@@ -26,7 +26,7 @@ type Plant struct {
 	Image             string             `bson:"image" json:"image"`
 	UserID            primitive.ObjectID `bson:"user_id" json:"user_id"`
 	Size              string             `bson:"size" json:"size"`
-	Price             float64            `bson:"price" json:"price"`
+	Price             float32            `bson:"price" json:"price"`
 	LightCondition    string             `bson:"light_condition" json:"light_condition"`
 	WateringFrequency string             `bson:"watering_frequency" json:"watering_frequency"`
 	TemperatureRegime string             `bson:"temperature_regime" json:"temperature_regime"`
@@ -36,6 +36,7 @@ type Plant struct {
 	Species           string             `bson:"species" json:"species"`
 	CareRules         primitive.ObjectID `bson:"care_rules" json:"care_rules"`
 	CreatedAt         time.Time          `bson:"created_at" json:"created_at"`
+	Place             string             `bson:"place" json:"place"`
 }
 
 type TradeUser struct {
