@@ -11,6 +11,80 @@
     "application/json"
   ],
   "paths": {
+    "/api/care": {
+      "get": {
+        "operationId": "PlantsAPI_GetPlantsWithCareRuleRulesV1",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/plantsapiGetPlantsWithCareRulesV1Response"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "tags": [
+          "PlantsAPI"
+        ]
+      }
+    },
+    "/api/care/new": {
+      "post": {
+        "operationId": "PlantsAPI_CreateNewCareRuleV1",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/plantsapiCreateNewCareRuleV1Response"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "tags": [
+          "PlantsAPI"
+        ]
+      }
+    },
+    "/api/care/{species}": {
+      "get": {
+        "operationId": "PlantsAPI_GetCareRuleV1",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/plantsapiGetCareRuleV1Response"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "species",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "PlantsAPI"
+        ]
+      }
+    },
     "/example": {
       "get": {
         "operationId": "PlantsAPI_GetExampleV1",
@@ -35,8 +109,62 @@
     }
   },
   "definitions": {
+    "GetPlantsWithCareRulesV1ResponsePlant": {
+      "type": "object",
+      "properties": {
+        "species": {
+          "type": "string"
+        },
+        "image": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        }
+      }
+    },
+    "plantsapiCareRule": {
+      "type": "object",
+      "properties": {
+        "user": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "plantsapiCreateNewCareRuleV1Response": {
+      "type": "object"
+    },
+    "plantsapiGetCareRuleV1Response": {
+      "type": "object",
+      "properties": {
+        "careRules": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/plantsapiCareRule"
+          }
+        }
+      }
+    },
     "plantsapiGetExampleV1Response": {
       "type": "object"
+    },
+    "plantsapiGetPlantsWithCareRulesV1Response": {
+      "type": "object",
+      "properties": {
+        "plants": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GetPlantsWithCareRulesV1ResponsePlant"
+          }
+        }
+      }
     },
     "protobufAny": {
       "type": "object",
