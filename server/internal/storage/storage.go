@@ -4,6 +4,7 @@ import (
 	"context"
 	"log/slog"
 	"plants/internal/models"
+	"strings"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/v2/bson"
@@ -107,4 +108,24 @@ func (s *Storage) AddPlant(ctx context.Context, plant *models.Plant) error {
 		return err
 	}
 	return nil
+}
+
+func (s *Storage) SearchUser(ctx context.Context, login string, password string) (string, error) {
+	collection := s.DataBase.Collection("users")
+	var filter bson.M
+	if strings.Contains(login, "@") {
+		filter = bson.M{"email": login, "password": password}
+	} else {
+		filter = bson.M{"phone_number": login, "password": password}
+	}
+	cursor, err := collection.Find(ctx, filter)
+	if err != nil {
+		return nil, err
+	}
+	var result models.User
+	err := cursor.Decode(&result)
+	if err != nil {
+		return nil, err
+	}
+	return &result.ID, nil
 }

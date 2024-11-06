@@ -38,6 +38,16 @@ service PlantsAPI {
             post: "/api/plants/add"
         };
     };
+    rpc UserLoginV1 (UserLoginV1Request) returns (UserLoginV1Response){
+        option (google.api.http) = {
+            get: "/api/auth"
+        };
+    };
+    rpc UserRegisterV1 (UserRegisterV1Request) returns (UserRegisterV1Response){
+        option (google.api.http) = {
+            post: "api/register"
+        };
+    };
     
 }
 
@@ -122,5 +132,24 @@ message GetExampleV1Request{
 }
 
 message GetExampleV1Response {
+
+}
+
+message UserLoginV1Request{
+    string login = 1;
+    string password = 2;
+}
+
+message UserLoginV1Response{
+    string id = 1;
+}
+
+message UserRegisterV1Request{
+    string name = 1;
+    string login = 2;
+    string password = 3;
+}
+
+message UserRegisterV1Response{
 
 }
