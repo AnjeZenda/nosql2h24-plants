@@ -39,7 +39,7 @@ func (s Storage) Disconnect(ctx context.Context) error {
 
 func (s *Storage) GetPlantsWithCareRules(ctx context.Context) ([]*models.Plant, error) {
 	collection := s.DataBase.Collection("plants")
-	filter := bson.M{"care_rules": bson.M{"ne": nil}}
+	filter := bson.M{"care_rules": bson.M{"$ne": nil}}
 	cursor, err := collection.Find(ctx, filter)
 	if err != nil {
 		return nil, err
