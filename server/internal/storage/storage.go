@@ -46,8 +46,8 @@ func (s *Storage) GetPlantsWithCareRules(ctx context.Context) ([]*models.Plant, 
 	}
 	defer cursor.Close(ctx)
 	plants := make([]*models.Plant, 0)
-	var plant models.Plant
 	for cursor.Next(ctx) {
+		var plant models.Plant
 		cursor.Decode(&plant)
 		plants = append(plants, &plant)
 	}
