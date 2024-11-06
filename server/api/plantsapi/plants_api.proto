@@ -5,6 +5,7 @@ package plantsapi;
 option go_package = "github.com/moevm/nosql2h24-plants/server/api/plantsapi;plantsapi";
 
 import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
 
 service PlantsAPI {
     rpc GetExampleV1 (GetExampleV1Request) returns (GetExampleV1Response) {
@@ -12,6 +13,61 @@ service PlantsAPI {
             get: "/example"
         };
     };
+    rpc GetPlantsWithCareRuleRulesV1 (GetPlantsWithCareRuleV1Request) returns (GetPlantsWithCareRuleV1Response) {
+        option (google.api.http) = {
+            get: "/api/care"
+        };
+    };
+    rpc CreateNewCareRuleV1 (CreateNewCareRuleV1Request) returns (CreateNewCareRuleV1Response) {
+        option (google.api.http) = {
+            post: "/api/care/new"
+        };
+    };
+    rpc GetCareRuleV1 (GetCareRuleV1Request) returns (GetCareRuleV1Response) {
+        option (google.api.http) = {
+            get: "/api/care/{species}"
+        };
+    };
+}
+
+message GetCareRuleV1Request {
+    string species = 1;
+}
+
+message GetCareRuleV1Response {
+    repeated CareRule careRules = 1;
+}
+
+message CareRule {
+    string user = 1;
+    string description = 2;
+    google.protobuf.Timestamp created_at = 3;
+}
+
+message CreateNewCareRuleV1Request {
+    string lightCondition = 1;
+    string type = 2;
+    string species = 3;
+    string image = 4;
+    string temperatureRegime = 5;
+    string descriptionAddition = 6;
+}
+
+message CreateNewCareRuleV1Response {
+
+}
+
+message GetPlantsWithCareRuleV1Request {
+    
+}
+
+message GetPlantsWithCareRuleV1Response {
+    message Plant {
+        string species = 1;
+        string image = 2;
+        string id = 3;
+    }
+    repeated Plant plants = 1;
 }
 
 message GetExampleV1Request{

@@ -3,7 +3,9 @@ package storage
 import (
 	"context"
 	"log/slog"
+	"plants/internal/models"
 
+	"go.mongodb.org/mongo-driver/v2/bson"
 	"go.mongodb.org/mongo-driver/v2/mongo"
 	"go.mongodb.org/mongo-driver/v2/mongo/options"
 )
@@ -33,4 +35,21 @@ func New(ctx context.Context, uri, db string) (*Storage, error) {
 
 func (s Storage) Disconnect(ctx context.Context) error {
 	return s.Client.Disconnect(ctx)
+}
+
+func (s *Storage) GetPlantsWithCareRules(ctx context.Context) ([]*models.Plant, error) {
+	collection := s.DataBase.Collection("plants")
+	filter := bson.M{"care_rules": bson.M{"ne": nil}}
+	cursor, err := collection.Find(ctx, filter)
+	if err != nil {
+		return nil, err
+	}
+	defer cursor.Close(ctx)
+	plants := make([]*models.Plant, 0)
+	var plant models.Plant
+	for cursor.Next(ctx) {
+		cursor.Decode(&plant)
+		plants = append(plants, &plant)
+	}
+	return plants, nil
 }

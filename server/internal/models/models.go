@@ -23,6 +23,7 @@ type User struct {
 
 type Plant struct {
 	ID                primitive.ObjectID `bson:"_id,omitempty" json:"id"`
+	Image             string             `bson:"image" json:"image"`
 	UserID            primitive.ObjectID `bson:"user_id" json:"user_id"`
 	Size              string             `bson:"size" json:"size"`
 	Price             float64            `bson:"price" json:"price"`
