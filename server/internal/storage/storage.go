@@ -5,6 +5,7 @@ import (
 	"log/slog"
 	"plants/internal/models"
 
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/v2/bson"
 	"go.mongodb.org/mongo-driver/v2/mongo"
 	"go.mongodb.org/mongo-driver/v2/mongo/options"
@@ -74,4 +75,36 @@ func (s *Storage) GetCareRulesForPlant(ctx context.Context, species string) (*mo
 		return nil, err
 	}
 	return &result, nil
+}
+
+func (s *Storage) GetPlants(ctx context.Context) ([]*models.Plant, error) {
+	collection := s.DataBase.Collection("plants")
+	cursor, err := collection.Find(ctx, bson.M{})
+	if err != nil {
+		return nil, err
+	}
+	plants := make([]*models.Plant, 0)
+	for cursor.Next(ctx) {
+		var plant models.Plant
+		if err := cursor.Decode(&plant); err != nil {
+			return nil, err
+		}
+		plants = append(plants, &plant)
+	}
+	return plants, nil
+}
+
+func (s *Storage) AddPlant(ctx context.Context, plant *models.Plant) error {
+	collection := s.DataBase.Collection("plants")
+	careRules, err := s.GetCareRulesForPlant(ctx, plant.Species)
+	if err == nil {
+		plant.CareRules = careRules.ID
+	} else {
+		plant.CareRules = primitive.NewObjectID()
+	}
+	_, err = collection.InsertOne(ctx, plant)
+	if err != nil {
+		return err
+	}
+	return nil
 }
