@@ -2,8 +2,10 @@ package storage
 
 import (
 	"context"
+	"errors"
 	"log/slog"
 	"plants/internal/models"
+	"strings"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/v2/bson"
@@ -107,4 +109,78 @@ func (s *Storage) AddPlant(ctx context.Context, plant *models.Plant) error {
 		return err
 	}
 	return nil
+}
+
+func (s *Storage) SearchUser(ctx context.Context, login string, password string) (string, int32, error) {
+	collection := s.DataBase.Collection("users")
+	var filter bson.M
+	if strings.Contains(login, "@") {
+		filter = bson.M{"email": login, "password": password}
+	} else {
+		filter = bson.M{"phone_number": login, "password": password}
+	}
+	cursor := collection.FindOne(ctx, filter)
+	var result models.User
+	err := cursor.Decode(&result)
+	if err != nil {
+		return "", 0, err
+	}
+	return result.ID.Hex(), result.Role, nil
+}
+
+func (s *Storage) AddUser(ctx context.Context, user *models.User) error {
+	collection := s.DataBase.Collection("users")
+	var filter bson.M
+
+	if user.Email != "" {
+		filter = bson.M{"email": user.Email}
+	} else {
+		filter = bson.M{"phone_number": user.PhoneNumber}
+	}
+
+	if err := collection.FindOne(ctx, filter).Decode(&user); err != nil {
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			_, err = collection.InsertOne(ctx, user)
+			return err
+		}
+		return err
+	}
+	return nil
+}
+
+func (s *Storage) GetUser(ctx context.Context, id string) (*models.User, error) {
+	collection := s.DataBase.Collection("users")
+	objID, err := primitive.ObjectIDFromHex(id)
+	filter := bson.M{"id": objID}
+	cursor := collection.FindOne(ctx, filter)
+
+	var result models.User
+	err = cursor.Decode(&result)
+	if err != nil {
+		return nil, err
+	}
+	return &result, nil
+}
+
+func (s *Storage) GetTrade(ctx context.Context, id string, mode int32) (*models.Trade, error) {
+	collection := s.DataBase.Collection("users")
+	objID, err := primitive.ObjectIDFromHex(id)
+	var filter bson.M
+	if mode == 1 {
+		filter = bson.M{
+			"offerer": bson.M{"id": objID},
+		}
+	} else {
+		filter = bson.M{
+			"accepter": bson.M{"id": objID},
+		}
+	}
+	cursor := collection.FindOne(ctx, filter)
+
+	var result models.Trade
+	err = cursor.Decode(&result)
+	if err != nil {
+		return nil, err
+	}
+	return &result, nil
 }

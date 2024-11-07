@@ -38,7 +38,34 @@ service PlantsAPI {
             post: "/api/plants/add"
         };
     };
+    rpc UserLoginV1 (UserLoginV1Request) returns (UserLoginV1Response){
+        option (google.api.http) = {
+            get: "/api/auth"
+        };
+    };
+    rpc UserRegisterV1 (UserRegisterV1Request) returns (UserRegisterV1Response){
+        option (google.api.http) = {
+            post: "/api/register"
+        };
+    };
+
+    rpc GetUserV1 (GetUserV1Request) returns (GetUserV1Response){
+        option (google.api.http) = {
+            get: "/api/user/{id}"
+        };
+    };
+
+    rpc GetTradeInV1 (GetTradeInV1Request) returns (GetTradeInV1Response){
+        option (google.api.http) = {
+            get: "/api/trade/in/{id}"
+        };
+    };
     
+    rpc GetTradeOutV1 (GetTradeOutV1Request) returns (GetTradeOutV1Response){
+        option (google.api.http) = {
+            get: "/api/trade/out/{id}"
+        };
+    }
 }
 
 message CreatePlantV1Request {
@@ -107,7 +134,7 @@ message CreateNewCareRuleV1Response {
 message GetPlantsWithCareRulesV1Request {
     
 }
-
+    
 message GetPlantsWithCareRulesV1Response {
     message Plant {
         string species = 1;
@@ -123,4 +150,69 @@ message GetExampleV1Request{
 
 message GetExampleV1Response {
 
+}
+
+message UserLoginV1Request{
+    string login = 1;
+    string password = 2;
+}
+
+message UserLoginV1Response{
+    string id = 1;
+    int32 role =2;
+}
+
+message UserRegisterV1Request{
+    string name = 1;
+    string login = 2;
+    string password = 3;
+}
+
+message UserRegisterV1Response{
+    
+}
+
+message GetUserV1Request{
+    string id = 1;
+}
+
+message GetUserV1Response{
+    message User {
+        string photo = 1;
+        string surname = 2;
+        string name = 3;
+        string father_name = 4;
+        string phone_number = 5;
+        string email = 6;
+        google.protobuf.Timestamp createdAt = 7;
+        google.protobuf.Timestamp updatedAt = 8;
+    }
+    User user = 1;
+}
+
+message Trade{
+    message Plant{
+         string name = 1;
+    }
+    message User{
+        string name = 1;
+        Plant plant = 2;
+}
+    User offerer = 1;
+    User accepter = 2;
+    int32 status = 3;
+}
+
+message GetTradeInV1Request{
+    string id = 1;
+}
+message GetTradeInV1Response{
+   repeated Trade trade = 1;
+}
+
+message GetTradeOutV1Request{
+    string id = 1;
+}
+message GetTradeOutV1Response{
+    repeated Trade trade = 1;
 }

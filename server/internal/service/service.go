@@ -14,6 +14,10 @@ type Storage interface {
 	GetCareRulesForPlant(ctx context.Context, species string) (*models.CareRules, error)
 	GetPlants(ctx context.Context) ([]*models.Plant, error)
 	AddPlant(ctx context.Context, plant *models.Plant) error
+	SearchUser(ctx context.Context, login string, password string) (string, int32, error)
+	AddUser(ctx context.Context, user *models.User) error
+	GetUser(ctx context.Context, id string) (*models.User, error)
+	GetTrade(ctx context.Context, id string, mode int32) (*models.Trade, error)
 }
 
 type Implementation struct {
