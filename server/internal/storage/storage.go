@@ -161,3 +161,26 @@ func (s *Storage) GetUser(ctx context.Context, id string) (*models.User, error) 
 	}
 	return &result, nil
 }
+
+func (s *Storage) GetTrade(ctx context.Context, id string, mode int32) (*models.Trade, error) {
+	collection := s.DataBase.Collection("users")
+	objid, err := primitive.ObjectIDFromHex(id)
+	var filter = bson.M
+	if mode == 1{
+		filter = bson.M{
+			"offerer": bson.M{"id": objid}
+		}
+	}else{
+		filter = bson.M{
+			"accepter": bson.M{"id": objid}
+		}
+	}
+	cursor := collection.FindOne(ctx, filter)
+
+	var result models.Trade
+	err = cursor.Decode(&result)
+	if err != nil {
+		return nil, err
+	}
+	return &result, nil
+}
