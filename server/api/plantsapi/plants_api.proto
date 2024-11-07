@@ -48,6 +48,12 @@ service PlantsAPI {
             post: "/api/register"
         };
     };
+
+    rpc GetUserV1 (GetUserV1Request) returns (GetUserV1Response){
+        option (google.api.http) = {
+            get: "/api/user/{id}"
+        };
+    };
     
 }
 
@@ -152,4 +158,22 @@ message UserRegisterV1Request{
 
 message UserRegisterV1Response{
 
+}
+
+message GetUserV1Request{
+    string id = 1;
+}
+
+message GetUserV1Response{
+    message User {
+        string photo = 1;
+        string surname = 2;
+        string name = 3;
+        string father_name = 4;
+        string phone_number = 5;
+        string email = 6;
+        google.protobuf.Timestamp createdAt = 7;
+        google.protobuf.Timestamp updatedAt = 8;
+    }
+    User user = 1;
 }

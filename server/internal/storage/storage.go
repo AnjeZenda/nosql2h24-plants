@@ -147,3 +147,17 @@ func (s *Storage) AddUser(ctx context.Context, user *models.User) error {
 	}
 	return errors.New("user already exists")
 }
+
+func (s *Storage) GetUser(ctx context.Context, id string) (*models.User, error) {
+	collection := s.DataBase.Collection("users")
+	objid, err := primitive.ObjectIDFromHex(id)
+	filter := bson.M{"id": objid}
+	cursor := collection.FindOne(ctx, filter)
+
+	var result models.User
+	err = cursor.Decode(&result)
+	if err != nil {
+		return nil, err
+	}
+	return &result, nil
+}

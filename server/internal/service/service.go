@@ -16,6 +16,7 @@ type Storage interface {
 	AddPlant(ctx context.Context, plant *models.Plant) error
 	SearchUser(ctx context.Context, login string, password string) (string, error)
 	AddUser(ctx context.Context, user *models.User) error
+	GetUser(ctx context.Context, id string) (*models.User, error)
 }
 
 type Implementation struct {
