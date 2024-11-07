@@ -57,7 +57,7 @@ service PlantsAPI {
 
     rpc GetTradeInV1 (GetTradeInV1Request) returns (GetTradeInV1Response){
         option (google.api.http) = {
-            get: "/api/trade/in{id}"
+            get: "/api/trade/in/{id}"
         };
     };
     
