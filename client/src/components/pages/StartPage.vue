@@ -21,7 +21,7 @@
         <div v-if="!isLogin" class="form-group">
           <input
               type="text"
-              v-model="fullName"
+              v-model="name"
               placeholder="ФИО"
               required
           />
@@ -30,8 +30,8 @@
         <div class="form-group">
           <input
               type="text"
-              v-model="username"
-              :placeholder="isLogin ? 'Почта/Номер телефона' : 'Почта/номер телефона'"
+              v-model="login"
+              :placeholder="isLogin ? 'Почта/Номер телефона' : 'Почта/Номер телефона'"
               required
           />
         </div>
@@ -54,37 +54,77 @@
 </template>
 
 <script>
+import axios from 'axios';
+
+const REGISTER_URL = '/api/register'
+const AUTH_URL = '/api/auth'
+
 export default {
   data() {
     return {
       isLogin: true,
-      username: '',
+      login: '',
       password: '',
-      fullName: '',
+      name: '',
     };
   },
+
+  beforeMount() {
+    window.sessionStorage.clear();
+  },
+
   methods: {
     switchToLogin() {
       this.isLogin = true;
       this.clearForm();
     },
+
     switchToRegister() {
       this.isLogin = false;
       this.clearForm();
     },
+
     clearForm() {
-      this.username = '';
+      this.login = '';
       this.password = '';
-      this.fullName = '';
+      this.name = '';
     },
+
     submitForm() {
       if (this.isLogin) {
-        console.log('Авторизация:', this.username, this.password);
+        this.auth();
       } else {
-        console.log('Регистрация:', this.fullName, this.username, this.password);
+        this.register();
       }
     },
-  },
+
+    async auth() {
+      const userData = {
+          login: this.login,
+          password: this.password
+      };
+
+      const response = await axios.post(AUTH_URL, userData);
+      sessionStorage.setItem("id", response.data.id);
+      sessionStorage.setItem("role", response.data.role);
+      this.$router.push('/plants/start');
+    },
+
+    async register() {
+      const userData = {
+        name: this.name,
+        login: this.login,
+        password: this.password
+      };
+
+      try {
+        await axios.post(REGISTER_URL, userData);
+        alert('Регистрация выполнена успешно!');
+      } catch (error) {
+        alert('Произошла ошибка при регистрации. Попробуйте снова.');
+      }
+    }
+  }
 };
 </script>
 
@@ -158,6 +198,7 @@ input[type="password"] {
   border-radius: 10px;
   cursor: pointer;
   margin-top: 10px;
+  font-weight: bold;
 }
 
 .login-button:hover {
