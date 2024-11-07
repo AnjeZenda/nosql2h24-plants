@@ -54,7 +54,18 @@ service PlantsAPI {
             get: "/api/user/{id}"
         };
     };
+
+    rpc GetTradeInV1 (GetTradeInV1Request) returns (GetTradeInV1Response){
+        option (google.api.http) = {
+            get: "/api/trade/in{id}"
+        };
+    };
     
+    rpc GetTradeOutV1 (GetTradeOutV1Request) returns (GetTradeOutV1Response){
+        option (google.api.http) = {
+            get: "/api/trade/out/{id}"
+        };
+    }
 }
 
 message CreatePlantV1Request {
@@ -176,4 +187,22 @@ message GetUserV1Response{
         google.protobuf.Timestamp updatedAt = 8;
     }
     User user = 1;
+}
+
+message Trade{
+   
+}
+
+message GetTradeInV1Request{
+    string id = 1;
+}
+message GetTradeInV1Response{
+    Trade trade = 1;
+}
+
+message GetTradeOutV1Request{
+    string id = 1;
+}
+message GetTradeOutV1Response{
+    Trade trade = 1;
 }

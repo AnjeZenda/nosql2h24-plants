@@ -17,6 +17,7 @@ type Storage interface {
 	SearchUser(ctx context.Context, login string, password string) (string, error)
 	AddUser(ctx context.Context, user *models.User) error
 	GetUser(ctx context.Context, id string) (*models.User, error)
+	GetTrade(ctx context.Context, id string, mode int32) (*models.Trade, error)
 }
 
 type Implementation struct {
