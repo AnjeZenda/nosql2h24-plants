@@ -12,7 +12,7 @@ func (s *Implementation) GetTradeInV1(
 	ctx context.Context,
 	req *api.GetTradeInV1Request,
 ) (*api.GetTradeInV1Response, error) {
-	trade, err := s.storage.GetTrade(ctx, req.id, 2)
+	trade, err := s.storage.GetTrade(ctx, req.Id, 2)
 	if err != nil {
 		return nil, status.Error(codes.Internal, "cant get trade")
 	}
