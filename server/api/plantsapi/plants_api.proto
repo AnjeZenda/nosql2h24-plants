@@ -134,13 +134,13 @@ message CreateNewCareRuleV1Response {
 message GetPlantsWithCareRulesV1Request {
     
 }
-message Plant {
+    
+message GetPlantsWithCareRulesV1Response {
+    message Plant {
         string species = 1;
         string image = 2;
         string id = 3;
     }
-    
-message GetPlantsWithCareRulesV1Response {
     repeated Plant plants = 1;
 }
 
@@ -194,24 +194,24 @@ message Trade{
          string name = 1;
     }
     message User{
-        String name = 1;
+        string name = 1;
         Plant plant = 2;
 }
-    User Offerer = 1;
-    User Acceptor = 2;
-    Type Status = 3;
+    User offerer = 1;
+    User accepter = 2;
+    int32 status = 3;
 }
 
 message GetTradeInV1Request{
     string id = 1;
 }
 message GetTradeInV1Response{
-    Trade trade = 1;
+   repeated Trade trade = 1;
 }
 
 message GetTradeOutV1Request{
     string id = 1;
 }
 message GetTradeOutV1Response{
-    Trade trade = 1;
+    repeated Trade trade = 1;
 }

@@ -145,13 +145,13 @@ func (s *Storage) AddUser(ctx context.Context, user *models.User) error {
 		}
 		return err
 	}
-	return errors.New("user already exists")
+	return nil
 }
 
 func (s *Storage) GetUser(ctx context.Context, id string) (*models.User, error) {
 	collection := s.DataBase.Collection("users")
-	objid, err := primitive.ObjectIDFromHex(id)
-	filter := bson.M{"id": objid}
+	objID, err := primitive.ObjectIDFromHex(id)
+	filter := bson.M{"id": objID}
 	cursor := collection.FindOne(ctx, filter)
 
 	var result models.User
@@ -164,15 +164,15 @@ func (s *Storage) GetUser(ctx context.Context, id string) (*models.User, error) 
 
 func (s *Storage) GetTrade(ctx context.Context, id string, mode int32) (*models.Trade, error) {
 	collection := s.DataBase.Collection("users")
-	objid, err := primitive.ObjectIDFromHex(id)
-	var filter = bson.M
-	if mode == 1{
+	objID, err := primitive.ObjectIDFromHex(id)
+	var filter bson.M
+	if mode == 1 {
 		filter = bson.M{
-			"offerer": bson.M{"id": objid}
+			"offerer": bson.M{"id": objID},
 		}
-	}else{
+	} else {
 		filter = bson.M{
-			"accepter": bson.M{"id": objid}
+			"accepter": bson.M{"id": objID},
 		}
 	}
 	cursor := collection.FindOne(ctx, filter)

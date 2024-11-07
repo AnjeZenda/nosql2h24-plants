@@ -17,6 +17,6 @@ func (s *Implementation) UserLoginV1(
 		return nil, status.Error(codes.NotFound, "could not find user")
 	}
 	return &api.UserLoginV1Response{
-		id: user,
+		Id: user,
 	}, nil
 }

@@ -40,9 +40,11 @@ type Plant struct {
 }
 
 type TradeUser struct {
-	ID    primitive.ObjectID `bson:"_id" json:"id"`
-	Name  string             `bson:"name" json:"name"`
-	Plant TradePlant         `bson:"plant" json:"plant"`
+	ID         primitive.ObjectID `bson:"_id" json:"id"`
+	Surname    string             `bson:"surname" json:"surname"`
+	Name       string             `bson:"name" json:"name"`
+	FatherName string             `bson:"father_name" json:"father_name"`
+	Plant      TradePlant         `bson:"plant" json:"plant"`
 }
 
 type Trade struct {

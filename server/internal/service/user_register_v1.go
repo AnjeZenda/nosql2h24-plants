@@ -17,9 +17,11 @@ func (s *Implementation) UserRegister(
 	ctx context.Context,
 	req *api.UserRegisterV1Request,
 ) (*api.UserRegisterV1Response, error) {
-	name := strings.Fields(req.name)
-	email := ""
-	phone := ""
+	name := strings.Fields(req.Name)
+	var (
+		email string
+		phone string
+	)
 	if strings.Contains(req.Login, "@") {
 		email = req.Login
 	} else {
