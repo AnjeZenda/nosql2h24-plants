@@ -244,16 +244,6 @@ export default {
   font-weight: bold;
 }
 
-.plant-price {
-  color: black;
-  font-weight: bold;
-}
-
-.plant-place,
-.plant-date {
-  color: #7E7E7E;
-}
-
 .modal-overlay {
   position: fixed;
   top: 0;
