@@ -134,13 +134,13 @@ message CreateNewCareRuleV1Response {
 message GetPlantsWithCareRulesV1Request {
     
 }
-
-message GetPlantsWithCareRulesV1Response {
-    message Plant {
+message Plant {
         string species = 1;
         string image = 2;
         string id = 3;
     }
+    
+message GetPlantsWithCareRulesV1Response {
     repeated Plant plants = 1;
 }
 
@@ -189,11 +189,11 @@ message GetUserV1Response{
     User user = 1;
 }
 
-Message Trade{
-    Message Plant{
-         String name = 1
+message Trade{
+    message Plant{
+         string name = 1
     }
-    Message User{
+    message User{
         String name = 1
         Plant plant = 2
 }
