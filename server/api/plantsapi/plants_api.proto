@@ -189,8 +189,17 @@ message GetUserV1Response{
     User user = 1;
 }
 
-message Trade{
-   
+Message Trade{
+    Message Plant{
+         String name = 1
+    }
+    Message User{
+        String name = 1
+        Plant plant = 2
+}
+    User Offerer = 1;
+    User Acceptor = 2;
+    Type Status = 3;
 }
 
 message GetTradeInV1Request{
