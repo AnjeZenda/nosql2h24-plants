@@ -12,7 +12,7 @@ func (s *Implementation) GetUserV1(
 	ctx context.Context,
 	req *api.GetUserV1Request,
 ) (*api.GetUserV1Response, error) {
-	user, err := s.storage.GetUser(ctx, req.id)
+	user, err := s.storage.GetUser(ctx, req.Id)
 	if err != nil {
 		return nil, status.Error(codes.Internal, "cant get user")
 	}
