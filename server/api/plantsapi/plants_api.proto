@@ -45,7 +45,7 @@ service PlantsAPI {
     };
     rpc UserRegisterV1 (UserRegisterV1Request) returns (UserRegisterV1Response){
         option (google.api.http) = {
-            post: "api/register"
+            post: "/api/register"
         };
     };
     

@@ -2,6 +2,7 @@ package storage
 
 import (
 	"context"
+	"errors"
 	"log/slog"
 	"plants/internal/models"
 	"strings"
@@ -118,14 +119,31 @@ func (s *Storage) SearchUser(ctx context.Context, login string, password string)
 	} else {
 		filter = bson.M{"phone_number": login, "password": password}
 	}
-	cursor, err := collection.Find(ctx, filter)
-	if err != nil {
-		return nil, err
-	}
+	cursor := collection.FindOne(ctx, filter)
 	var result models.User
 	err := cursor.Decode(&result)
 	if err != nil {
-		return nil, err
+		return "", err
 	}
-	return &result.ID, nil
+	return result.ID.Hex(), nil
+}
+
+func (s *Storage) AddUser(ctx context.Context, user *models.User) error {
+	collection := s.DataBase.Collection("users")
+	var filter bson.M
+
+	if user.Email != "" {
+		filter = bson.M{"email": user.Email}
+	} else {
+		filter = bson.M{"phone_number": user.PhoneNumber}
+	}
+
+	if err := collection.FindOne(ctx, filter).Decode(&user); err != nil {
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			_, err = collection.InsertOne(ctx, user)
+			return err
+		}
+		return err
+	}
+	return errors.New("user already exists")
 }
