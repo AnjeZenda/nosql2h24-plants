@@ -191,11 +191,11 @@ message GetUserV1Response{
 
 message Trade{
     message Plant{
-         string name = 1
+         string name = 1;
     }
     message User{
-        String name = 1
-        Plant plant = 2
+        String name = 1;
+        Plant plant = 2;
 }
     User Offerer = 1;
     User Acceptor = 2;
