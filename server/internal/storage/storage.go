@@ -111,7 +111,7 @@ func (s *Storage) AddPlant(ctx context.Context, plant *models.Plant) error {
 	return nil
 }
 
-func (s *Storage) SearchUser(ctx context.Context, login string, password string) (string, error) {
+func (s *Storage) SearchUser(ctx context.Context, login string, password string) (string, int32, error) {
 	collection := s.DataBase.Collection("users")
 	var filter bson.M
 	if strings.Contains(login, "@") {
@@ -123,9 +123,9 @@ func (s *Storage) SearchUser(ctx context.Context, login string, password string)
 	var result models.User
 	err := cursor.Decode(&result)
 	if err != nil {
-		return "", err
+		return "", 0, err
 	}
-	return result.ID.Hex(), nil
+	return result.ID.Hex(), result.Role, nil
 }
 
 func (s *Storage) AddUser(ctx context.Context, user *models.User) error {

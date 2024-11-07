@@ -19,6 +19,7 @@ type User struct {
 	UpdatedAt   time.Time            `bson:"updated_at" json:"updated_at"`
 	Plants      []Plant              `bson:"plants" json:"plants"`
 	Trades      []primitive.ObjectID `bson:"trades" json:"trades"`
+	Role        int32                `bson:"role" json:"role"`
 }
 
 type Plant struct {

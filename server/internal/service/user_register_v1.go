@@ -37,6 +37,7 @@ func (s *Implementation) UserRegister(
 		Password:    req.Password,
 		CreatedAt:   time.Now().UTC(),
 		UpdatedAt:   time.Now().UTC(),
+		Role:        1,
 	})
 	if err != nil {
 		return nil, status.Error(codes.Internal, "could not create user")

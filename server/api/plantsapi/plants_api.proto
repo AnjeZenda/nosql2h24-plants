@@ -159,6 +159,7 @@ message UserLoginV1Request{
 
 message UserLoginV1Response{
     string id = 1;
+    int32 role =2;
 }
 
 message UserRegisterV1Request{
@@ -168,7 +169,7 @@ message UserRegisterV1Request{
 }
 
 message UserRegisterV1Response{
-
+    
 }
 
 message GetUserV1Request{
