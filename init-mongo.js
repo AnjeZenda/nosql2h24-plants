@@ -29,7 +29,7 @@ db.users.insertMany(
                     "species": "aloe",
                     "care_rules": "672d0ad0fc13ae0c12674602",
                     "created_at": "1731078741866",
-                    "place": "Moscow"
+                    "place": "Москва"
                 },
                 {
                     "_id":  "272d0cf2fc13ae0d466745fe",
@@ -46,7 +46,7 @@ db.users.insertMany(
                     "species": "cactus",
                     "care_rules": "672d0ad0fc13ae0c126745ff",
                     "created_at": "1731078741866",
-                    "place": "Moscow"
+                    "place": "Москва"
                 },
                 {
                     "_id":  "372d0cf2fc13ae0d466745fe",
@@ -63,7 +63,7 @@ db.users.insertMany(
                     "species": "rose",
                     "care_rules": "672d0cf2fc13ae0d46674600",
                     "created_at": "1731078741866",
-                    "place": "Moscow"
+                    "place": "Москва"
                 }
             ],
             "trades": [
@@ -103,7 +103,7 @@ db.users.insertMany(
                     "species": "rose",
                     "care_rules": "672d0cf2fc13ae0d46674600",
                     "created_at": "1731078741866",
-                    "place": "Moscow"
+                    "place": "Москва"
                 }
             ],
             "trades": [
@@ -140,7 +140,7 @@ db.users.insertMany(
                     "species": "rose",
                     "care_rules": "672d0cf2fc13ae0d46674600",
                     "created_at": "1731078741866",
-                    "place": "Moscow"
+                    "place": "Москва"
                 }
             ],
             "trades": [
@@ -219,7 +219,7 @@ db.plants.insertMany(
             "species": "aloe",
             "care_rules": "672d0ad0fc13ae0c12674602",
             "created_at": "1731078741866",
-            "place": "Moscow"
+            "place": "Москва"
         },
         {
             "_id": "272d0cf2fc13ae0d466745fe",
@@ -236,7 +236,7 @@ db.plants.insertMany(
             "species": "cactus",
             "care_rules": "672d0ad0fc13ae0c126745ff",
             "created_at": "1731078741866",
-            "place": "Moscow"
+            "place": "Москва"
         },
         {
             "_id": "372d0cf2fc13ae0d466745fe",
@@ -253,7 +253,7 @@ db.plants.insertMany(
             "species": "rose",
             "care_rules": "672d0cf2fc13ae0d46674600",
             "created_at": "1731078741866",
-            "place": "Moscow"
+            "place": "Москва"
         },
         {
             "_id": "472d0cf2fc13ae0d466745fe",
@@ -270,7 +270,7 @@ db.plants.insertMany(
             "species": "rose",
             "care_rules": "672d0cf2fc13ae0d46674600",
             "created_at": "1731078741866",
-            "place": "Moscow"
+            "place": "Москва"
         },
         {
             "_id": "572d0cf2fc13ae0d466745fe",
@@ -287,7 +287,7 @@ db.plants.insertMany(
             "species": "rose",
             "care_rules": "672d0cf2fc13ae0d46674600",
             "created_at": "1731078741866",
-            "place": "Moscow"
+            "place": "Москва"
         }
     ]
 )
