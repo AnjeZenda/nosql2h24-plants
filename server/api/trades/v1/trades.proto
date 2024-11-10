@@ -1,0 +1,57 @@
+syntax = "proto3";
+
+package trades.v1;
+
+option go_package = "trades/v1;trades_v1";
+
+import "google/api/annotations.proto";
+
+service Trades {
+  rpc GetTradeInV1 (GetTradeInV1Request) returns (GetTradeInV1Response){
+    option (google.api.http) = {
+      get: "/api/trade/in/{id}"
+    };
+  };
+
+  rpc GetTradeOutV1 (GetTradeOutV1Request) returns (GetTradeOutV1Response){
+    option (google.api.http) = {
+      get: "/api/trade/out/{id}"
+    };
+  }
+}
+
+enum Status {
+  STATUS_UNSPECIFIED = 0;
+  STATUS_PENDING = 1;
+  STATUS_ACCEPTED = 2;
+  STATUS_REJECTED = 3;
+}
+
+message Trade{
+  message Plant{
+    string name = 1;
+  }
+  message User{
+    string name = 1;
+    string surname = 2;
+    string fatherName = 3;
+    Plant plant = 4;
+  }
+  User offerer = 1;
+  User accepter = 2;
+  Status status = 3;
+}
+
+message GetTradeInV1Request{
+  string id = 1;
+}
+message GetTradeInV1Response{
+  repeated Trade trade = 1;
+}
+
+message GetTradeOutV1Request{
+  string id = 1;
+}
+message GetTradeOutV1Response{
+  repeated Trade trade = 1;
+}
