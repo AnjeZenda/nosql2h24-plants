@@ -29,7 +29,7 @@ func Run(cfg *config.Config) error {
 		"mongodb://%s:%s@%s:%s",
 		cfg.Mongo.User,
 		cfg.Mongo.Password,
-		cfg.Mongo.Domen,
+		cfg.Mongo.Host,
 		cfg.Mongo.Port,
 	)
 	slog.Info(mongoURL)

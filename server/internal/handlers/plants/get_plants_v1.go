@@ -18,7 +18,7 @@ func (h *Handler) GetPlantsV1(
 	if err != nil {
 		return nil, status.Error(codes.Internal, "could not get plants")
 	}
-	result := make([]*api.GetPlantsV1Response_Plant, 0, len(plants))
+	result := make([]*api.GetPlantsV1Response_Plant, len(plants))
 	for i, p := range plants {
 		result[i] = &api.GetPlantsV1Response_Plant{
 			Image:     p.Image,

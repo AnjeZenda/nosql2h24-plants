@@ -15,7 +15,7 @@ type Config struct {
 
 type MongoConfig struct {
 	User     string `yaml:"user"`
-	Domen    string `yaml:"domen"`
+	Host     string `yaml:"host"`
 	DataBase string `yaml:"database"`
 	Password string `yaml:"password"`
 	Port     string `yaml:"port"`
