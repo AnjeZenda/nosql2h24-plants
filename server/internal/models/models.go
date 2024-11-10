@@ -6,6 +6,13 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
+type Role int8
+
+const (
+	Admin Role = iota + 1
+	Regular
+)
+
 type User struct {
 	ID          primitive.ObjectID   `bson:"_id,omitempty" json:"id"`
 	Photo       string               `bson:"photo" json:"photo"`
@@ -18,8 +25,8 @@ type User struct {
 	CreatedAt   time.Time            `bson:"created_at" json:"created_at"`
 	UpdatedAt   time.Time            `bson:"updated_at" json:"updated_at"`
 	Plants      []Plant              `bson:"plants" json:"plants"`
-	Trades      []primitive.ObjectID `bson:"trades" json:"trades"`
-	Role        int32                `bson:"role" json:"role"`
+	Trades      []primitive.ObjectID `bson:"trades,omitempty" json:"trades"`
+	Role        Role                 `bson:"role" json:"role"`
 }
 
 type Plant struct {
@@ -59,7 +66,7 @@ type Trade struct {
 
 type TradePlant struct {
 	ID   primitive.ObjectID `bson:"_id" json:"id"`
-	Name string             `bson:"name" json:"name"`
+	Name string             `bson:"species" json:"species"`
 }
 
 type CareRules struct {
