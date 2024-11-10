@@ -1,9 +1,14 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "plantsapi/plants_api.proto",
+    "title": "plants/v1/plants.proto",
     "version": "version not set"
   },
+  "tags": [
+    {
+      "name": "PlantsAPI"
+    }
+  ],
   "consumes": [
     "application/json"
   ],
@@ -13,18 +18,18 @@
   "paths": {
     "/api/care": {
       "get": {
-        "operationId": "PlantsAPI_GetPlantsWithCareRuleRulesV1",
+        "operationId": "PlantsAPI_GetPlantsWithCareRulesV1",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/plantsapiGetPlantsWithCareRulesV1Response"
+              "$ref": "#/definitions/v1GetPlantsWithCareRulesV1Response"
             }
           },
           "default": {
             "description": "An unexpected error response.",
             "schema": {
-              "$ref": "#/definitions/runtimeError"
+              "$ref": "#/definitions/googlerpcStatus"
             }
           }
         },
@@ -40,16 +45,26 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/plantsapiCreateNewCareRuleV1Response"
+              "$ref": "#/definitions/v1CreateNewCareRuleV1Response"
             }
           },
           "default": {
             "description": "An unexpected error response.",
             "schema": {
-              "$ref": "#/definitions/runtimeError"
+              "$ref": "#/definitions/googlerpcStatus"
             }
           }
         },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1CreateNewCareRuleV1Request"
+            }
+          }
+        ],
         "tags": [
           "PlantsAPI"
         ]
@@ -62,13 +77,13 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/plantsapiGetCareRuleV1Response"
+              "$ref": "#/definitions/v1GetCareRuleV1Response"
             }
           },
           "default": {
             "description": "An unexpected error response.",
             "schema": {
-              "$ref": "#/definitions/runtimeError"
+              "$ref": "#/definitions/googlerpcStatus"
             }
           }
         },
@@ -92,13 +107,13 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/plantsapiGetPlantsV1Response"
+              "$ref": "#/definitions/v1GetPlantsV1Response"
             }
           },
           "default": {
             "description": "An unexpected error response.",
             "schema": {
-              "$ref": "#/definitions/runtimeError"
+              "$ref": "#/definitions/googlerpcStatus"
             }
           }
         },
@@ -114,16 +129,26 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/plantsapiCreatePlantV1Response"
+              "$ref": "#/definitions/v1CreatePlantV1Response"
             }
           },
           "default": {
             "description": "An unexpected error response.",
             "schema": {
-              "$ref": "#/definitions/runtimeError"
+              "$ref": "#/definitions/googlerpcStatus"
             }
           }
         },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1CreatePlantV1Request"
+            }
+          }
+        ],
         "tags": [
           "PlantsAPI"
         ]
@@ -136,13 +161,13 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/plantsapiGetExampleV1Response"
+              "$ref": "#/definitions/v1GetExampleV1Response"
             }
           },
           "default": {
             "description": "An unexpected error response.",
             "schema": {
-              "$ref": "#/definitions/runtimeError"
+              "$ref": "#/definitions/googlerpcStatus"
             }
           }
         },
@@ -153,7 +178,35 @@
     }
   },
   "definitions": {
-    "plantsapiCareRule": {
+    "googlerpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "v1CareRule": {
       "type": "object",
       "properties": {
         "user": {
@@ -168,38 +221,115 @@
         }
       }
     },
-    "plantsapiCreateNewCareRuleV1Response": {
+    "v1CreateNewCareRuleV1Request": {
+      "type": "object",
+      "properties": {
+        "lightCondition": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "species": {
+          "type": "string"
+        },
+        "image": {
+          "type": "string"
+        },
+        "temperatureRegime": {
+          "type": "string"
+        },
+        "descriptionAddition": {
+          "type": "string"
+        },
+        "userId": {
+          "type": "string"
+        }
+      }
+    },
+    "v1CreateNewCareRuleV1Response": {
       "type": "object"
     },
-    "plantsapiCreatePlantV1Response": {
+    "v1CreatePlantV1Request": {
+      "type": "object",
+      "properties": {
+        "image": {
+          "type": "string"
+        },
+        "place": {
+          "type": "string"
+        },
+        "size": {
+          "type": "string"
+        },
+        "price": {
+          "type": "number",
+          "format": "float"
+        },
+        "lightCondition": {
+          "type": "string"
+        },
+        "wateringFrequency": {
+          "type": "string"
+        },
+        "temperatureRegime": {
+          "type": "string"
+        },
+        "careComplexity": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "species": {
+          "type": "string"
+        },
+        "careRules": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "userId": {
+          "type": "string"
+        }
+      }
+    },
+    "v1CreatePlantV1Response": {
       "type": "object"
     },
-    "plantsapiGetCareRuleV1Response": {
+    "v1GetCareRuleV1Response": {
       "type": "object",
       "properties": {
         "careRules": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/plantsapiCareRule"
+            "type": "object",
+            "$ref": "#/definitions/v1CareRule"
           }
         }
       }
     },
-    "plantsapiGetExampleV1Response": {
+    "v1GetExampleV1Response": {
       "type": "object"
     },
-    "plantsapiGetPlantsV1Response": {
+    "v1GetPlantsV1Response": {
       "type": "object",
       "properties": {
         "plants": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/plantsapiGetPlantsV1ResponsePlant"
+            "type": "object",
+            "$ref": "#/definitions/v1GetPlantsV1ResponsePlant"
           }
         }
       }
     },
-    "plantsapiGetPlantsV1ResponsePlant": {
+    "v1GetPlantsV1ResponsePlant": {
       "type": "object",
       "properties": {
         "image": {
@@ -221,18 +351,19 @@
         }
       }
     },
-    "plantsapiGetPlantsWithCareRulesV1Response": {
+    "v1GetPlantsWithCareRulesV1Response": {
       "type": "object",
       "properties": {
         "plants": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/plantsapiGetPlantsWithCareRulesV1ResponsePlant"
+            "type": "object",
+            "$ref": "#/definitions/v1GetPlantsWithCareRulesV1ResponsePlant"
           }
         }
       }
     },
-    "plantsapiGetPlantsWithCareRulesV1ResponsePlant": {
+    "v1GetPlantsWithCareRulesV1ResponsePlant": {
       "type": "object",
       "properties": {
         "species": {
@@ -243,39 +374,6 @@
         },
         "id": {
           "type": "string"
-        }
-      }
-    },
-    "protobufAny": {
-      "type": "object",
-      "properties": {
-        "type_url": {
-          "type": "string"
-        },
-        "value": {
-          "type": "string",
-          "format": "byte"
-        }
-      }
-    },
-    "runtimeError": {
-      "type": "object",
-      "properties": {
-        "error": {
-          "type": "string"
-        },
-        "code": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "message": {
-          "type": "string"
-        },
-        "details": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/protobufAny"
-          }
         }
       }
     }

@@ -1,0 +1,183 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "trades/v1/trades.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "Trades"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/api/trade/in/{id}": {
+      "get": {
+        "operationId": "Trades_GetTradeInV1",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetTradeInV1Response"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Trades"
+        ]
+      }
+    },
+    "/api/trade/out/{id}": {
+      "get": {
+        "operationId": "Trades_GetTradeOutV1",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetTradeOutV1Response"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Trades"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "googlerpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "tradesv1Status": {
+      "type": "string",
+      "enum": [
+        "STATUS_UNSPECIFIED",
+        "STATUS_PENDING",
+        "STATUS_ACCEPTED",
+        "STATUS_REJECTED"
+      ],
+      "default": "STATUS_UNSPECIFIED"
+    },
+    "v1GetTradeInV1Response": {
+      "type": "object",
+      "properties": {
+        "trade": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Trade"
+          }
+        }
+      }
+    },
+    "v1GetTradeOutV1Response": {
+      "type": "object",
+      "properties": {
+        "trade": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Trade"
+          }
+        }
+      }
+    },
+    "v1Trade": {
+      "type": "object",
+      "properties": {
+        "offerer": {
+          "$ref": "#/definitions/v1TradeUser"
+        },
+        "accepter": {
+          "$ref": "#/definitions/v1TradeUser"
+        },
+        "status": {
+          "$ref": "#/definitions/tradesv1Status"
+        }
+      }
+    },
+    "v1TradePlant": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "v1TradeUser": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "surname": {
+          "type": "string"
+        },
+        "fatherName": {
+          "type": "string"
+        },
+        "plant": {
+          "$ref": "#/definitions/v1TradePlant"
+        }
+      }
+    }
+  }
+}
