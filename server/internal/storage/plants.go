@@ -12,9 +12,10 @@ package storage
 import (
 	"context"
 
+	"plants/internal/models"
+
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"plants/internal/models"
 )
 
 func (s *Storage) GetPlantsWithCareRules(ctx context.Context) ([]*models.Plant, error) {
@@ -52,6 +53,15 @@ func (s *Storage) GetCareRulesForPlant(ctx context.Context, species string) (*mo
 	err := cursor.Decode(&result)
 	if err != nil {
 		return nil, err
+	}
+	for i, d := range result.Description {
+		u, err := s.GetUserById(ctx, d.UserID.Hex())
+		if err != nil {
+			return nil, err
+		}
+		result.Description[i].UserName = u.Name
+		result.Description[i].UserSurname = u.Surname
+		result.Description[i].UserFatherName = u.FatherName
 	}
 	return &result, nil
 }
