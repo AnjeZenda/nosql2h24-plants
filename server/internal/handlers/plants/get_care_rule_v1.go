@@ -18,7 +18,7 @@ func (h *Handler) GetCareRuleV1(
 	if err != nil {
 		return nil, status.Error(codes.Internal, "cant get plant")
 	}
-	result := make([]*api.CareRule, 0, len(rules.Description))
+	result := make([]*api.CareRule, len(rules.Description))
 	for i, r := range rules.Description {
 		result[i] = &api.CareRule{
 			User:        r.UserID.Hex(),
