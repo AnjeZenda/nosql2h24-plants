@@ -6,16 +6,19 @@ import (
 	"log/slog"
 	"net"
 	"net/http"
-	"plants/internal/config"
-	gw "plants/internal/pb/plantsapi/github.com/moevm/nosql2h24-plants/server/api/plantsapi"
-	"plants/internal/service"
-	"plants/internal/storage"
 
+	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"golang.org/x/sync/errgroup"
-
-	"github.com/grpc-ecosystem/grpc-gateway/runtime"
-
 	"google.golang.org/grpc"
+
+	"plants/internal/config"
+	"plants/internal/handlers/plants"
+	"plants/internal/handlers/trades"
+	"plants/internal/handlers/users"
+	plantsAPI "plants/internal/pkg/pb/plants/v1"
+	tradesAPI "plants/internal/pkg/pb/trades/v1"
+	usersAPI "plants/internal/pkg/pb/users/v1"
+	"plants/internal/storage"
 )
 
 func Run(cfg *config.Config) error {
@@ -23,22 +26,40 @@ func Run(cfg *config.Config) error {
 	defer cancel()
 	gRPCServer := grpc.NewServer()
 	mongoURL := fmt.Sprintf(
-		"%v:%v",
+		"mongodb://%s:%s@%s:%s",
+		cfg.Mongo.User,
+		cfg.Mongo.Password,
 		cfg.Mongo.Domen,
 		cfg.Mongo.Port,
 	)
-	storage, err := storage.New(ctx, mongoURL, cfg.Mongo.DataBase)
+	slog.Info(mongoURL)
+	repo, err := storage.New(ctx, mongoURL, cfg.Mongo.DataBase)
 	if err != nil {
 		return err
 	}
-	plants_api := service.NewAPI(storage)
-	plants_api.Register(gRPCServer)
+
+	plantsHandler := plants.New(repo)
+	plantsAPI.RegisterPlantsAPIServer(gRPCServer, plantsHandler)
+
+	usersHandler := users.New(repo)
+	usersAPI.RegisterUserServer(gRPCServer, usersHandler)
+
+	tradesHandler := trades.New(repo)
+	tradesAPI.RegisterTradesServer(gRPCServer, tradesHandler)
 
 	mux := runtime.NewServeMux()
-	err = gw.RegisterPlantsAPIHandlerServer(ctx, mux, plants_api)
-	if err != nil {
+	if err = plantsAPI.RegisterPlantsAPIHandlerServer(ctx, mux, plantsHandler); err != nil {
 		return err
 	}
+
+	if err = usersAPI.RegisterUserHandlerServer(ctx, mux, usersHandler); err != nil {
+		return err
+	}
+
+	if err = tradesAPI.RegisterTradesHandlerServer(ctx, mux, tradesHandler); err != nil {
+		return err
+	}
+
 	var group errgroup.Group
 	l, err := net.Listen("tcp", fmt.Sprintf(":%v", cfg.GRPC.Port))
 
