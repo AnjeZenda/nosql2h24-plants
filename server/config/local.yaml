@@ -3,8 +3,8 @@ grpc:
   port: 8882
   timeout: 10h
 mongo:
-  domen: "mongodb://localhost"
-  database: "example"
+  domen: "mongodb"
+  database: "plants_market"
   password: "pass"
   user: "user"
   port: "27017"
