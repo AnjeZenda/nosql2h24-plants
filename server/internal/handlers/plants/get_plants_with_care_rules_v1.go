@@ -1,18 +1,19 @@
-package service
+package plants
 
 import (
 	"context"
-	api "plants/internal/pb/plantsapi/github.com/moevm/nosql2h24-plants/server/api/plantsapi"
 
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+
+	api "plants/internal/pkg/pb/plants/v1"
 )
 
-func (s *Implementation) GetPlantsWithCareRulesV1(
+func (h *Handler) GetPlantsWithCareRulesV1(
 	ctx context.Context,
-	req *api.GetPlantsWithCareRulesV1Request,
+	_ *api.GetPlantsWithCareRulesV1Request,
 ) (*api.GetPlantsWithCareRulesV1Response, error) {
-	plants, err := s.storage.GetPlantsWithCareRules(ctx)
+	plants, err := h.storage.GetPlantsWithCareRules(ctx)
 	if err != nil {
 		return nil, status.Error(codes.Internal, "internal error occured")
 	}
@@ -22,7 +23,7 @@ func (s *Implementation) GetPlantsWithCareRulesV1(
 		result = append(result, &api.GetPlantsWithCareRulesV1Response_Plant{
 			Species: p.Species,
 			Image:   p.Image,
-			Id:      p.ID.String(),
+			Id:      p.ID.Hex(),
 		})
 	}
 	return &api.GetPlantsWithCareRulesV1Response{

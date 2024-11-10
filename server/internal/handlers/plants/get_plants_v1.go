@@ -1,19 +1,20 @@
-package service
+package plants
 
 import (
 	"context"
-	api "plants/internal/pb/plantsapi/github.com/moevm/nosql2h24-plants/server/api/plantsapi"
 
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/timestamppb"
+
+	api "plants/internal/pkg/pb/plants/v1"
 )
 
-func (s *Implementation) GetPlantsV1(
+func (h *Handler) GetPlantsV1(
 	ctx context.Context,
 	req *api.GetPlantsV1Request,
 ) (*api.GetPlantsV1Response, error) {
-	plants, err := s.storage.GetPlants(ctx)
+	plants, err := h.storage.GetPlants(ctx)
 	if err != nil {
 		return nil, status.Error(codes.Internal, "could not get plants")
 	}

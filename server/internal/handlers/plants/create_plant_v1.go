@@ -1,18 +1,18 @@
-package service
+package plants
 
 import (
 	"context"
-	"plants/internal/models"
-	api "plants/internal/pb/plantsapi/github.com/moevm/nosql2h24-plants/server/api/plantsapi"
 	"time"
 
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"go.mongodb.org/mongo-driver/bson/primitive"
+	"plants/internal/models"
+	api "plants/internal/pkg/pb/plants/v1"
 )
 
-func (s *Implementation) CreatePlantV1(
+func (h *Handler) CreatePlantV1(
 	ctx context.Context,
 	req *api.CreatePlantV1Request,
 ) (*api.CreatePlantV1Response, error) {
@@ -20,7 +20,7 @@ func (s *Implementation) CreatePlantV1(
 	if err != nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid user id")
 	}
-	err = s.storage.AddPlant(ctx, &models.Plant{
+	err = h.storage.AddPlant(ctx, &models.Plant{
 		ID:                primitive.NewObjectID(),
 		UserID:            userId,
 		Image:             req.Image,
