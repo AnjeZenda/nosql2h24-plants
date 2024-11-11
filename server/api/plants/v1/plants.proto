@@ -100,13 +100,9 @@ message CareRule {
 }
 
 message CreateNewCareRuleV1Request {
-    string lightCondition = 1;
-    string type = 2;
-    string species = 3;
-    string image = 4;
-    string temperatureRegime = 5;
-    string descriptionAddition = 6;
-    string userId = 7;
+    string species = 1;
+    string userId = 2;
+    string descriptionAddition = 3;
 }
 
 message CreateNewCareRuleV1Response {}
