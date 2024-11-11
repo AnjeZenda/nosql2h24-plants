@@ -168,11 +168,7 @@ export default {
 
     async postCare() {
       const careData = {
-        lightCondition: this.lightCondition,
-        type: this.type,
-        image: "https://avatars.mds.yandex.net/i?id=5b167f0e52d626daaea97045b9d447f0_l-4577816-images-thumbs&n=13",
         species: this.species,
-        temperatureRegime: this.temperatureRegime,
         descriptionAddition: this.descriptionAddition,
         userId: this.userId
       }
