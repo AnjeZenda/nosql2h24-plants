@@ -19,4 +19,5 @@
 
 ## Отладочные пользователи
 Логин: ivanov.alexey@example.com
+
 Пароль: password123
