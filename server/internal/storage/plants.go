@@ -37,11 +37,22 @@ func (s *Storage) GetPlantsWithCareRules(ctx context.Context) ([]*models.Plant, 
 
 func (s *Storage) CreateNewCareRule(ctx context.Context, rule *models.CareRules) error {
 	collection := s.DataBase.Collection("care_rules")
-	_, err := collection.InsertOne(ctx, rule)
-	if err != nil {
+	result := collection.FindOne(ctx, bson.M{"species": rule.Species})
+	if result.Err() != nil {
+		_, err := collection.InsertOne(ctx, rule)
 		return err
 	}
-	return nil
+	newAddition := bson.D{
+		{Key: "description_addition", Value: rule.Description[0].DescriptionAddition},
+		{Key: "created_at", Value: rule.Description[0].CreatedAt},
+		{Key: "user_id", Value: rule.Description[0].UserID},
+	}
+	update := bson.D{
+		{Key: "$push", Value: bson.D{{Key: "description", Value: newAddition}}},
+		{Key: "$set", Value: bson.D{{Key: "update_at", Value: rule.UpdatedAt}}},
+	}
+	_, err := collection.UpdateOne(ctx, bson.M{"species": rule.Species}, update)
+	return err
 }
 
 func (s *Storage) GetCareRulesForPlant(ctx context.Context, species string) (*models.CareRules, error) {
