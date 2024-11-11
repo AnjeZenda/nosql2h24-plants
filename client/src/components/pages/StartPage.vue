@@ -143,7 +143,7 @@ export default {
 .login-container {
   width: 400px;
   padding: 20px;
-  background-color: #fff;
+  background-color: #FFFFFF;
   border: 1px solid #989898;
   border-radius: 10px;
   box-sizing: border-box;
@@ -156,20 +156,19 @@ export default {
 
 .auth-button {
   flex: 1;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: bold;
   background-color: #89A758;
   color: #fff;
   padding: 10px;
   border: none;
-  border-radius: 10px 10px 0 0;
+  border-radius: 10px;
   cursor: pointer;
 }
 
 .auth-button.active {
   background-color: #ffffff;
   color: #000000;
-  border-bottom: 2px solid #89A758;
 }
 
 .auth-button:not(.active):hover {
@@ -185,8 +184,9 @@ input[type="password"] {
   width: 100%;
   padding: 10px;
   font-size: 14px;
-  border: 1px solid #ddd;
   border-radius: 10px;
+  border: none;
+  color: #676767;
   background-color: #EDEDED;
   box-sizing: border-box;
 }
