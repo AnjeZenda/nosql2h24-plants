@@ -84,6 +84,19 @@
       </form>
     </div>
   </div>
+
+  <div v-if="isCareModalOpen" class="modal-overlay-care" @click="closeCareModal">
+    <div class="modal-content-care" @click.stop>
+      <header class="modal-header-care">
+        <h2>{{ this.curCareSpec }}. Правила ухода.</h2>
+        <button @click="closeModal" class="close-button-care">X</button>
+      </header>
+      <section class="modal-body-care" v-for="(care, index) in currentCare" :key="index">
+        <p>{{ care.description }}</p>
+        <p class="author">{{ care.author }} {{ formatDate(care.createdAt) }}</p>
+      </section>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -108,7 +121,9 @@ export default {
       temperatureRegime: '',
       descriptionAddition: '',
       userId: '',
-      care: []
+      currentCare: [],
+      curCareSpec: '',
+      isCareModalOpen: false
     };
   },
 
@@ -122,6 +137,11 @@ export default {
       this.postCare();
     },
 
+    closeModal() {
+      this.isCareModalOpen = false;
+      this.currentCare = []
+    },
+
     clearForm() {
       this.showModal = false;
       this.lightCondition = '';
@@ -133,26 +153,32 @@ export default {
     },
 
     async getCarePlants() {
-      const response = await axios.get(CARE_PLANTS_URL);
-      this.carePlants = response.data.map(elem => ({
-        image: elem.image,
-        species: elem.species,
-        id: elem.id
-      }));
+      axios
+          .get(CARE_PLANTS_URL)
+          .then((response) => {
+            response.data.plants.forEach(elem => {
+              let plant = {
+                image: elem.image,
+                species: elem.species
+              };
+              this.carePlants.push(plant)
+            })
+          })
     },
 
     async postCare() {
       const careData = {
         lightCondition: this.lightCondition,
         type: this.type,
+        image: "https://avatars.mds.yandex.net/i?id=5b167f0e52d626daaea97045b9d447f0_l-4577816-images-thumbs&n=13",
         species: this.species,
-        image: this.image,
         temperatureRegime: this.temperatureRegime,
         descriptionAddition: this.descriptionAddition,
-        id: this.userId
+        userId: this.userId
       }
       try {
         await axios.post(POST_CARE_URL, careData);
+        alert('Правило ухода успешно добавлено!');
         this.clearForm();
       } catch (error) {
         alert('Произошла ошибка при добавлении правила ухода. Попробуйте снова.');
@@ -160,13 +186,39 @@ export default {
     },
 
     async getCare(species) {
-      const response = await axios.get(`/api/care/${species}`);
-      this.care = response.data.map(elem => ({
-        image: elem.image,
-        species: elem.species,
-        id: elem.id
-      }));
+      this.curCareSpec = species;
+      axios
+          .get(`/api/care/${species}`)
+          .then((response) => {
+            response.data.careRules.forEach(elem => {
+              const str1 = elem.user.userSurname;
+              const str2 = elem.user.userName;
+              const str3 = elem.user.userFatherName;
+              const result = `${str1} ${str2} ${str3}`;
+              let care = {
+                description: elem.description,
+                createdAt: elem.createdAt,
+                author: result
+              };
+              this.currentCare.push(care)
+            })
+          })
+      this.isCareModalOpen = true;
     },
+
+    formatDate(dateString) {
+      const date = new Date(dateString);
+      const options = {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+      };
+      const formattedDate = date.toLocaleString('ru-RU', options);
+      return formattedDate.replace(',', ' в');
+    }
   }
 }
 </script>
@@ -314,5 +366,62 @@ textarea {
   display: flex;
   justify-content: flex-end;
   margin-top: 20px;
+}
+
+.modal-overlay-care {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content-care {
+  background: #fff;
+  width: 60%;
+  max-width: 500px;
+  padding: 20px;
+  border-radius: 8px;
+  position: relative;
+}
+
+.modal-header-care {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+}
+
+.modal-header-care h2 {
+  font-size: 1.5em;
+  margin: 0;
+}
+
+.close-button-care {
+  background: none;
+  border: none;
+  font-size: 1.5em;
+  cursor: pointer;
+  color: #333;
+}
+
+.modal-body-care p {
+  margin: 10px 0;
+  line-height: 1.6;
+  font-size: 1em;
+}
+
+.author {
+  color: #666;
+  font-size: 0.9em;
+  margin-top: 15px;
+  text-align: right;
 }
 </style>

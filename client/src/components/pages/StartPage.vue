@@ -56,8 +56,8 @@
 <script>
 import axios from 'axios';
 
-const REGISTER_URL = '/api/register'
-const AUTH_URL = '/api/auth'
+const REGISTER_URL = '/api/v1/register'
+const AUTH_URL = '/api/v1/login'
 
 export default {
   data() {
@@ -107,13 +107,16 @@ export default {
       const response = await axios.post(AUTH_URL, userData);
       sessionStorage.setItem("id", response.data.id);
       sessionStorage.setItem("role", response.data.role);
-      this.$router.push('/plants/start');
+      this.$router.push('/plants/sale');
     },
 
     async register() {
+      const [name, surname, fatherName] = this.name.split(" ");
       const userData = {
-        name: this.name,
-        login: this.login,
+        name: name,
+        surname: surname,
+        fatherName: fatherName,
+        email: this.login,
         password: this.password
       };
 
