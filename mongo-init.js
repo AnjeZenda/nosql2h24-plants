@@ -4,7 +4,7 @@ db.plants.insertMany([
     {
         "_id": ObjectId("5f1d7c1d1d8e2f1a1a2b3c4d"),
         "user_id": ObjectId("5f2d8c1d1d8e2f1a1a2b3c7a"),
-        "image": "https://images.unsplash.com/photo-1567306226416-28f0efdc88ce?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDF8fHBsYW50fGVufDB8fHx8MTY5OTQxNjg5Nw&ixlib=rb-1.2.1&q=80&w=400",
+        "image": "https://avatars.mds.yandex.net/i?id=5b167f0e52d626daaea97045b9d447f0_l-4577816-images-thumbs&n=13",
         "size": "Маленькие (до 20 см)",
         "price": 500,
         "light_condition": "Тенелюбивые",
@@ -21,7 +21,7 @@ db.plants.insertMany([
       {
         "_id": ObjectId("5f1d7c1d1d8e2f1a1a2b3c4e"),
         "user_id": ObjectId("5f2d8c1d1d8e2f1a1a2b3c7a"),
-        "image": "https://images.unsplash.com/photo-1501004318641-b39e6451bec6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDJ8fHBsYW50fGVufDB8fHx8MTY5OTQxNjg5Nw&ixlib=rb-1.2.1&q=80&w=400",
+        "image": "https://cvety-planety.ru/upload/iblock/776/a4uj1p6m37kghorv2nn4ps1qe774izuy.webp",
         "size": "Средние (от 20 до 50 см)",
         "price": 1500,
         "light_condition": "Полутеневые",
@@ -38,7 +38,7 @@ db.plants.insertMany([
       {
         "_id": ObjectId("5f1d7c1d1d8e2f1a1a2b3c4f"),
         "user_id": ObjectId("5f2d8c1d1d8e2f1a1a2b3c7a"),
-        "image": "https://images.unsplash.com/photo-1504198458649-3128b932f49b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDR8fHBsYW50fGVufDB8fHx8MTY5OTQxNjg5Nw&ixlib=rb-1.2.1&q=80&w=400",
+        "image": "https://img.inmyroom.ru/inmyroom/resize/620x/jpg:85/uploads/photo/file/77/77e8/jpg_1000_77e814a5-db24-48a0-b39f-d6cb5535b87e.jpg?sign=ac5dcc57b6f51fea31baa4869aa82a98d2c8055d41a650be47cd0045635e485f",
         "size": "Большие (более 50 см)",
         "price": 3000,
         "light_condition": "Светолюбивые",
@@ -55,7 +55,7 @@ db.plants.insertMany([
       {
         "_id": ObjectId("5f1d7c1d1d8e2f1a1a2b3c50"),
         "user_id": ObjectId("5f2d8c1d1d8e2f1a1a2b3c7c"),
-        "image": "https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDV8fHBsYW50fGVufDB8fHx8MTY5OTQxNjg5Nw&ixlib=rb-1.2.1&q=80&w=400",
+        "image": "https://i.pinimg.com/originals/3f/b0/db/3fb0db994ea49b370c06fd8745e03048.jpg",
         "size": "Маленькие (до 20 см)",
         "price": 800,
         "light_condition": "Полутеневые",
@@ -72,7 +72,7 @@ db.plants.insertMany([
       {
         "_id": ObjectId("5f1d7c1d1d8e2f1a1a2b3c51"),
         "user_id": ObjectId("5f2d8c1d1d8e2f1a1a2b3c7c"),
-        "image": "https://images.unsplash.com/photo-1529516532344-1a34b1df1f19?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDZ8fHBsYW50fGVufDB8fHx8MTY5OTQxNjg5Nw&ixlib=rb-1.2.1&q=80&w=400",
+        "image": "https://avatars.mds.yandex.net/i?id=02ff3c807e963cecee0fc557f14b75de_l-6505870-images-thumbs&n=13",
         "size": "Средние (от 20 до 50 см)",
         "price": 1200,
         "light_condition": "Тенелюбивые",
@@ -89,7 +89,7 @@ db.plants.insertMany([
       {
         "_id": ObjectId("5f1d7c1d1d8e2f1a1a2b3c52"),
         "user_id": ObjectId("5f2d8c1d1d8e2f1a1a2b3c80"),
-        "image": "https://images.unsplash.com/photo-1465101162946-4377e57745c3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDd8fHBsYW50fGVufDB8fHx8MTY5OTQxNjg5Nw&ixlib=rb-1.2.1&q=80&w=400",
+        "image": "https://i.pinimg.com/736x/72/51/b4/7251b45263cfcaea655e94aa81ec18e7.jpg",
         "size": "Большие (более 50 см)",
         "price": 2700,
         "light_condition": "Светолюбивые",
@@ -106,7 +106,7 @@ db.plants.insertMany([
       {
         "_id": ObjectId("5f1d7c1d1d8e2f1a1a2b3c53"),
         "user_id": ObjectId("5f2d8c1d1d8e2f1a1a2b3c80"),
-        "image": "https://images.unsplash.com/photo-1517683059670-9cb6f6b43a59?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDh8fHBsYW50fGVufDB8fHx8MTY5OTQxNjg5Nw&ixlib=rb-1.2.1&q=80&w=400",
+        "image": "https://avatars.mds.yandex.net/i?id=8428ff239edffbd66e53cce304e1bb0b_l-13095119-images-thumbs&n=13",
         "size": "Маленькие (до 20 см)",
         "price": 600,
         "light_condition": "Полутеневые",
@@ -123,7 +123,7 @@ db.plants.insertMany([
       {
         "_id": ObjectId("5f1d7c1d1d8e2f1a1a2b3c54"),
         "user_id": ObjectId("5f2d8c1d1d8e2f1a1a2b3c83"),
-        "image": "https://images.unsplash.com/photo-1526744226395-7d63a3c6a5bb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDl8fHBsYW50fGVufDB8fHx8MTY5OTQxNjg5Nw&ixlib=rb-1.2.1&q=80&w=400",
+        "image": "https://flowry.ru/wp-content/uploads/2022/03/cay-van-nien-thanh-loc-khong-khi.jpg",
         "size": "Средние (от 20 до 50 см)",
         "price": 1400,
         "light_condition": "Тенелюбивые",
@@ -140,7 +140,7 @@ db.plants.insertMany([
       {
         "_id": ObjectId("5f1d7c1d1d8e2f1a1a2b3c55"),
         "user_id": ObjectId("5f2d8c1d1d8e2f1a1a2b3c83"),
-        "image": "https://images.unsplash.com/photo-1511546395754-38b13532eabc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDEwfHxwbGFudHxlbnwwfHx8fDE2OTk0MTY4OTc&ixlib=rb-1.2.1&q=80&w=400",
+        "image": "https://avatars.mds.yandex.net/i?id=4a2c5e1bb0e5b6d6b425874ccd928902_l-9065769-images-thumbs&n=13",
         "size": "Большие (более 50 см)",
         "price": 3200,
         "light_condition": "Светолюбивые",
@@ -157,7 +157,7 @@ db.plants.insertMany([
       {
         "_id": ObjectId("5f1d7c1d1d8e2f1a1a2b3c56"),
         "user_id": ObjectId("5f2d8c1d1d8e2f1a1a2b3c7e"),
-        "image": "https://images.unsplash.com/photo-1501004318641-b39e6451bec6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDJ8fHBsYW50fGVufDB8fHx8MTY5OTQxNjg5Nw&ixlib=rb-1.2.1&q=80&w=400",
+        "image": "https://avatars.mds.yandex.net/i?id=8c2f8a972981d9594dbcbee96c16cace_l-6489726-images-thumbs&n=13",
         "size": "Средние (от 20 до 50 см)",
         "price": 1300,
         "light_condition": "Полутеневые",
@@ -400,7 +400,7 @@ db.trades.insertMany([
 db.users.insertMany([
     {
         "_id": ObjectId("5f2d8c1d1d8e2f1a1a2b3c7a"),
-        "photo": "https://example.com/photo1.jpg",
+        "photo": "https://dreamrider.ru/wp-content/uploads/2023/01/8v1z7d_t20_yx6vkm-scaled.jpg",
         "surname": "Иванов",
         "name": "Алексей",
         "father_name": "Петрович",
