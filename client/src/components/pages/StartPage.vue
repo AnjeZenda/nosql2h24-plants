@@ -101,10 +101,21 @@ export default {
     },
 
     async auth() {
-      const userData = {
-          login: this.login,
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const phoneRegex = /^\+?\d{10,15}$/;
+      let userData = {};
+
+      if (emailRegex.test(this.login)) {
+        userData = {
+          email: this.login,
           password: this.password
-      };
+        };
+      } else if (phoneRegex.test(this.login)) {
+        userData = {
+          phone_number: this.login,
+          password: this.password
+        };
+      }
 
       const response = await axios.post(AUTH_URL, userData);
       sessionStorage.setItem("id", response.data.id);
@@ -114,13 +125,28 @@ export default {
 
     async register() {
       const [name, surname, fatherName] = this.name.split(" ");
-      const userData = {
-        name: name,
-        surname: surname,
-        fatherName: fatherName,
-        email: this.login,
-        password: this.password
-      };
+
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const phoneRegex = /^\+?\d{10,15}$/;
+      let userData = {};
+
+      if (emailRegex.test(this.login)) {
+        userData = {
+          name: name,
+          surname: surname,
+          fatherName: fatherName,
+          email: this.login,
+          password: this.password
+        };
+      } else if (phoneRegex.test(this.login)) {
+        userData = {
+          name: name,
+          surname: surname,
+          fatherName: fatherName,
+          phone_number: this.login,
+          password: this.password
+        };
+      }
 
       try {
         await axios.post(REGISTER_URL, userData);
