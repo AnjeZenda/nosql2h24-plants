@@ -3,14 +3,16 @@
     <div class="login-container">
       <div class="header">
         <button
-            class="auth-button"
+            class="green-button-white-text"
+            id="auth-button"
             :class="{ active: isLogin }"
             @click="switchToLogin"
         >
           Авторизация
         </button>
         <button
-            class="auth-button"
+            class="green-button-white-text"
+            id="auth-button"
             :class="{ active: !isLogin }"
             @click="switchToRegister"
         >
@@ -20,7 +22,7 @@
       <form @submit.prevent="submitForm">
         <div v-if="!isLogin" class="form-group">
           <input
-              type="text"
+              class="inputs"
               v-model="name"
               placeholder="ФИО"
               required
@@ -29,7 +31,7 @@
 
         <div class="form-group">
           <input
-              type="text"
+              class="inputs"
               v-model="login"
               :placeholder="isLogin ? 'Почта/Номер телефона' : 'Почта/Номер телефона'"
               required
@@ -38,14 +40,14 @@
 
         <div class="form-group">
           <input
-              type="password"
+              class="inputs"
               v-model="password"
               placeholder="Пароль"
               required
           />
         </div>
 
-        <button type="submit" class="login-button">
+        <button type="submit" class="green-button-white-text" id="login-button">
           {{ isLogin ? 'Войти' : 'Зарегистрироваться' }}
         </button>
       </form>
@@ -132,12 +134,14 @@ export default {
 </script>
 
 <style scoped>
+@import "../../../main.css";
+
 .login-page {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
-  font-family: 'Century Gothic', sans-serif;
+
 }
 
 .login-container {
@@ -154,24 +158,16 @@ export default {
   margin-bottom: 20px;
 }
 
-.auth-button {
+#auth-button {
   flex: 1;
-  font-size: 16px;
-  font-weight: bold;
-  background-color: #89A758;
-  color: #fff;
-  padding: 10px;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
 }
 
-.auth-button.active {
+#auth-button.active {
   background-color: #ffffff;
   color: #000000;
 }
 
-.auth-button:not(.active):hover {
+#auth-button:not(.active):hover {
   background-color: #77934a;
 }
 
@@ -179,32 +175,8 @@ export default {
   margin-bottom: 15px;
 }
 
-input[type="text"],
-input[type="password"] {
+#login-button {
   width: 100%;
-  padding: 10px;
-  font-size: 14px;
-  border-radius: 10px;
-  border: none;
-  color: #676767;
-  background-color: #EDEDED;
-  box-sizing: border-box;
-}
-
-.login-button {
-  width: 100%;
-  padding: 10px;
-  font-size: 16px;
-  background-color: #89A758;
-  color: #fff;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
   margin-top: 10px;
-  font-weight: bold;
-}
-
-.login-button:hover {
-  background-color: #77934a;
 }
 </style>
