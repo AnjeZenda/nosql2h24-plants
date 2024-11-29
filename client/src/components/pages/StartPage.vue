@@ -100,6 +100,22 @@ export default {
       }
     },
 
+    errorRegister() {
+      this.$notify({
+        title: "Ошибка!",
+        text: "Произошла ошибка при регистрации, попробуйте еще раз.",
+        type: 'error'
+      });
+    },
+
+    success() {
+      this.$notify({
+        title: "Получилось!",
+        text: "Регистрация прошла успешно.",
+        type: 'success'
+      });
+    },
+
     async auth() {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       const phoneRegex = /^\+?\d{10,15}$/;
@@ -150,9 +166,9 @@ export default {
 
       try {
         await axios.post(REGISTER_URL, userData);
-        alert('Регистрация выполнена успешно!');
+        this.success();
       } catch (error) {
-        alert('Произошла ошибка при регистрации. Попробуйте снова.');
+        this.errorRegister();
       }
     }
   }
@@ -167,7 +183,6 @@ export default {
   justify-content: center;
   align-items: center;
   height: 100vh;
-
 }
 
 .login-container {
@@ -191,14 +206,11 @@ export default {
 #auth-button.active {
   background-color: #ffffff;
   color: #000000;
+  cursor: default;
 }
 
 #auth-button:not(.active):hover {
   background-color: #77934a;
-}
-
-.form-group {
-  margin-bottom: 15px;
 }
 
 #login-button {
