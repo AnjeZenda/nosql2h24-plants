@@ -387,7 +387,7 @@ db.trades.insertMany([
     },
     "created_at": ISODate("2024-10-10T10:00:00Z"),
     "updated_at": ISODate("2024-10-11T10:00:00Z"),
-    "status": 0,
+    "status": 1,
     "type": "trade",
   },
   {
@@ -418,7 +418,7 @@ db.trades.insertMany([
     },
     "created_at": ISODate("2024-02-22T10:00:00Z"),
     "updated_at": ISODate("2024-02-28T10:00:00Z"),
-    "status": 0,
+    "status": 1,
     "type": "trade",
   },
   {
@@ -448,7 +448,7 @@ db.trades.insertMany([
     },
     "created_at": ISODate("2024-08-11T10:00:00Z"),
     "updated_at": ISODate("2024-08-28T10:00:00Z"),
-    "status": 0,
+    "status": 1,
     "type": "trade",
   }
 ])
