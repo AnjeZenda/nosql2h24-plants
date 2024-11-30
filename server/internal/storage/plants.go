@@ -6,7 +6,6 @@ import (
 	"plants/internal/models"
 
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func (s *Storage) GetPlantsWithCareRules(ctx context.Context) ([]*models.Plant, error) {
@@ -87,13 +86,7 @@ func (s *Storage) GetPlants(ctx context.Context) ([]*models.Plant, error) {
 
 func (s *Storage) AddPlant(ctx context.Context, plant *models.Plant) error {
 	collection := s.DataBase.Collection("plants")
-	careRules, err := s.GetCareRulesForPlant(ctx, plant.Species)
-	if err == nil {
-		plant.CareRules = careRules.ID
-	} else {
-		plant.CareRules = primitive.NewObjectID()
-	}
-	_, err = collection.InsertOne(ctx, plant)
+	_, err := collection.InsertOne(ctx, plant)
 	if err != nil {
 		return err
 	}
