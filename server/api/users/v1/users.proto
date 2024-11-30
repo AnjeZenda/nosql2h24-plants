@@ -50,8 +50,11 @@ message UserRegisterV1Request{
   string name = 1;
   string surname = 2;
   string fatherName = 3;
-  string email = 4;
-  string password = 5;
+  oneof login {
+    string email = 4;
+    string phone_number = 5;
+  }
+  string password = 6;
 }
 
 message UserRegisterV1Response{}
