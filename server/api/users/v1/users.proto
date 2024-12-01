@@ -89,9 +89,9 @@ message UpdateUserV1Request{
   string id = 1;
   string name = 2;
   string surname = 3;
-  string father_name = 4;
+  string fatherName = 4;
   string email = 5;
-  string phone_number = 6;
+  string phoneNumber = 6;
   string photo = 7;
 }
 
