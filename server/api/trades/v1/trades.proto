@@ -91,7 +91,7 @@ message PostTradeV1Response{
 }
 
 message AcceptTradeV1Request{
-  string trade_id = 1;
+  string tradeId = 1;
 }
 
 message AcceptTradeV1Response{
