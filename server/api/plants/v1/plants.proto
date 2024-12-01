@@ -35,13 +35,20 @@ service PlantsAPI {
 
     rpc GetPlantsV1 (GetPlantsV1Request) returns (GetPlantsV1Response) {
         option (google.api.http) = {
-            get: "/api/plants"
+            get: "/api/plants/{page}/{size}/{sort}"
         };
     };
 
     rpc CreatePlantV1 (CreatePlantV1Request) returns (CreatePlantV1Response) {
         option (google.api.http) = {
             post: "/api/plants/add"
+            body: "*"
+        };
+    };
+
+    rpc GetFilteredPlantsV1 (GetFilteredPlantsV1Request) returns (GetFilteredPlantsV1Response) {
+        option (google.api.http) = {
+            post: "/api/palnts/{page}/{size}/{sort}"
             body: "*"
         };
     };
@@ -66,15 +73,54 @@ message CreatePlantV1Request {
 
 message CreatePlantV1Response {}
 
-message GetPlantsV1Request {}
+message GetFilteredPlantsV1Request{
+    int64 page = 1;
+    int64 size = 2;
+    string sort = 3;
+    bool isDesc = 4;
+    message Filter {
+        string species = 1;
+        string type = 2;
+        repeated string size = 3;
+        repeated string light_condition = 4;
+        repeated string watering_frequency = 5;
+        repeated string temperature_regime = 6;
+        repeated string care_complexity = 7;
+        string description = 8;
+        string place = 9;
+        float priceFrom = 10; 
+        float priceTo = 11;  
+    }
+    Filter filter = 5;
+}
+
+message GetFilteredPlantsV1Response{
+    message Plant {
+        string id = 1;
+        string image = 2;
+        string species = 3; 
+        float price = 4; 
+        google.protobuf.Timestamp createdAt = 5;
+        string place = 6;
+    }
+    repeated Plant plants = 1;
+}
+
+message GetPlantsV1Request {
+    int64 page = 1;
+    int64 size = 2;
+    string sort = 3;
+    bool isDesc = 4;
+}
 
 message GetPlantsV1Response {
     message Plant {
-        string image = 1;
-        string species = 2; 
-        float price = 3; 
-        google.protobuf.Timestamp createdAt = 4;
-        string place = 5;
+        string id = 1;
+        string image = 2;
+        string species = 3; 
+        float price = 4; 
+        google.protobuf.Timestamp createdAt = 5;
+        string place = 6;
     }
     repeated Plant plants = 1;
 }

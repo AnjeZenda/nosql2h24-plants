@@ -78,6 +78,31 @@
     }
   },
   "definitions": {
+    "TradePlant": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "TradeUser": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "surname": {
+          "type": "string"
+        },
+        "fatherName": {
+          "type": "string"
+        },
+        "plant": {
+          "$ref": "#/definitions/TradePlant"
+        }
+      }
+    },
     "googlerpcStatus": {
       "type": "object",
       "properties": {
@@ -144,38 +169,13 @@
       "type": "object",
       "properties": {
         "offerer": {
-          "$ref": "#/definitions/v1TradeUser"
+          "$ref": "#/definitions/TradeUser"
         },
         "accepter": {
-          "$ref": "#/definitions/v1TradeUser"
+          "$ref": "#/definitions/TradeUser"
         },
         "status": {
           "$ref": "#/definitions/tradesv1Status"
-        }
-      }
-    },
-    "v1TradePlant": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
-        }
-      }
-    },
-    "v1TradeUser": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
-        },
-        "surname": {
-          "type": "string"
-        },
-        "fatherName": {
-          "type": "string"
-        },
-        "plant": {
-          "$ref": "#/definitions/v1TradePlant"
         }
       }
     }
