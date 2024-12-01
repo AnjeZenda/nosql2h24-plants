@@ -29,17 +29,18 @@ func (h *Handler) GetTradeOutV1(
 	res := &api.GetTradeOutV1Response{Trade: make([]*api.Trade, 0)}
 	for _, trade := range trades {
 		res.Trade = append(res.Trade, &api.Trade{
+			Id: trade.ID.Hex(),
 			Offerer: &api.Trade_User{
 				Name:       trade.Offerer.Name,
 				Surname:    trade.Offerer.Surname,
 				FatherName: trade.Offerer.FatherName,
-				Plant:      &api.Trade_Plant{Name: trade.Offerer.Plant.Name},
+				Plant:      &api.Trade_Plant{Name: trade.Offerer.Plant.Name, Image: trade.Offerer.Plant.Image},
 			},
 			Accepter: &api.Trade_User{
 				Name:       trade.Accepter.Name,
 				Surname:    trade.Accepter.Surname,
 				FatherName: trade.Accepter.FatherName,
-				Plant:      &api.Trade_Plant{Name: trade.Accepter.Plant.Name},
+				Plant:      &api.Trade_Plant{Name: trade.Accepter.Plant.Name, Image: trade.Accepter.Plant.Image},
 			},
 			Status: api.Status(trade.Status),
 		})

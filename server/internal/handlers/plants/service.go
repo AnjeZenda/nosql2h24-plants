@@ -13,6 +13,7 @@ type Storage interface {
 	GetCareRulesForPlant(ctx context.Context, species string) (*models.CareRules, error)
 	GetPlants(ctx context.Context) ([]*models.Plant, error)
 	AddPlant(ctx context.Context, plant *models.Plant) error
+	GetPlantsForTrade(ctx context.Context, id string) ([]*models.Plant, error)
 }
 
 type Handler struct {

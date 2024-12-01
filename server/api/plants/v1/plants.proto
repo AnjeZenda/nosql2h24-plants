@@ -45,6 +45,12 @@ service PlantsAPI {
             body: "*"
         };
     };
+
+    rpc GetPlantsForTradeV1 (GetPlantsForTradeV1Request) returns (GetPlantsForTradeV1Response) {
+        option (google.api.http) = {
+            get: "/api/plants/trade/{user_id}"
+        };
+    };
 }
 
 message CreatePlantV1Request {
@@ -114,6 +120,21 @@ message GetPlantsWithCareRulesV1Response {
         string species = 1;
         string image = 2;
         string id = 3;
+    }
+    repeated Plant plants = 1;
+}
+
+message GetPlantsForTradeV1Request {
+    string user_id = 1;
+}
+
+message GetPlantsForTradeV1Response {
+    message Plant{
+        string species = 1;
+        string price = 2;
+        string place = 3;
+        google.protobuf.Timestamp createdAt = 4;
+        
     }
     repeated Plant plants = 1;
 }

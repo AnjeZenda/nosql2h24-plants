@@ -11,6 +11,29 @@ import (
 	"plants/internal/models"
 )
 
+func (s *Storage) GetUserByLogin(
+	ctx context.Context,
+	login string,
+) (models.User, error) {
+	collection := s.DataBase.Collection("users")
+
+	filter := bson.D{
+		{"$or", bson.A{
+			bson.D{{"email", login}},
+			bson.D{{"phone", login}},
+		}}}
+
+	var result models.User
+	var err error
+	if err = collection.FindOne(ctx, filter).Decode(&result); err != nil {
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			return models.User{}, ErrUserNotFound
+		}
+		return models.User{}, err
+	}
+	return result, nil
+}
+
 func (s *Storage) GetUserByLoginAndPassword(
 	ctx context.Context,
 	login, password string,
@@ -43,22 +66,6 @@ func (s *Storage) CreateUser(ctx context.Context, user models.User) error {
 	return nil
 }
 
-func (s *Storage) GetUserByEmail(ctx context.Context, email string) (models.User, error) {
-	collection := s.DataBase.Collection("users")
-
-	filter := bson.D{{"email", email}}
-
-	var result models.User
-	var err error
-	if err = collection.FindOne(ctx, filter).Decode(&result); err != nil {
-		if errors.Is(err, mongo.ErrNoDocuments) {
-			return models.User{}, ErrUserNotFound
-		}
-		return models.User{}, err
-	}
-	return result, nil
-}
-
 func (s *Storage) GetUserById(ctx context.Context, id string) (models.User, error) {
 	collection := s.DataBase.Collection("users")
 	objID, err := primitive.ObjectIDFromHex(id)
@@ -73,6 +80,39 @@ func (s *Storage) GetUserById(ctx context.Context, id string) (models.User, erro
 		}
 		return models.User{}, err
 	}
-
 	return result, nil
+}
+
+func (s *Storage) UpdateUser(ctx context.Context,
+	id string, name string,
+	surname string,
+	father_name string,
+	email string,
+	phone_number string,
+	photo string) error {
+
+	collection := s.DataBase.Collection("users")
+
+	objID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return ErrUserInvalidId
+	}
+
+	filter := bson.M{"_id": objID}
+	update := bson.D{
+		{"$set", bson.D{
+			{"name", name},
+			{"surname", surname},
+			{"father_name", father_name},
+			{"email", email},
+			{"phone_number", phone_number},
+			{"photo", photo},
+		}},
+	}
+	_, errres := collection.UpdateOne(ctx, filter, update)
+	if errres != nil {
+		return ErrUserNotUpdated
+	}
+
+	return nil
 }
