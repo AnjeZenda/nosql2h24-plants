@@ -92,3 +92,11 @@ type CareDescriptionPart struct {
 	UserSurname         string
 	UserFatherName      string
 }
+
+type Filter struct {
+	Page   int64
+	Size   int64
+	SortBy string
+	IsDesc bool
+	Labels map[string]interface{}
+}
