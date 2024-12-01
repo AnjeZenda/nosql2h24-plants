@@ -99,7 +99,7 @@ message AcceptTradeV1Response{
 }
 
 message RejectTradeV1Request{
-  string trade_id = 1;
+  string tradeId = 1;
 }
 
 message RejectTradeV1Response{
