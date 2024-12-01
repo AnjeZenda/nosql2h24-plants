@@ -203,7 +203,6 @@ message BuyPlantV1Request{
     string plantId = 3;
     string species = 4;
     float price = 5;
-    string plantImage = 6;
 }
 message BuyPlantV1Response{
 

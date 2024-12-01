@@ -410,9 +410,6 @@
         "price": {
           "type": "number",
           "format": "float"
-        },
-        "plantImage": {
-          "type": "string"
         }
       }
     },
