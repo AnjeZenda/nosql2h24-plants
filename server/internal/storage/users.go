@@ -86,9 +86,9 @@ func (s *Storage) GetUserById(ctx context.Context, id string) (models.User, erro
 func (s *Storage) UpdateUser(ctx context.Context,
 	id string, name string,
 	surname string,
-	father_name string,
+	fatherName string,
 	email string,
-	phone_number string,
+	phoneNumber string,
 	photo string) error {
 
 	collection := s.DataBase.Collection("users")
@@ -103,9 +103,9 @@ func (s *Storage) UpdateUser(ctx context.Context,
 		{"$set", bson.D{
 			{"name", name},
 			{"surname", surname},
-			{"father_name", father_name},
+			{"father_name", fatherName},
 			{"email", email},
-			{"phone_number", phone_number},
+			{"phone_number", phoneNumber},
 			{"photo", photo},
 		}},
 	}
