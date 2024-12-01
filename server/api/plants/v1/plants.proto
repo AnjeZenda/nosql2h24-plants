@@ -8,12 +8,6 @@ import "google/api/annotations.proto";
 import "google/protobuf/timestamp.proto";
 
 service PlantsAPI {
-    rpc GetExampleV1 (GetExampleV1Request) returns (GetExampleV1Response) {
-        option (google.api.http) = {
-            get: "/example"
-        };
-    };
-
     rpc GetPlantsWithCareRulesV1 (GetPlantsWithCareRulesV1Request) returns (GetPlantsWithCareRulesV1Response) {
         option (google.api.http) = {
             get: "/api/care"
@@ -27,6 +21,11 @@ service PlantsAPI {
         };
     };
 
+    rpc GetPlantByIdV1 (GetPlantByIdV1Request) returns (GetPlantByIdV1Response) {
+        option (google.api.http) = {
+            get: "/api/palnts/{id}"
+        };
+    };
     rpc GetCareRuleV1 (GetCareRuleV1Request) returns (GetCareRuleV1Response) {
         option (google.api.http) = {
             get: "/api/care/{species}"
@@ -49,6 +48,13 @@ service PlantsAPI {
     rpc GetFilteredPlantsV1 (GetFilteredPlantsV1Request) returns (GetFilteredPlantsV1Response) {
         option (google.api.http) = {
             post: "/api/palnts/{page}/{size}/{sort}"
+            body: "*"
+        };
+    };
+    
+    rpc BuyPlantV1 (BuyPlantV1Request) returns (BuyPlantV1Response) {
+        option (google.api.http) = {
+            post: "/api/plants/buy"
             body: "*"
         };
     };
@@ -82,10 +88,10 @@ message GetFilteredPlantsV1Request{
         string species = 1;
         string type = 2;
         repeated string size = 3;
-        repeated string light_condition = 4;
-        repeated string watering_frequency = 5;
-        repeated string temperature_regime = 6;
-        repeated string care_complexity = 7;
+        repeated string lightCondition = 4;
+        repeated string wateringFrequency = 5;
+        repeated string temperatureRegime = 6;
+        repeated string careComplexity = 7;
         string description = 8;
         string place = 9;
         float priceFrom = 10; 
@@ -164,6 +170,41 @@ message GetPlantsWithCareRulesV1Response {
     repeated Plant plants = 1;
 }
 
-message GetExampleV1Request {}
+message GetPlantByIdV1Request{
+    string id  = 1;
+}
+message GetPlantByIdV1Response{
+    message Plant {
+        string species = 1;
+        string type = 2;
+        string size = 3;
+        string lightCondition = 4;
+        string wateringFrequency = 5;
+        string temperatureRegime = 6;
+        string careComplexity = 7;
+        string description = 8;
+        string place = 9;
+        string image = 10;
+        float price = 11;
+    }
+    message User {
+        string photo = 1;
+        string name = 2;
+        string surname = 3;
+        string fatherName = 4;
+    }
+    Plant plant = 1;
+    User user = 2;
+}
 
-message GetExampleV1Response {}
+message BuyPlantV1Request{
+    string sellerId = 1;
+    string buyerId = 2;
+    string plantId = 3;
+    string species = 4;
+    float price = 5;
+    string plantImage = 6;
+}
+message BuyPlantV1Response{
+
+}
