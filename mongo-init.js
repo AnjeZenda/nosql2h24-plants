@@ -15,7 +15,8 @@ db.plants.insertMany([
     "type": "Комнатное растение",
     "species": "Фикус",
     "created_at": ISODate("2024-01-31T10:00:00Z"),
-    "place": "Москва"
+    "place": "Москва",
+    "sold_at": ISODate("0001-01-01T00:00:00Z")
   },
   {
     "_id": ObjectId("5f1d7c1d1d8e2f1a1a2b3c4e"),
@@ -31,7 +32,8 @@ db.plants.insertMany([
     "type": "Суккулент",
     "species": "Алоэ",
     "created_at": ISODate("2024-01-02T11:00:00Z"),
-    "place": "Санкт-Петербург"
+    "place": "Санкт-Петербург",
+    "sold_at": ISODate("0001-01-01T00:00:00Z")
   },
   {
     "_id": ObjectId("5f1d7c1d1d8e2f1a1a2b3c4f"),
@@ -47,7 +49,8 @@ db.plants.insertMany([
     "type": "Пальма",
     "species": "Финиковая пальма",
     "created_at": ISODate("2024-09-29T12:00:00Z"),
-    "place": "Казань"
+    "place": "Казань",
+    "sold_at": ISODate("0001-01-01T00:00:00Z")
   },
   {
     "_id": ObjectId("5f1d7c1d1d8e2f1a1a2b3c50"),
@@ -63,7 +66,8 @@ db.plants.insertMany([
     "type": "Комнатное растение",
     "species": "Сансевиерия",
     "created_at": ISODate("2024-10-04T13:00:00Z"),
-    "place": "Новосибирск"
+    "place": "Новосибирск",
+    "sold_at": ISODate("0001-01-01T00:00:00Z")
   },
   {
     "_id": ObjectId("5f1d7c1d1d8e2f1a1a2b3c51"),
@@ -79,7 +83,8 @@ db.plants.insertMany([
     "type": "Папоротник",
     "species": "Нефролепис",
     "created_at": ISODate("2024-02-11T14:00:00Z"),
-    "place": "Екатеринбург"
+    "place": "Екатеринбург",
+    "sold_at": ISODate("0001-01-01T00:00:00Z")
   },
   {
     "_id": ObjectId("5f1d7c1d1d8e2f1a1a2b3c52"),
@@ -95,7 +100,8 @@ db.plants.insertMany([
     "type": "Пальма",
     "species": "Кокосовая пальма",
     "created_at": ISODate("2024-08-27T15:00:00Z"),
-    "place": "Нижний Новгород"
+    "place": "Нижний Новгород",
+    "sold_at":ISODate("0001-01-01T00:00:00Z")
   },
   {
     "_id": ObjectId("5f1d7c1d1d8e2f1a1a2b3c53"),
@@ -111,7 +117,8 @@ db.plants.insertMany([
     "type": "Суккулент",
     "species": "Каланхоэ",
     "created_at": ISODate("2024-07-07T16:00:00Z"),
-    "place": "Воронеж"
+    "place": "Воронеж",
+    "sold_at":ISODate("0001-01-01T00:00:00Z")
   },
   {
     "_id": ObjectId("5f1d7c1d1d8e2f1a1a2b3c54"),
@@ -127,7 +134,8 @@ db.plants.insertMany([
     "type": "Комнатное растение",
     "species": "Диффенбахия",
     "created_at": ISODate("2024-03-30T17:00:00Z"),
-    "place": "Самара"
+    "place": "Самара",
+    "sold_at":ISODate("0001-01-01T00:00:00Z")
   },
   {
     "_id": ObjectId("5f1d7c1d1d8e2f1a1a2b3c55"),
@@ -143,7 +151,8 @@ db.plants.insertMany([
     "type": "Пальма",
     "species": "Бамбуковая пальма",
     "created_at": ISODate("2024-03-22T18:00:00Z"),
-    "place": "Челябинск"
+    "place": "Челябинск",
+    "sold_at":ISODate("0001-01-01T00:00:00Z")
   },
   {
     "_id": ObjectId("5f1d7c1d1d8e2f1a1a2b3c56"),
@@ -159,8 +168,9 @@ db.plants.insertMany([
     "type": "Комнатное растение",
     "species": "Плющ",
     "created_at": ISODate("2024-09-11T19:00:00Z"),
-    "place": "Ростов-на-Дону"
-  }
+    "place": "Ростов-на-Дону",
+    "sold_at":ISODate("0001-01-01T00:00:00Z")
+  },
 ])
 
 db.care_rules.insertMany([
@@ -480,7 +490,8 @@ db.users.insertMany([
         "type": "Комнатное растение",
         "species": "Фикус",
         "created_at": ISODate("2024-01-31T10:00:00Z"),
-        "place": "Москва"
+        "place": "Москва",
+        "sold_at":ISODate("0001-01-01T00:00:00Z")
       },
       {
         "_id": ObjectId("5f1d7c1d1d8e2f1a1a2b3c4e"),
@@ -496,7 +507,8 @@ db.users.insertMany([
         "type": "Суккулент",
         "species": "Алоэ",
         "created_at": ISODate("2024-01-02T11:00:00Z"),
-        "place": "Санкт-Петербург"
+        "place": "Санкт-Петербург",
+        "sold_at":ISODate("0001-01-01T00:00:00Z")
       },
       {
         "_id": ObjectId("5f1d7c1d1d8e2f1a1a2b3c4f"),
@@ -512,7 +524,8 @@ db.users.insertMany([
         "type": "Пальма",
         "species": "Финиковая пальма",
         "created_at": ISODate("2024-09-29T12:00:00Z"),
-        "place": "Казань"
+        "place": "Казань",
+        "sold_at": ISODate(ISODate("0001-01-01T00:00:00Z"))
       }
     ],
     "trades": [
@@ -560,7 +573,8 @@ db.users.insertMany([
         "type": "Комнатное растение",
         "species": "Сансевиерия",
         "created_at": ISODate("2024-10-04T13:00:00Z"),
-        "place": "Новосибирск"
+        "place": "Новосибирск",
+        "sold_at": ISODate("0001-01-01T00:00:00Z")
       },
       {
         "_id": ObjectId("5f1d7c1d1d8e2f1a1a2b3c51"),
@@ -575,7 +589,8 @@ db.users.insertMany([
         "type": "Папоротник",
         "species": "Нефролепис",
         "created_at": ISODate("2024-02-11T14:00:00Z"),
-        "place": "Екатеринбург"
+        "place": "Екатеринбург",
+        "sold_at": ISODate("0001-01-01T00:00:00Z")
       }
     ],
     "trades": [
@@ -621,7 +636,8 @@ db.users.insertMany([
         "type": "Комнатное растение",
         "species": "Плющ",
         "created_at": ISODate("2024-09-11T19:00:00Z"),
-        "place": "Ростов-на-Дону"
+        "place": "Ростов-на-Дону",
+        "sold_at": ISODate("0001-01-01T00:00:00Z")
       }
     ],
     "trades": [
@@ -667,7 +683,8 @@ db.users.insertMany([
         "type": "Пальма",
         "species": "Кокосовая пальма",
         "created_at": ISODate("2024-08-27T15:00:00Z"),
-        "place": "Нижний Новгород"
+        "place": "Нижний Новгород",
+        "sold_at": ISODate("0001-01-01T00:00:00Z")
       },
       {
         "_id": ObjectId("5f1d7c1d1d8e2f1a1a2b3c53"),
@@ -682,7 +699,8 @@ db.users.insertMany([
         "type": "Суккулент",
         "species": "Каланхоэ",
         "created_at": ISODate("2024-07-07T16:00:00Z"),
-        "place": "Воронеж"
+        "place": "Воронеж",
+        "sold_at": ISODate("0001-01-01T00:00:00Z")
       }
     ],
     "trades": [
@@ -741,7 +759,8 @@ db.users.insertMany([
         "type": "Комнатное растение",
         "species": "Диффенбахия",
         "created_at": ISODate("2024-03-30T17:00:00Z"),
-        "place": "Самара"
+        "place": "Самара",
+        "sold_at": ISODate("0001-01-01T00:00:00Z")
       },
       {
         "_id": ObjectId("5f1d7c1d1d8e2f1a1a2b3c55"),
@@ -756,7 +775,8 @@ db.users.insertMany([
         "type": "Пальма",
         "species": "Бамбуковая пальма",
         "created_at": ISODate("2024-03-22T18:00:00Z"),
-        "place": "Челябинск"
+        "place": "Челябинск",
+        "sold_at": ISODate("0001-01-01T00:00:00Z")
       }
     ],
     "role": 2

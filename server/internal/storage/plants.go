@@ -2,10 +2,12 @@ package storage
 
 import (
 	"context"
+	"time"
 
 	"plants/internal/models"
 
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 func (s *Storage) GetPlantsWithCareRules(ctx context.Context) ([]*models.Plant, error) {
@@ -67,9 +69,17 @@ func (s *Storage) GetCareRulesForPlant(ctx context.Context, species string) (*mo
 	return &result, nil
 }
 
-func (s *Storage) GetPlants(ctx context.Context) ([]*models.Plant, error) {
+func (s *Storage) GetPlants(ctx context.Context, fltr *models.Filter) ([]*models.Plant, error) {
+	filter := bson.D{{"sold_at", time.Time{}}}
+	opts := options.Find()
+	opts.SetSort(bson.D{{Key: fltr.SortBy, Value: parseSortType(fltr.IsDesc)}})
+	opts.SetLimit(fltr.Size)
+	opts.SetSkip((fltr.Page - 1) * fltr.Size)
+	if len(fltr.Labels) != 0 {
+		filter = parseLabelsToBSON(fltr.Labels)
+	}
 	collection := s.DataBase.Collection("plants")
-	cursor, err := collection.Find(ctx, bson.M{})
+	cursor, err := collection.Find(ctx, filter, opts)
 	if err != nil {
 		return nil, err
 	}
@@ -91,4 +101,36 @@ func (s *Storage) AddPlant(ctx context.Context, plant *models.Plant) error {
 		return err
 	}
 	return nil
+}
+
+func parseSortType(isDesc bool) int8 {
+	if isDesc {
+		return -1
+	}
+	return 1
+}
+
+func parseLabelsToBSON(labels map[string]interface{}) bson.D {
+	bsonFltr := bson.D{}
+	for k, v := range labels {
+		switch vc := v.(type) {
+		case string:
+			bsonFltr = append(bsonFltr, bson.E{Key: k, Value: v})
+		case []string:
+			listOfV := vc
+			listFltr := make([]bson.D, len(listOfV))
+			for i, e := range listOfV {
+				listFltr[i] = bson.D{{Key: k, Value: e}}
+			}
+			bsonFltr = append(bsonFltr, bson.E{Key: "$or", Value: listFltr})
+		}
+	}
+	if v, ok := labels["price_to"]; ok && v != -1 {
+		bsonFltr = append(bsonFltr, bson.E{Key: "price", Value: bson.M{"$lte": v}})
+	}
+	if v, ok := labels["price_from"]; ok && v != -1 {
+		bsonFltr = append(bsonFltr, bson.E{Key: "price", Value: bson.M{"$gte": v}})
+	}
+	bsonFltr = append(bsonFltr, bson.E{Key: "sold_at", Value: time.Time{}})
+	return bsonFltr
 }

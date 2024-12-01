@@ -11,7 +11,7 @@ type Storage interface {
 	GetPlantsWithCareRules(ctx context.Context) ([]*models.Plant, error)
 	CreateNewCareRule(ctx context.Context, rule *models.CareRules) error
 	GetCareRulesForPlant(ctx context.Context, species string) (*models.CareRules, error)
-	GetPlants(ctx context.Context) ([]*models.Plant, error)
+	GetPlants(ctx context.Context, fltr *models.Filter) ([]*models.Plant, error)
 	AddPlant(ctx context.Context, plant *models.Plant) error
 }
 

@@ -7,6 +7,7 @@ import (
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
+	"plants/internal/models"
 	api "plants/internal/pkg/pb/plants/v1"
 )
 
@@ -14,13 +15,15 @@ func (h *Handler) GetPlantsV1(
 	ctx context.Context,
 	req *api.GetPlantsV1Request,
 ) (*api.GetPlantsV1Response, error) {
-	plants, err := h.storage.GetPlants(ctx)
+	filter := parseFilterWithoutLables(req)
+	plants, err := h.storage.GetPlants(ctx, filter)
 	if err != nil {
-		return nil, status.Error(codes.Internal, "could not get plants")
+		return nil, status.Errorf(codes.Internal, "could not get plants. Error %v", err)
 	}
 	result := make([]*api.GetPlantsV1Response_Plant, len(plants))
 	for i, p := range plants {
 		result[i] = &api.GetPlantsV1Response_Plant{
+			Id:        p.ID.Hex(),
 			Image:     p.Image,
 			Species:   p.Species,
 			Price:     p.Price,
@@ -31,4 +34,14 @@ func (h *Handler) GetPlantsV1(
 	return &api.GetPlantsV1Response{
 		Plants: result,
 	}, nil
+}
+
+func parseFilterWithoutLables(req *api.GetPlantsV1Request) *models.Filter {
+	return &models.Filter{
+		Page:   req.Page,
+		Size:   req.Size,
+		SortBy: req.Sort,
+		IsDesc: req.IsDesc,
+		Labels: nil,
+	}
 }
