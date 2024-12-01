@@ -70,7 +70,7 @@ func (s *Storage) GetCareRulesForPlant(ctx context.Context, species string) (*mo
 }
 
 func (s *Storage) GetPlants(ctx context.Context, fltr *models.Filter) ([]*models.Plant, error) {
-	filter := bson.D{{Key: "sold_at", Value: bson.E{Key: "$ne", Value: time.Time{}}}}
+	filter := bson.D{{"sold_at", time.Time{}}}
 	opts := options.Find()
 	opts.SetSort(bson.D{{Key: fltr.SortBy, Value: parseSortType(fltr.IsDesc)}})
 	opts.SetLimit(fltr.Size)
@@ -131,6 +131,6 @@ func parseLabelsToBSON(labels map[string]interface{}) bson.D {
 	if v, ok := labels["price_from"]; ok && v != -1 {
 		bsonFltr = append(bsonFltr, bson.E{Key: "price", Value: bson.M{"$gte": v}})
 	}
-	bsonFltr = append(bsonFltr, bson.E{Key: "sold_at", Value: bson.M{"$ne": time.Time{}}})
+	bsonFltr = append(bsonFltr, bson.E{Key: "sold_at", Value: time.Time{}})
 	return bsonFltr
 }
