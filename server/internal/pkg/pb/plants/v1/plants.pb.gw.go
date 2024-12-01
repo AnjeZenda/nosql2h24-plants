@@ -33,24 +33,6 @@ var _ = utilities.NewDoubleArray
 var _ = descriptor.ForMessage
 var _ = metadata.Join
 
-func request_PlantsAPI_GetExampleV1_0(ctx context.Context, marshaler runtime.Marshaler, client PlantsAPIClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq GetExampleV1Request
-	var metadata runtime.ServerMetadata
-
-	msg, err := client.GetExampleV1(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
-	return msg, metadata, err
-
-}
-
-func local_request_PlantsAPI_GetExampleV1_0(ctx context.Context, marshaler runtime.Marshaler, server PlantsAPIServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq GetExampleV1Request
-	var metadata runtime.ServerMetadata
-
-	msg, err := server.GetExampleV1(ctx, &protoReq)
-	return msg, metadata, err
-
-}
-
 func request_PlantsAPI_GetPlantsWithCareRulesV1_0(ctx context.Context, marshaler runtime.Marshaler, client PlantsAPIClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var protoReq GetPlantsWithCareRulesV1Request
 	var metadata runtime.ServerMetadata
@@ -99,6 +81,60 @@ func local_request_PlantsAPI_CreateNewCareRuleV1_0(ctx context.Context, marshale
 	}
 
 	msg, err := server.CreateNewCareRuleV1(ctx, &protoReq)
+	return msg, metadata, err
+
+}
+
+func request_PlantsAPI_GetPlantByIdV1_0(ctx context.Context, marshaler runtime.Marshaler, client PlantsAPIClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq GetPlantByIdV1Request
+	var metadata runtime.ServerMetadata
+
+	var (
+		val string
+		ok  bool
+		err error
+		_   = err
+	)
+
+	val, ok = pathParams["id"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "id")
+	}
+
+	protoReq.Id, err = runtime.String(val)
+
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "id", err)
+	}
+
+	msg, err := client.GetPlantByIdV1(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	return msg, metadata, err
+
+}
+
+func local_request_PlantsAPI_GetPlantByIdV1_0(ctx context.Context, marshaler runtime.Marshaler, server PlantsAPIServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq GetPlantByIdV1Request
+	var metadata runtime.ServerMetadata
+
+	var (
+		val string
+		ok  bool
+		err error
+		_   = err
+	)
+
+	val, ok = pathParams["id"]
+	if !ok {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "id")
+	}
+
+	protoReq.Id, err = runtime.String(val)
+
+	if err != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "id", err)
+	}
+
+	msg, err := server.GetPlantByIdV1(ctx, &protoReq)
 	return msg, metadata, err
 
 }
@@ -421,34 +457,45 @@ func local_request_PlantsAPI_GetFilteredPlantsV1_0(ctx context.Context, marshale
 
 }
 
+func request_PlantsAPI_BuyPlantV1_0(ctx context.Context, marshaler runtime.Marshaler, client PlantsAPIClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq BuyPlantV1Request
+	var metadata runtime.ServerMetadata
+
+	newReader, berr := utilities.IOReaderFactory(req.Body)
+	if berr != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", berr)
+	}
+	if err := marshaler.NewDecoder(newReader()).Decode(&protoReq); err != nil && err != io.EOF {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+
+	msg, err := client.BuyPlantV1(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	return msg, metadata, err
+
+}
+
+func local_request_PlantsAPI_BuyPlantV1_0(ctx context.Context, marshaler runtime.Marshaler, server PlantsAPIServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var protoReq BuyPlantV1Request
+	var metadata runtime.ServerMetadata
+
+	newReader, berr := utilities.IOReaderFactory(req.Body)
+	if berr != nil {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", berr)
+	}
+	if err := marshaler.NewDecoder(newReader()).Decode(&protoReq); err != nil && err != io.EOF {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+
+	msg, err := server.BuyPlantV1(ctx, &protoReq)
+	return msg, metadata, err
+
+}
+
 // RegisterPlantsAPIHandlerServer registers the http handlers for service PlantsAPI to "mux".
 // UnaryRPC     :call PlantsAPIServer directly.
 // StreamingRPC :currently unsupported pending https://github.com/grpc/grpc-go/issues/906.
 // Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterPlantsAPIHandlerFromEndpoint instead.
 func RegisterPlantsAPIHandlerServer(ctx context.Context, mux *runtime.ServeMux, server PlantsAPIServer) error {
-
-	mux.Handle("GET", pattern_PlantsAPI_GetExampleV1_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
-		ctx, cancel := context.WithCancel(req.Context())
-		defer cancel()
-		var stream runtime.ServerTransportStream
-		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
-		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req)
-		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
-			return
-		}
-		resp, md, err := local_request_PlantsAPI_GetExampleV1_0(rctx, inboundMarshaler, server, req, pathParams)
-		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
-		ctx = runtime.NewServerMetadataContext(ctx, md)
-		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
-			return
-		}
-
-		forward_PlantsAPI_GetExampleV1_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
-
-	})
 
 	mux.Handle("GET", pattern_PlantsAPI_GetPlantsWithCareRulesV1_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
@@ -493,6 +540,29 @@ func RegisterPlantsAPIHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 		}
 
 		forward_PlantsAPI_CreateNewCareRuleV1_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+
+	})
+
+	mux.Handle("GET", pattern_PlantsAPI_GetPlantByIdV1_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		var stream runtime.ServerTransportStream
+		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req)
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_PlantsAPI_GetPlantByIdV1_0(rctx, inboundMarshaler, server, req, pathParams)
+		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
+		ctx = runtime.NewServerMetadataContext(ctx, md)
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+
+		forward_PlantsAPI_GetPlantByIdV1_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
@@ -588,6 +658,29 @@ func RegisterPlantsAPIHandlerServer(ctx context.Context, mux *runtime.ServeMux, 
 
 	})
 
+	mux.Handle("POST", pattern_PlantsAPI_BuyPlantV1_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		var stream runtime.ServerTransportStream
+		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		rctx, err := runtime.AnnotateIncomingContext(ctx, mux, req)
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_PlantsAPI_BuyPlantV1_0(rctx, inboundMarshaler, server, req, pathParams)
+		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
+		ctx = runtime.NewServerMetadataContext(ctx, md)
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+
+		forward_PlantsAPI_BuyPlantV1_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+
+	})
+
 	return nil
 }
 
@@ -629,26 +722,6 @@ func RegisterPlantsAPIHandler(ctx context.Context, mux *runtime.ServeMux, conn *
 // "PlantsAPIClient" to call the correct interceptors.
 func RegisterPlantsAPIHandlerClient(ctx context.Context, mux *runtime.ServeMux, client PlantsAPIClient) error {
 
-	mux.Handle("GET", pattern_PlantsAPI_GetExampleV1_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
-		ctx, cancel := context.WithCancel(req.Context())
-		defer cancel()
-		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		rctx, err := runtime.AnnotateContext(ctx, mux, req)
-		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
-			return
-		}
-		resp, md, err := request_PlantsAPI_GetExampleV1_0(rctx, inboundMarshaler, client, req, pathParams)
-		ctx = runtime.NewServerMetadataContext(ctx, md)
-		if err != nil {
-			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
-			return
-		}
-
-		forward_PlantsAPI_GetExampleV1_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
-
-	})
-
 	mux.Handle("GET", pattern_PlantsAPI_GetPlantsWithCareRulesV1_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
@@ -686,6 +759,26 @@ func RegisterPlantsAPIHandlerClient(ctx context.Context, mux *runtime.ServeMux, 
 		}
 
 		forward_PlantsAPI_CreateNewCareRuleV1_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+
+	})
+
+	mux.Handle("GET", pattern_PlantsAPI_GetPlantByIdV1_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		rctx, err := runtime.AnnotateContext(ctx, mux, req)
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_PlantsAPI_GetPlantByIdV1_0(rctx, inboundMarshaler, client, req, pathParams)
+		ctx = runtime.NewServerMetadataContext(ctx, md)
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+
+		forward_PlantsAPI_GetPlantByIdV1_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 
 	})
 
@@ -769,15 +862,35 @@ func RegisterPlantsAPIHandlerClient(ctx context.Context, mux *runtime.ServeMux, 
 
 	})
 
+	mux.Handle("POST", pattern_PlantsAPI_BuyPlantV1_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		rctx, err := runtime.AnnotateContext(ctx, mux, req)
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_PlantsAPI_BuyPlantV1_0(rctx, inboundMarshaler, client, req, pathParams)
+		ctx = runtime.NewServerMetadataContext(ctx, md)
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+
+		forward_PlantsAPI_BuyPlantV1_0(ctx, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+
+	})
+
 	return nil
 }
 
 var (
-	pattern_PlantsAPI_GetExampleV1_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0}, []string{"example"}, "", runtime.AssumeColonVerbOpt(true)))
-
 	pattern_PlantsAPI_GetPlantsWithCareRulesV1_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"api", "care"}, "", runtime.AssumeColonVerbOpt(true)))
 
 	pattern_PlantsAPI_CreateNewCareRuleV1_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "care", "new"}, "", runtime.AssumeColonVerbOpt(true)))
+
+	pattern_PlantsAPI_GetPlantByIdV1_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"api", "palnts", "id"}, "", runtime.AssumeColonVerbOpt(true)))
 
 	pattern_PlantsAPI_GetCareRuleV1_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"api", "care", "species"}, "", runtime.AssumeColonVerbOpt(true)))
 
@@ -786,14 +899,16 @@ var (
 	pattern_PlantsAPI_CreatePlantV1_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "plants", "add"}, "", runtime.AssumeColonVerbOpt(true)))
 
 	pattern_PlantsAPI_GetFilteredPlantsV1_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 1, 0, 4, 1, 5, 3, 1, 0, 4, 1, 5, 4}, []string{"api", "palnts", "page", "size", "sort"}, "", runtime.AssumeColonVerbOpt(true)))
+
+	pattern_PlantsAPI_BuyPlantV1_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "plants", "buy"}, "", runtime.AssumeColonVerbOpt(true)))
 )
 
 var (
-	forward_PlantsAPI_GetExampleV1_0 = runtime.ForwardResponseMessage
-
 	forward_PlantsAPI_GetPlantsWithCareRulesV1_0 = runtime.ForwardResponseMessage
 
 	forward_PlantsAPI_CreateNewCareRuleV1_0 = runtime.ForwardResponseMessage
+
+	forward_PlantsAPI_GetPlantByIdV1_0 = runtime.ForwardResponseMessage
 
 	forward_PlantsAPI_GetCareRuleV1_0 = runtime.ForwardResponseMessage
 
@@ -802,4 +917,6 @@ var (
 	forward_PlantsAPI_CreatePlantV1_0 = runtime.ForwardResponseMessage
 
 	forward_PlantsAPI_GetFilteredPlantsV1_0 = runtime.ForwardResponseMessage
+
+	forward_PlantsAPI_BuyPlantV1_0 = runtime.ForwardResponseMessage
 )

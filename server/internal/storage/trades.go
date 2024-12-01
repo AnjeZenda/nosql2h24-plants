@@ -30,3 +30,12 @@ func (s *Storage) GetTrades(ctx context.Context, id primitive.ObjectID, role str
 
 	return result, nil
 }
+
+func (s *Storage) CreateBuyTrade(ctx context.Context, trade *models.Trade) error {
+	collection := s.DataBase.Collection("trades")
+	_, err := collection.InsertOne(ctx, trade)
+	if err != nil {
+		return err
+	}
+	return nil
+}
