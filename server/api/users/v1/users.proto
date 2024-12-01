@@ -60,7 +60,7 @@ message UserRegisterV1Request{
   string fatherName = 3;
   oneof login{
     string email = 4;
-    string phone_number = 5;
+    string phoneNumber = 5;
   }
   string password = 6;
 }
