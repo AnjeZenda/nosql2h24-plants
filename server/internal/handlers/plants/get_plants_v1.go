@@ -41,6 +41,7 @@ func parseFilterWithoutLables(req *api.GetPlantsV1Request) *models.Filter {
 		Page:   req.Page,
 		Size:   req.Size,
 		SortBy: req.Sort,
+		IsDesc: req.IsDesc,
 		Labels: nil,
 	}
 }
