@@ -9,6 +9,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/options"
+
 )
 
 func (s *Storage) GetPlantsWithCareRules(ctx context.Context) ([]*models.Plant, error) {
@@ -104,6 +105,28 @@ func (s *Storage) AddPlant(ctx context.Context, plant *models.Plant) error {
 	return nil
 }
 
+
+func (s *Storage) GetPlantsForTrade(ctx context.Context, id string) ([]*models.Plant, error) {
+	collection := s.DataBase.Collection("plants")
+
+	filter := bson.D{
+		{"user_id", id},
+		{"sold_at", ""},
+	}
+	doc, err := collection.Find(ctx, filter)
+	if err != nil {
+		return nil, err
+	}
+	plants := make([]*models.Plant, 0)
+	for doc.Next(ctx) {
+		var plant models.Plant
+		if err := doc.Decode(&plant); err != nil {
+			return nil, err
+		}
+		plants = append(plants, &plant)
+	}
+	return plants, nil
+
 func (s *Storage) GetPlant(ctx context.Context, id string) (*models.Plant, error) {
 	collection := s.DataBase.Collection("plants")
 	objID, err := primitive.ObjectIDFromHex(id)
@@ -128,6 +151,7 @@ func (s *Storage) SoldPlant(ctx context.Context, id string) error {
 		return err
 	}
 	return nil
+
 }
 
 func parseSortType(isDesc bool) int8 {
@@ -160,4 +184,5 @@ func parseLabelsToBSON(labels map[string]interface{}) bson.D {
 	}
 	bsonFltr = append(bsonFltr, bson.E{Key: "sold_at", Value: time.Time{}})
 	return bsonFltr
+
 }

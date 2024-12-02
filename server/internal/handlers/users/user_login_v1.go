@@ -18,7 +18,6 @@ func (h *Handler) UserLoginV1(
 	if req.GetLogin() == "" || req.GetPassword() == "" {
 		return &api.UserLoginV1Response{}, status.Error(codes.InvalidArgument, "login and password are required")
 	}
-
 	id, role, err := h.storage.GetUserByLoginAndPassword(ctx, req.GetLogin(), req.GetPassword())
 	if err != nil {
 		if errors.Is(err, repo.ErrUserNotFound) {

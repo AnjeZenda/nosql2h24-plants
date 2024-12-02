@@ -18,6 +18,27 @@ service Trades {
       get: "/api/trade/out/{id}"
     };
   }
+  rpc PostTradeV1 (PostTradeV1Request) returns (PostTradeV1Response){
+    option (google.api.http) = {
+      post: "/api/trade"
+      body: "*"
+    };
+  }
+  rpc AcceptTradeV1 (AcceptTradeV1Request) returns (AcceptTradeV1Response){
+    option (google.api.http) = {
+      post: "/api/trade/accept/{trade_id}"
+    };
+  }
+  rpc RejectTradeV1 (RejectTradeV1Request) returns (RejectTradeV1Response){
+    option (google.api.http) = {
+      post: "/api/trade/reject/{trade_id}"
+    };
+  }
+  rpc PostBuyV1 (PostBuyV1Request) returns (PostBuyV1Response){
+    option (google.api.http) = {
+      post: "/api/buy"
+    };
+  }
 }
 
 enum Status {
@@ -30,6 +51,7 @@ enum Status {
 message Trade{
   message Plant{
     string name = 1;
+    string image = 2;
   }
   message User{
     string name = 1;
@@ -37,9 +59,10 @@ message Trade{
     string fatherName = 3;
     Plant plant = 4;
   }
-  User offerer = 1;
-  User accepter = 2;
-  Status status = 3;
+  string id = 1;
+  User offerer = 2;
+  User accepter = 3;
+  Status status = 4;
 }
 
 message GetTradeInV1Request{
@@ -54,4 +77,41 @@ message GetTradeOutV1Request{
 }
 message GetTradeOutV1Response{
   repeated Trade trade = 1;
+}
+
+message PostTradeV1Request{
+  string offererId = 1;
+  string offererPlantId = 2;
+  string accepterId = 3;
+  string accepterPlantId = 4;
+}
+
+message PostTradeV1Response{
+
+}
+
+message AcceptTradeV1Request{
+  string tradeId = 1;
+}
+
+message AcceptTradeV1Response{
+
+}
+
+message RejectTradeV1Request{
+  string tradeId = 1;
+}
+
+message RejectTradeV1Response{
+
+}
+
+message PostBuyV1Request{
+  string offererId = 1;
+  string offererPlantId = 2;
+  string accepterId = 3;
+}
+
+message PostBuyV1Response{
+
 }

@@ -28,6 +28,14 @@ service User {
       response_body: "user"
     };
   };
+
+  rpc UpdateUserV1 (UpdateUserV1Request) returns (UpdateUserV1Response){
+    option (google.api.http) = {
+      post: "/api/v1/user/{id}"
+      body: "*"
+    };
+  };
+
 }
 
 message UserLoginV1Request{
@@ -50,8 +58,11 @@ message UserRegisterV1Request{
   string name = 1;
   string surname = 2;
   string fatherName = 3;
-  string email = 4;
-  string password = 5;
+  oneof login{
+    string email = 4;
+    string phoneNumber = 5;
+  }
+  string password = 6;
 }
 
 message UserRegisterV1Response{}
@@ -72,4 +83,18 @@ message GetUserV1Response{
     google.protobuf.Timestamp updatedAt = 8;
   }
   User user = 1;
+}
+
+message UpdateUserV1Request{
+  string id = 1;
+  string name = 2;
+  string surname = 3;
+  string fatherName = 4;
+  string email = 5;
+  string phoneNumber = 6;
+  string photo = 7;
+}
+
+message UpdateUserV1Response{
+
 }

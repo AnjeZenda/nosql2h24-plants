@@ -13,6 +13,7 @@ type Storage interface {
 	GetCareRulesForPlant(ctx context.Context, species string) (*models.CareRules, error)
 	GetPlants(ctx context.Context, fltr *models.Filter) ([]*models.Plant, error)
 	AddPlant(ctx context.Context, plant *models.Plant) error
+	GetPlantsForTrade(ctx context.Context, id string) ([]*models.Plant, error)
 	GetPlant(ctx context.Context, id string) (*models.Plant, error)
 	GetUserById(ctx context.Context, id string) (models.User, error)
 	CreateBuyTrade(ctx context.Context, trade *models.Trade) error

@@ -11,8 +11,9 @@ import (
 type storage interface {
 	GetUserById(context.Context, string) (models.User, error)
 	GetUserByLoginAndPassword(context.Context, string, string) (string, models.Role, error)
-	GetUserByEmail(context.Context, string) (models.User, error)
+	GetUserByLogin(context.Context, string) (models.User, error)
 	CreateUser(context.Context, models.User) error
+	UpdateUser(context.Context, string, string, string, string, string, string, string) error
 }
 
 type Handler struct {

@@ -3,8 +3,9 @@ package trades
 import (
 	"context"
 
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	api "plants/internal/pkg/pb/trades/v1"
+
+	"go.mongodb.org/mongo-driver/bson/primitive"
 
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -29,17 +30,18 @@ func (h *Handler) GetTradeInV1(
 	res := &api.GetTradeInV1Response{Trade: make([]*api.Trade, 0)}
 	for _, trade := range trades {
 		res.Trade = append(res.Trade, &api.Trade{
+			Id: trade.ID.Hex(),
 			Offerer: &api.Trade_User{
 				Name:       trade.Offerer.Name,
 				Surname:    trade.Offerer.Surname,
 				FatherName: trade.Offerer.FatherName,
-				Plant:      &api.Trade_Plant{Name: trade.Offerer.Plant.Name},
+				Plant:      &api.Trade_Plant{Name: trade.Offerer.Plant.Name, Image: trade.Offerer.Plant.Image},
 			},
 			Accepter: &api.Trade_User{
 				Name:       trade.Accepter.Name,
 				Surname:    trade.Accepter.Surname,
 				FatherName: trade.Accepter.FatherName,
-				Plant:      &api.Trade_Plant{Name: trade.Accepter.Plant.Name},
+				Plant:      &api.Trade_Plant{Name: trade.Accepter.Plant.Name, Image: trade.Accepter.Plant.Image},
 			},
 			Status: api.Status(trade.Status),
 		})
