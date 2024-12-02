@@ -20,15 +20,15 @@ func (h *Handler) PostBuyV1(
 
 	offerer, erro := h.storage.GetUserByIdForTrade(ctx, req.OffererId)
 	if erro != nil {
-		return &api.PostTradeV1Response{}, status.Error(codes.Internal, "could not find accepters offerer")
+		return &api.PostBuyV1Response{}, status.Error(codes.Internal, "could not find accepters offerer")
 	}
 	accepter, erra := h.storage.GetUserByIdForTrade(ctx, req.AccepterId)
 	if erra != nil {
-		return &api.PostTradeV1Response{}, status.Error(codes.Internal, "could not find accepter")
+		return &api.PostBuyV1Response{}, status.Error(codes.Internal, "could not find accepter")
 	}
 	offPlant, errop := h.storage.GetPlantByIdForTrade(ctx, req.OffererPlantId)
 	if errop != nil {
-		return &api.PostTradeV1Response{}, status.Error(codes.Internal, "could not find offerers plant")
+		return &api.PostBuyV1Response{}, status.Error(codes.Internal, "could not find offerers plant")
 	}
 
 	err := h.storage.CreateBuyTrade(ctx, &models.Trade{
@@ -55,7 +55,7 @@ func (h *Handler) PostBuyV1(
 		CreatedAt: time.Now().UTC(),
 		UpdatedAt: time.Now().UTC(),
 		Status:    1,
-		Type:      "trade",
+		Type:      "buy",
 	})
 	if err != nil {
 		return nil, status.Error(codes.Internal, "could not create trade")

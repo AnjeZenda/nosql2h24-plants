@@ -35,7 +35,7 @@ func (h *Handler) PostTradeV1(
 		return &api.PostTradeV1Response{}, status.Error(codes.Internal, "could not find accepters plant")
 	}
 
-	err := h.storage.PostTrade(ctx, &models.Trade{
+	err := h.storage.CreateBuyTrade(ctx, &models.Trade{
 		ID: primitive.NewObjectID(),
 		Offerer: models.TradeUser{
 			ID:         offerer.ID,

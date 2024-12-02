@@ -167,4 +167,3 @@ func (s *Storage) UpdateTrade(ctx context.Context,
 
 	return nil
 }
-
