@@ -55,7 +55,7 @@ func (h *Handler) PostBuyV1(
 		CreatedAt: time.Now().UTC(),
 		UpdatedAt: time.Now().UTC(),
 		Status:    1,
-		Type:      "trade",
+		Type:      "buy",
 	})
 	if err != nil {
 		return nil, status.Error(codes.Internal, "could not create trade")
