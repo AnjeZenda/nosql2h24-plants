@@ -16,6 +16,110 @@
     "application/json"
   ],
   "paths": {
+    "/api/buy": {
+      "post": {
+        "operationId": "Trades_PostBuyV1",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1PostBuyV1Response"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "offererId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "offererPlantId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "accepterId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Trades"
+        ]
+      }
+    },
+    "/api/trade": {
+      "post": {
+        "operationId": "Trades_PostTradeV1",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1PostTradeV1Response"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1PostTradeV1Request"
+            }
+          }
+        ],
+        "tags": [
+          "Trades"
+        ]
+      }
+    },
+    "/api/trade/accept/{tradeId}": {
+      "post": {
+        "operationId": "Trades_AcceptTradeV1",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1AcceptTradeV1Response"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "tradeId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Trades"
+        ]
+      }
+    },
     "/api/trade/in/{id}": {
       "get": {
         "operationId": "Trades_GetTradeInV1",
@@ -75,6 +179,36 @@
           "Trades"
         ]
       }
+    },
+    "/api/trade/reject/{tradeId}": {
+      "post": {
+        "operationId": "Trades_RejectTradeV1",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1RejectTradeV1Response"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "tradeId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Trades"
+        ]
+      }
     }
   },
   "definitions": {
@@ -82,6 +216,9 @@
       "type": "object",
       "properties": {
         "name": {
+          "type": "string"
+        },
+        "image": {
           "type": "string"
         }
       }
@@ -141,6 +278,9 @@
       ],
       "default": "STATUS_UNSPECIFIED"
     },
+    "v1AcceptTradeV1Response": {
+      "type": "object"
+    },
     "v1GetTradeInV1Response": {
       "type": "object",
       "properties": {
@@ -165,9 +305,38 @@
         }
       }
     },
+    "v1PostBuyV1Response": {
+      "type": "object"
+    },
+    "v1PostTradeV1Request": {
+      "type": "object",
+      "properties": {
+        "offererId": {
+          "type": "string"
+        },
+        "offererPlantId": {
+          "type": "string"
+        },
+        "accepterId": {
+          "type": "string"
+        },
+        "accepterPlantId": {
+          "type": "string"
+        }
+      }
+    },
+    "v1PostTradeV1Response": {
+      "type": "object"
+    },
+    "v1RejectTradeV1Response": {
+      "type": "object"
+    },
     "v1Trade": {
       "type": "object",
       "properties": {
+        "id": {
+          "type": "string"
+        },
         "offerer": {
           "$ref": "#/definitions/TradeUser"
         },

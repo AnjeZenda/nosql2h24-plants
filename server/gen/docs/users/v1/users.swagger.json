@@ -108,6 +108,42 @@
         "tags": [
           "User"
         ]
+      },
+      "post": {
+        "operationId": "User_UpdateUserV1",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1UpdateUserV1Response"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UserUpdateUserV1Body"
+            }
+          }
+        ],
+        "tags": [
+          "User"
+        ]
       }
     }
   },
@@ -140,6 +176,29 @@
         "updatedAt": {
           "type": "string",
           "format": "date-time"
+        }
+      }
+    },
+    "UserUpdateUserV1Body": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "surname": {
+          "type": "string"
+        },
+        "fatherName": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "phoneNumber": {
+          "type": "string"
+        },
+        "photo": {
+          "type": "string"
         }
       }
     },
@@ -188,6 +247,9 @@
       ],
       "default": "ROLE_UNSPECIFIED"
     },
+    "v1UpdateUserV1Response": {
+      "type": "object"
+    },
     "v1UserLoginV1Request": {
       "type": "object",
       "properties": {
@@ -223,6 +285,9 @@
           "type": "string"
         },
         "email": {
+          "type": "string"
+        },
+        "phoneNumber": {
           "type": "string"
         },
         "password": {

@@ -17,10 +17,10 @@ func (h *Handler) GetPlantsWithCareRulesV1(
 	if err != nil {
 		return nil, status.Error(codes.Internal, "internal error occured")
 	}
-	result := make([]*api.GetPlantsWithCareRulesV1Response_Plant, 0, len(plants))
+	result := make([]*api.GetPlantsWithCareRulesV1Response_PlantInfo, 0, len(plants))
 
 	for _, p := range plants {
-		result = append(result, &api.GetPlantsWithCareRulesV1Response_Plant{
+		result = append(result, &api.GetPlantsWithCareRulesV1Response_PlantInfo{
 			Species: p.Species,
 			Image:   p.Image,
 			Id:      p.ID.Hex(),

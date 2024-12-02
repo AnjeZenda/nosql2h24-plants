@@ -132,12 +132,12 @@
     },
     "/api/palnts/{page}/{size}/{sort}": {
       "post": {
-        "operationId": "PlantsAPI_GetFilteredPlantsV1",
+        "operationId": "PlantsAPI_GetPlantsV1",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1GetFilteredPlantsV1Response"
+              "$ref": "#/definitions/v1GetPlantsV1Response"
             }
           },
           "default": {
@@ -173,7 +173,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/PlantsAPIGetFilteredPlantsV1Body"
+              "$ref": "#/definitions/PlantsAPIGetPlantsV1Body"
             }
           }
         ],
@@ -246,14 +246,14 @@
         ]
       }
     },
-    "/api/plants/{page}/{size}/{sort}": {
-      "get": {
-        "operationId": "PlantsAPI_GetPlantsV1",
+    "/api/plants/buy/{userId}": {
+      "post": {
+        "operationId": "PlantsAPI_GetBoughtPlantsV1",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1GetPlantsV1Response"
+              "$ref": "#/definitions/v1GetBoughtPlantsV1Response"
             }
           },
           "default": {
@@ -265,30 +265,84 @@
         },
         "parameters": [
           {
-            "name": "page",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "format": "int64"
-          },
-          {
-            "name": "size",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "format": "int64"
-          },
-          {
-            "name": "sort",
+            "name": "userId",
             "in": "path",
             "required": true,
             "type": "string"
           },
           {
-            "name": "isDesc",
-            "in": "query",
-            "required": false,
-            "type": "boolean"
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PlantsAPIGetBoughtPlantsV1Body"
+            }
+          }
+        ],
+        "tags": [
+          "PlantsAPI"
+        ]
+      }
+    },
+    "/api/plants/trade/{userId}": {
+      "get": {
+        "operationId": "PlantsAPI_GetPlantsForTradeV1",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetPlantsForTradeV1Response"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "PlantsAPI"
+        ]
+      },
+      "post": {
+        "operationId": "PlantsAPI_GetTradedPlantsV1",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetTradedPlantsV1Response"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PlantsAPIGetTradedPlantsV1Body"
+            }
           }
         ],
         "tags": [
@@ -298,69 +352,30 @@
     }
   },
   "definitions": {
-    "GetFilteredPlantsV1RequestFilter": {
+    "PlantsAPIGetBoughtPlantsV1Body": {
       "type": "object",
       "properties": {
-        "species": {
-          "type": "string"
-        },
-        "type": {
-          "type": "string"
-        },
-        "size": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "lightCondition": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "wateringFrequency": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "temperatureRegime": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "careComplexity": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "description": {
-          "type": "string"
-        },
-        "place": {
-          "type": "string"
-        },
-        "priceFrom": {
-          "type": "number",
-          "format": "float"
-        },
-        "priceTo": {
-          "type": "number",
-          "format": "float"
+        "filter": {
+          "$ref": "#/definitions/v1Filter"
         }
       }
     },
-    "PlantsAPIGetFilteredPlantsV1Body": {
+    "PlantsAPIGetPlantsV1Body": {
       "type": "object",
       "properties": {
         "isDesc": {
           "type": "boolean"
         },
         "filter": {
-          "$ref": "#/definitions/GetFilteredPlantsV1RequestFilter"
+          "$ref": "#/definitions/v1Filter"
+        }
+      }
+    },
+    "PlantsAPIGetTradedPlantsV1Body": {
+      "type": "object",
+      "properties": {
+        "filter": {
+          "$ref": "#/definitions/v1Filter"
         }
       }
     },
@@ -517,6 +532,73 @@
     "v1CreatePlantV1Response": {
       "type": "object"
     },
+    "v1Filter": {
+      "type": "object",
+      "properties": {
+        "species": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "size": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "lightCondition": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "wateringFrequency": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "temperatureRegime": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "careComplexity": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "description": {
+          "type": "string"
+        },
+        "place": {
+          "type": "string"
+        },
+        "priceFrom": {
+          "type": "number",
+          "format": "float"
+        },
+        "priceTo": {
+          "type": "number",
+          "format": "float"
+        }
+      }
+    },
+    "v1GetBoughtPlantsV1Response": {
+      "type": "object",
+      "properties": {
+        "plants": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Plant"
+          }
+        }
+      }
+    },
     "v1GetCareRuleV1Response": {
       "type": "object",
       "properties": {
@@ -529,55 +611,18 @@
         }
       }
     },
-    "v1GetFilteredPlantsV1Response": {
-      "type": "object",
-      "properties": {
-        "plants": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "$ref": "#/definitions/v1GetFilteredPlantsV1ResponsePlant"
-          }
-        }
-      }
-    },
-    "v1GetFilteredPlantsV1ResponsePlant": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "image": {
-          "type": "string"
-        },
-        "species": {
-          "type": "string"
-        },
-        "price": {
-          "type": "number",
-          "format": "float"
-        },
-        "createdAt": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "place": {
-          "type": "string"
-        }
-      }
-    },
     "v1GetPlantByIdV1Response": {
       "type": "object",
       "properties": {
         "plant": {
-          "$ref": "#/definitions/v1GetPlantByIdV1ResponsePlant"
+          "$ref": "#/definitions/v1GetPlantByIdV1ResponsePlantInfo"
         },
         "user": {
           "$ref": "#/definitions/v1GetPlantByIdV1ResponseUser"
         }
       }
     },
-    "v1GetPlantByIdV1ResponsePlant": {
+    "v1GetPlantByIdV1ResponsePlantInfo": {
       "type": "object",
       "properties": {
         "species": {
@@ -633,6 +678,36 @@
         }
       }
     },
+    "v1GetPlantsForTradeV1Response": {
+      "type": "object",
+      "properties": {
+        "plants": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1GetPlantsForTradeV1ResponsePlantInfo"
+          }
+        }
+      }
+    },
+    "v1GetPlantsForTradeV1ResponsePlantInfo": {
+      "type": "object",
+      "properties": {
+        "species": {
+          "type": "string"
+        },
+        "price": {
+          "type": "string"
+        },
+        "place": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
     "v1GetPlantsV1Response": {
       "type": "object",
       "properties": {
@@ -640,12 +715,50 @@
           "type": "array",
           "items": {
             "type": "object",
-            "$ref": "#/definitions/v1GetPlantsV1ResponsePlant"
+            "$ref": "#/definitions/v1Plant"
           }
         }
       }
     },
-    "v1GetPlantsV1ResponsePlant": {
+    "v1GetPlantsWithCareRulesV1Response": {
+      "type": "object",
+      "properties": {
+        "plants": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1GetPlantsWithCareRulesV1ResponsePlantInfo"
+          }
+        }
+      }
+    },
+    "v1GetPlantsWithCareRulesV1ResponsePlantInfo": {
+      "type": "object",
+      "properties": {
+        "species": {
+          "type": "string"
+        },
+        "image": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        }
+      }
+    },
+    "v1GetTradedPlantsV1Response": {
+      "type": "object",
+      "properties": {
+        "plants": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Plant"
+          }
+        }
+      }
+    },
+    "v1Plant": {
       "type": "object",
       "properties": {
         "id": {
@@ -666,32 +779,6 @@
           "format": "date-time"
         },
         "place": {
-          "type": "string"
-        }
-      }
-    },
-    "v1GetPlantsWithCareRulesV1Response": {
-      "type": "object",
-      "properties": {
-        "plants": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "$ref": "#/definitions/v1GetPlantsWithCareRulesV1ResponsePlant"
-          }
-        }
-      }
-    },
-    "v1GetPlantsWithCareRulesV1ResponsePlant": {
-      "type": "object",
-      "properties": {
-        "species": {
-          "type": "string"
-        },
-        "image": {
-          "type": "string"
-        },
-        "id": {
           "type": "string"
         }
       }

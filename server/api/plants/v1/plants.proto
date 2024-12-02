@@ -32,12 +32,6 @@ service PlantsAPI {
         };
     };
 
-    rpc GetPlantsV1 (GetPlantsV1Request) returns (GetPlantsV1Response) {
-        option (google.api.http) = {
-            get: "/api/plants/{page}/{size}/{sort}"
-        };
-    };
-
     rpc CreatePlantV1 (CreatePlantV1Request) returns (CreatePlantV1Response) {
         option (google.api.http) = {
             post: "/api/plants/add"
@@ -45,13 +39,13 @@ service PlantsAPI {
         };
     };
 
-
     rpc GetPlantsForTradeV1 (GetPlantsForTradeV1Request) returns (GetPlantsForTradeV1Response) {
         option (google.api.http) = {
-            get: "/api/plants/trade/{user_id}"
+            get: "/api/plants/trade/{userId}"
         };
     };
-    rpc GetFilteredPlantsV1 (GetFilteredPlantsV1Request) returns (GetFilteredPlantsV1Response) {
+
+    rpc GetPlantsV1 (GetPlantsV1Request) returns (GetPlantsV1Response) {
         option (google.api.http) = {
             post: "/api/palnts/{page}/{size}/{sort}"
             body: "*"
@@ -64,6 +58,34 @@ service PlantsAPI {
             body: "*"
         };
     };
+
+    rpc GetBoughtPlantsV1 (GetBoughtPlantsV1Request) returns (GetBoughtPlantsV1Response) {
+        option (google.api.http) = {
+            post: "/api/plants/buy/{userId}"
+            body: "*"
+        };
+    };
+
+    rpc GetTradedPlantsV1 (GetTradedPlantsV1Request) returns (GetTradedPlantsV1Response) {
+        option (google.api.http) = {
+            post: "/api/plants/trade/{userId}"
+            body: "*"
+        };
+    };
+}
+
+message Filter {
+    string species = 1;
+    string type = 2;
+    repeated string size = 3;
+    repeated string lightCondition = 4;
+    repeated string wateringFrequency = 5;
+    repeated string temperatureRegime = 6;
+    repeated string careComplexity = 7;
+    string description = 8;
+    string place = 9;
+    float priceFrom = 10; 
+    float priceTo = 11;  
 }
 
 message CreatePlantV1Request {
@@ -85,55 +107,15 @@ message CreatePlantV1Request {
 
 message CreatePlantV1Response {}
 
-message GetFilteredPlantsV1Request{
-    int64 page = 1;
-    int64 size = 2;
-    string sort = 3;
-    bool isDesc = 4;
-    message Filter {
-        string species = 1;
-        string type = 2;
-        repeated string size = 3;
-        repeated string lightCondition = 4;
-        repeated string wateringFrequency = 5;
-        repeated string temperatureRegime = 6;
-        repeated string careComplexity = 7;
-        string description = 8;
-        string place = 9;
-        float priceFrom = 10; 
-        float priceTo = 11;  
-    }
-    Filter filter = 5;
-}
-
-message GetFilteredPlantsV1Response{
-    message Plant {
-        string id = 1;
-        string image = 2;
-        string species = 3; 
-        float price = 4; 
-        google.protobuf.Timestamp createdAt = 5;
-        string place = 6;
-    }
-    repeated Plant plants = 1;
-}
-
 message GetPlantsV1Request {
     int64 page = 1;
     int64 size = 2;
     string sort = 3;
     bool isDesc = 4;
+    Filter filter = 5;
 }
 
 message GetPlantsV1Response {
-    message Plant {
-        string id = 1;
-        string image = 2;
-        string species = 3; 
-        float price = 4; 
-        google.protobuf.Timestamp createdAt = 5;
-        string place = 6;
-    }
     repeated Plant plants = 1;
 }
 
@@ -168,28 +150,28 @@ message CreateNewCareRuleV1Response {}
 message GetPlantsWithCareRulesV1Request {}
     
 message GetPlantsWithCareRulesV1Response {
-    message Plant {
+    message PlantInfo {
         string species = 1;
         string image = 2;
         string id = 3;
     }
-    repeated Plant plants = 1;
+    repeated PlantInfo plants = 1;
 }
 
 
 message GetPlantsForTradeV1Request {
-    string user_id = 1;
+    string userId = 1;
 }
 
 message GetPlantsForTradeV1Response {
-    message Plant{
+    message PlantInfo{
         string species = 1;
         string price = 2;
         string place = 3;
         google.protobuf.Timestamp createdAt = 4;
         
     }
-    repeated Plant plants = 1;
+    repeated PlantInfo plants = 1;
 }
 
 message GetExampleV1Request {}
@@ -198,7 +180,7 @@ message GetPlantByIdV1Request{
     string id  = 1;
 }
 message GetPlantByIdV1Response{
-    message Plant {
+    message PlantInfo {
         string species = 1;
         string type = 2;
         string size = 3;
@@ -217,7 +199,7 @@ message GetPlantByIdV1Response{
         string surname = 3;
         string fatherName = 4;
     }
-    Plant plant = 1;
+    PlantInfo plant = 1;
     User user = 2;
 }
 
@@ -230,5 +212,29 @@ message BuyPlantV1Request{
 }
 message BuyPlantV1Response{
 
+}
 
+message GetBoughtPlantsV1Request{
+    string userId = 1;
+    Filter filter = 2; 
+}
+message GetBoughtPlantsV1Response{
+    repeated Plant plants = 1;
+}
+
+message GetTradedPlantsV1Request{
+    string userId = 1;
+    Filter filter = 2;
+}
+message GetTradedPlantsV1Response{
+    repeated Plant plants = 1;
+}
+
+message Plant {
+    string id = 1;
+    string image = 2;
+    string species = 3; 
+    float price = 4; 
+    google.protobuf.Timestamp createdAt = 5;
+    string place = 6;
 }
