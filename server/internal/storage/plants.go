@@ -9,7 +9,6 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/options"
-
 )
 
 func (s *Storage) GetPlantsWithCareRules(ctx context.Context) ([]*models.Plant, error) {
@@ -105,7 +104,6 @@ func (s *Storage) AddPlant(ctx context.Context, plant *models.Plant) error {
 	return nil
 }
 
-
 func (s *Storage) GetPlantsForTrade(ctx context.Context, id string) ([]*models.Plant, error) {
 	collection := s.DataBase.Collection("plants")
 
@@ -126,6 +124,7 @@ func (s *Storage) GetPlantsForTrade(ctx context.Context, id string) ([]*models.P
 		plants = append(plants, &plant)
 	}
 	return plants, nil
+}
 
 func (s *Storage) GetPlant(ctx context.Context, id string) (*models.Plant, error) {
 	collection := s.DataBase.Collection("plants")

@@ -26,12 +26,12 @@ service Trades {
   }
   rpc AcceptTradeV1 (AcceptTradeV1Request) returns (AcceptTradeV1Response){
     option (google.api.http) = {
-      post: "/api/trade/accept/{trade_id}"
+      post: "/api/trade/accept/{tradeId}"
     };
   }
   rpc RejectTradeV1 (RejectTradeV1Request) returns (RejectTradeV1Response){
     option (google.api.http) = {
-      post: "/api/trade/reject/{trade_id}"
+      post: "/api/trade/reject/{tradeId}"
     };
   }
   rpc PostBuyV1 (PostBuyV1Request) returns (PostBuyV1Response){

@@ -20,7 +20,7 @@ type Storage interface {
 	GetUserByIdForTrade(context.Context, string) (models.User, error)
 	GetPlantByIdForTrade(context.Context, string) (models.Plant, error)
 	UpdateTrade(context.Context, string, int) error
-	PostBuy(context.Context, *models.Trade) error
+	CreateBuyTrade(context.Context, *models.Trade) error
 }
 
 type Handler struct {
