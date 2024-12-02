@@ -99,14 +99,35 @@ func (s *Storage) UpdateUser(ctx context.Context,
 	}
 
 	filter := bson.M{"_id": objID}
+	var usr models.User
+
+	if name != "" {
+		usr.Name = name
+	}
+	if surname != "" {
+		usr.Surname = surname
+	}
+	if fatherName != "" {
+		usr.FatherName = fatherName
+	}
+	if email != "" {
+		usr.Email = email
+	}
+	if phoneNumber != "" {
+		usr.PhoneNumber = phoneNumber
+	}
+	if photo != "" {
+		usr.Photo = photo
+	}
+
 	update := bson.D{
 		{"$set", bson.D{
-			{"name", name},
-			{"surname", surname},
-			{"father_name", fatherName},
-			{"email", email},
-			{"phone_number", phoneNumber},
-			{"photo", photo},
+			{"name", usr.Name},
+			{"surname", usr.Surname},
+			{"father_name", usr.FatherName},
+			{"email", usr.Email},
+			{"phone_number", usr.PhoneNumber},
+			{"photo", usr.Photo},
 		}},
 	}
 	_, errres := collection.UpdateOne(ctx, filter, update)
