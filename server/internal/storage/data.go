@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"io/ioutil"
 	"log"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -33,33 +32,18 @@ func (s *Storage) ImportDB(ctx context.Context, dataJson string) error {
 		if len(documents) == 0 {
 			continue
 		}
-
+		newDoc := make([]interface{}, len(documents))
+		for i := range documents {
+			newDoc[i] = documents[i]
+		}
 		collection := s.Client.Database("plants_market").Collection(collectionName)
-		_, err := collection.InsertMany(ctx, documents)
+		_, err := collection.InsertMany(ctx, newDoc)
 		if err != nil {
 			return errors.New("ошибка вставки данных в коллекцию " + collectionName + ": " + err.Error())
 		}
 	}
 
 	return nil
-}
-
-func main() {
-	// Пример использования функции импорта
-
-	// Читаем JSON из файла (пример)
-	filePath := "database.json" // Укажите путь к вашему файлу
-	jsonData, err := ioutil.ReadFile(filePath)
-	if err != nil {
-		log.Fatalf("Ошибка чтения файла: %v", err)
-	}
-
-	// Импортируем данные в MongoDB
-	if err := ImportDatabase(string(jsonData)); err != nil {
-		log.Fatalf("Ошибка импорта базы данных: %v", err)
-	}
-
-	log.Println("Импорт базы данных завершён успешно.")
 }
 
 func (s *Storage) ExportDB(ctx context.Context) (string, error) {

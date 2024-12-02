@@ -10,9 +10,9 @@ func (h *Handler) ImportDBV1(
 	ctx context.Context,
 	req *api.ImportDBV1Request,
 ) (*api.ImportDBV1Response, error) {
-	err := ImportDB(ctx, req.Db)
+	err := h.storage.ImportDB(ctx, req.Db)
 	if err != nil {
-		return &api.ImportDBV1Response{}, ErrDB
+		return &api.ImportDBV1Response{}, err
 	}
 	return &api.ImportDBV1Response{}, nil
 }

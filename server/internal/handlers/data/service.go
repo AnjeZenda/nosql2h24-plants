@@ -3,12 +3,12 @@ package data
 import (
 	"context"
 
-	v1 "data/internal/pkg/pb/data/v1"
+	v1 "plants/internal/pkg/pb/data/v1"
 )
 
 type Storage interface {
 	ExportDB(context.Context) (string, error)
-	ImportDB(context.Context, string), error
+	ImportDB(context.Context, string) error
 }
 
 type Handler struct {
