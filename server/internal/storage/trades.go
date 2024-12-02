@@ -49,7 +49,7 @@ func (s *Storage) CreateBuyTrade(ctx context.Context, trade *models.Trade) error
 	return nil
 }
 
-func (s *Storage) PostBuy(ctx context.Context, trade *models.Trade) error {
+func (s *Storage) PostTrade(ctx context.Context, trade *models.Trade) error {
 	collection := s.DataBase.Collection("trades")
 	_, err := collection.InsertOne(ctx, trade)
 	if err != nil {
@@ -167,4 +167,3 @@ func (s *Storage) UpdateTrade(ctx context.Context,
 
 	return nil
 }
-
