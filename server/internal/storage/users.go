@@ -137,3 +137,23 @@ func (s *Storage) UpdateUser(ctx context.Context,
 
 	return nil
 }
+
+func (s *Storage) DeletePlantFromUser(ctx context.Context, userId, plantId string) error {
+	collection := s.DataBase.Collection("users")
+	uID, err := primitive.ObjectIDFromHex(userId)
+	if err != nil {
+		return err
+	}
+	pID, err := primitive.ObjectIDFromHex(plantId)
+	if err != nil {
+		return err
+	}
+	filter := bson.M{"_id": uID}
+	_, err = collection.UpdateByID(ctx, filter, bson.M{
+		"$pull": bson.M{"plants": bson.M{"_id": pID}},
+	})
+	if err != nil {
+		return err
+	}
+	return nil
+}
