@@ -11,4 +11,5 @@ var (
 	ErrTradeNotUpdated = errors.New("trade not updated")
 	ErrPlantNotUpdated = errors.New("plant not updated")
 	ErrTradeNotFound   = errors.New("trade not found")
+	ErrDB              = errors.New("error while importing/exporting database")
 )
