@@ -8,6 +8,7 @@ import (
 
 type Storage interface {
 	ExportDB(context.Context) (string, error)
+	ImportDB(context.Context, string), error
 }
 
 type Handler struct {

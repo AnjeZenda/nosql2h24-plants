@@ -3,10 +3,64 @@ package storage
 import (
 	"context"
 	"encoding/json"
+	"errors"
+	"io/ioutil"
+	"log"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
+
+func (s *Storage) ImportDB(ctx context.Context, dataJson string) error {
+	collections, err := s.Client.Database("plants_market").ListCollectionNames(ctx, bson.D{})
+	if err != nil {
+		return errors.New("ошибка получения списка коллекций: " + err.Error())
+	}
+	for _, collectionName := range collections {
+		if err := s.Client.Database("plants_market").Collection(collectionName).Drop(ctx); err != nil {
+			return errors.New("ошибка очистки коллекции " + collectionName + ": " + err.Error())
+		}
+	}
+
+	log.Println("База данных успешно очищена.")
+
+	var data map[string][]bson.M
+	if err := json.Unmarshal([]byte(dataJson), &data); err != nil {
+		return errors.New("не удалось распарсить JSON: " + err.Error())
+	}
+
+	for collectionName, documents := range data {
+		if len(documents) == 0 {
+			continue
+		}
+
+		collection := s.Client.Database("plants_market").Collection(collectionName)
+		_, err := collection.InsertMany(ctx, documents)
+		if err != nil {
+			return errors.New("ошибка вставки данных в коллекцию " + collectionName + ": " + err.Error())
+		}
+	}
+
+	return nil
+}
+
+func main() {
+	// Пример использования функции импорта
+
+	// Читаем JSON из файла (пример)
+	filePath := "database.json" // Укажите путь к вашему файлу
+	jsonData, err := ioutil.ReadFile(filePath)
+	if err != nil {
+		log.Fatalf("Ошибка чтения файла: %v", err)
+	}
+
+	// Импортируем данные в MongoDB
+	if err := ImportDatabase(string(jsonData)); err != nil {
+		log.Fatalf("Ошибка импорта базы данных: %v", err)
+	}
+
+	log.Println("Импорт базы данных завершён успешно.")
+}
 
 func (s *Storage) ExportDB(ctx context.Context) (string, error) {
 	data := make(map[string]interface{})

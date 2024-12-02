@@ -10,6 +10,9 @@ func (h *Handler) ExportDBV1(
 	ctx context.Context,
 	req *api.ExportDBV1Request,
 ) (*api.ExportDBV1Response, error) {
-
-	return &api.ExportDBV1Response{}, nil
+	res, err := ExportDB(ctx)
+	if err != nil {
+		return &api.ExportDBV1Response{}, ErrDB
+	}
+	return &api.ExportDBV1Response{Db: res}, nil
 }
