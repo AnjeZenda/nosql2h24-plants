@@ -7,7 +7,7 @@ import (
 	"plants/internal/models"
 
 	"go.mongodb.org/mongo-driver/bson"
-
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/options"
 
 )
@@ -126,6 +126,32 @@ func (s *Storage) GetPlantsForTrade(ctx context.Context, id string) ([]*models.P
 		plants = append(plants, &plant)
 	}
 	return plants, nil
+
+func (s *Storage) GetPlant(ctx context.Context, id string) (*models.Plant, error) {
+	collection := s.DataBase.Collection("plants")
+	objID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return nil, err
+	}
+	var plant models.Plant
+	if err = collection.FindOne(ctx, bson.D{{"_id", objID}}).Decode(&plant); err != nil {
+		return nil, err
+	}
+	return &plant, nil
+}
+
+func (s *Storage) SoldPlant(ctx context.Context, id string) error {
+	collection := s.DataBase.Collection("plants")
+	objID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return err
+	}
+	_, err = collection.UpdateOne(ctx, bson.D{{"_id", objID}}, bson.M{"$set": bson.M{"sold_at": time.Now().UTC()}})
+	if err != nil {
+		return err
+	}
+	return nil
+
 }
 
 func parseSortType(isDesc bool) int8 {

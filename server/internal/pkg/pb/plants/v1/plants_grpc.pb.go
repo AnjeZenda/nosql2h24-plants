@@ -19,26 +19,28 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	PlantsAPI_GetExampleV1_FullMethodName             = "/plants.v1.PlantsAPI/GetExampleV1"
 	PlantsAPI_GetPlantsWithCareRulesV1_FullMethodName = "/plants.v1.PlantsAPI/GetPlantsWithCareRulesV1"
 	PlantsAPI_CreateNewCareRuleV1_FullMethodName      = "/plants.v1.PlantsAPI/CreateNewCareRuleV1"
+	PlantsAPI_GetPlantByIdV1_FullMethodName           = "/plants.v1.PlantsAPI/GetPlantByIdV1"
 	PlantsAPI_GetCareRuleV1_FullMethodName            = "/plants.v1.PlantsAPI/GetCareRuleV1"
 	PlantsAPI_GetPlantsV1_FullMethodName              = "/plants.v1.PlantsAPI/GetPlantsV1"
 	PlantsAPI_CreatePlantV1_FullMethodName            = "/plants.v1.PlantsAPI/CreatePlantV1"
 	PlantsAPI_GetFilteredPlantsV1_FullMethodName      = "/plants.v1.PlantsAPI/GetFilteredPlantsV1"
+	PlantsAPI_BuyPlantV1_FullMethodName               = "/plants.v1.PlantsAPI/BuyPlantV1"
 )
 
 // PlantsAPIClient is the client API for PlantsAPI service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type PlantsAPIClient interface {
-	GetExampleV1(ctx context.Context, in *GetExampleV1Request, opts ...grpc.CallOption) (*GetExampleV1Response, error)
 	GetPlantsWithCareRulesV1(ctx context.Context, in *GetPlantsWithCareRulesV1Request, opts ...grpc.CallOption) (*GetPlantsWithCareRulesV1Response, error)
 	CreateNewCareRuleV1(ctx context.Context, in *CreateNewCareRuleV1Request, opts ...grpc.CallOption) (*CreateNewCareRuleV1Response, error)
+	GetPlantByIdV1(ctx context.Context, in *GetPlantByIdV1Request, opts ...grpc.CallOption) (*GetPlantByIdV1Response, error)
 	GetCareRuleV1(ctx context.Context, in *GetCareRuleV1Request, opts ...grpc.CallOption) (*GetCareRuleV1Response, error)
 	GetPlantsV1(ctx context.Context, in *GetPlantsV1Request, opts ...grpc.CallOption) (*GetPlantsV1Response, error)
 	CreatePlantV1(ctx context.Context, in *CreatePlantV1Request, opts ...grpc.CallOption) (*CreatePlantV1Response, error)
 	GetFilteredPlantsV1(ctx context.Context, in *GetFilteredPlantsV1Request, opts ...grpc.CallOption) (*GetFilteredPlantsV1Response, error)
+	BuyPlantV1(ctx context.Context, in *BuyPlantV1Request, opts ...grpc.CallOption) (*BuyPlantV1Response, error)
 }
 
 type plantsAPIClient struct {
@@ -47,16 +49,6 @@ type plantsAPIClient struct {
 
 func NewPlantsAPIClient(cc grpc.ClientConnInterface) PlantsAPIClient {
 	return &plantsAPIClient{cc}
-}
-
-func (c *plantsAPIClient) GetExampleV1(ctx context.Context, in *GetExampleV1Request, opts ...grpc.CallOption) (*GetExampleV1Response, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetExampleV1Response)
-	err := c.cc.Invoke(ctx, PlantsAPI_GetExampleV1_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
 }
 
 func (c *plantsAPIClient) GetPlantsWithCareRulesV1(ctx context.Context, in *GetPlantsWithCareRulesV1Request, opts ...grpc.CallOption) (*GetPlantsWithCareRulesV1Response, error) {
@@ -73,6 +65,16 @@ func (c *plantsAPIClient) CreateNewCareRuleV1(ctx context.Context, in *CreateNew
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(CreateNewCareRuleV1Response)
 	err := c.cc.Invoke(ctx, PlantsAPI_CreateNewCareRuleV1_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *plantsAPIClient) GetPlantByIdV1(ctx context.Context, in *GetPlantByIdV1Request, opts ...grpc.CallOption) (*GetPlantByIdV1Response, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetPlantByIdV1Response)
+	err := c.cc.Invoke(ctx, PlantsAPI_GetPlantByIdV1_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -119,17 +121,28 @@ func (c *plantsAPIClient) GetFilteredPlantsV1(ctx context.Context, in *GetFilter
 	return out, nil
 }
 
+func (c *plantsAPIClient) BuyPlantV1(ctx context.Context, in *BuyPlantV1Request, opts ...grpc.CallOption) (*BuyPlantV1Response, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(BuyPlantV1Response)
+	err := c.cc.Invoke(ctx, PlantsAPI_BuyPlantV1_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // PlantsAPIServer is the server API for PlantsAPI service.
 // All implementations must embed UnimplementedPlantsAPIServer
 // for forward compatibility.
 type PlantsAPIServer interface {
-	GetExampleV1(context.Context, *GetExampleV1Request) (*GetExampleV1Response, error)
 	GetPlantsWithCareRulesV1(context.Context, *GetPlantsWithCareRulesV1Request) (*GetPlantsWithCareRulesV1Response, error)
 	CreateNewCareRuleV1(context.Context, *CreateNewCareRuleV1Request) (*CreateNewCareRuleV1Response, error)
+	GetPlantByIdV1(context.Context, *GetPlantByIdV1Request) (*GetPlantByIdV1Response, error)
 	GetCareRuleV1(context.Context, *GetCareRuleV1Request) (*GetCareRuleV1Response, error)
 	GetPlantsV1(context.Context, *GetPlantsV1Request) (*GetPlantsV1Response, error)
 	CreatePlantV1(context.Context, *CreatePlantV1Request) (*CreatePlantV1Response, error)
 	GetFilteredPlantsV1(context.Context, *GetFilteredPlantsV1Request) (*GetFilteredPlantsV1Response, error)
+	BuyPlantV1(context.Context, *BuyPlantV1Request) (*BuyPlantV1Response, error)
 	mustEmbedUnimplementedPlantsAPIServer()
 }
 
@@ -140,14 +153,14 @@ type PlantsAPIServer interface {
 // pointer dereference when methods are called.
 type UnimplementedPlantsAPIServer struct{}
 
-func (UnimplementedPlantsAPIServer) GetExampleV1(context.Context, *GetExampleV1Request) (*GetExampleV1Response, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetExampleV1 not implemented")
-}
 func (UnimplementedPlantsAPIServer) GetPlantsWithCareRulesV1(context.Context, *GetPlantsWithCareRulesV1Request) (*GetPlantsWithCareRulesV1Response, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetPlantsWithCareRulesV1 not implemented")
 }
 func (UnimplementedPlantsAPIServer) CreateNewCareRuleV1(context.Context, *CreateNewCareRuleV1Request) (*CreateNewCareRuleV1Response, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateNewCareRuleV1 not implemented")
+}
+func (UnimplementedPlantsAPIServer) GetPlantByIdV1(context.Context, *GetPlantByIdV1Request) (*GetPlantByIdV1Response, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetPlantByIdV1 not implemented")
 }
 func (UnimplementedPlantsAPIServer) GetCareRuleV1(context.Context, *GetCareRuleV1Request) (*GetCareRuleV1Response, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetCareRuleV1 not implemented")
@@ -160,6 +173,9 @@ func (UnimplementedPlantsAPIServer) CreatePlantV1(context.Context, *CreatePlantV
 }
 func (UnimplementedPlantsAPIServer) GetFilteredPlantsV1(context.Context, *GetFilteredPlantsV1Request) (*GetFilteredPlantsV1Response, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetFilteredPlantsV1 not implemented")
+}
+func (UnimplementedPlantsAPIServer) BuyPlantV1(context.Context, *BuyPlantV1Request) (*BuyPlantV1Response, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method BuyPlantV1 not implemented")
 }
 func (UnimplementedPlantsAPIServer) mustEmbedUnimplementedPlantsAPIServer() {}
 func (UnimplementedPlantsAPIServer) testEmbeddedByValue()                   {}
@@ -180,24 +196,6 @@ func RegisterPlantsAPIServer(s grpc.ServiceRegistrar, srv PlantsAPIServer) {
 		t.testEmbeddedByValue()
 	}
 	s.RegisterService(&PlantsAPI_ServiceDesc, srv)
-}
-
-func _PlantsAPI_GetExampleV1_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetExampleV1Request)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(PlantsAPIServer).GetExampleV1(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: PlantsAPI_GetExampleV1_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PlantsAPIServer).GetExampleV1(ctx, req.(*GetExampleV1Request))
-	}
-	return interceptor(ctx, in, info, handler)
 }
 
 func _PlantsAPI_GetPlantsWithCareRulesV1_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -232,6 +230,24 @@ func _PlantsAPI_CreateNewCareRuleV1_Handler(srv interface{}, ctx context.Context
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(PlantsAPIServer).CreateNewCareRuleV1(ctx, req.(*CreateNewCareRuleV1Request))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PlantsAPI_GetPlantByIdV1_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetPlantByIdV1Request)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PlantsAPIServer).GetPlantByIdV1(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PlantsAPI_GetPlantByIdV1_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PlantsAPIServer).GetPlantByIdV1(ctx, req.(*GetPlantByIdV1Request))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -308,6 +324,24 @@ func _PlantsAPI_GetFilteredPlantsV1_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
+func _PlantsAPI_BuyPlantV1_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BuyPlantV1Request)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PlantsAPIServer).BuyPlantV1(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PlantsAPI_BuyPlantV1_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PlantsAPIServer).BuyPlantV1(ctx, req.(*BuyPlantV1Request))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // PlantsAPI_ServiceDesc is the grpc.ServiceDesc for PlantsAPI service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -316,16 +350,16 @@ var PlantsAPI_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*PlantsAPIServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "GetExampleV1",
-			Handler:    _PlantsAPI_GetExampleV1_Handler,
-		},
-		{
 			MethodName: "GetPlantsWithCareRulesV1",
 			Handler:    _PlantsAPI_GetPlantsWithCareRulesV1_Handler,
 		},
 		{
 			MethodName: "CreateNewCareRuleV1",
 			Handler:    _PlantsAPI_CreateNewCareRuleV1_Handler,
+		},
+		{
+			MethodName: "GetPlantByIdV1",
+			Handler:    _PlantsAPI_GetPlantByIdV1_Handler,
 		},
 		{
 			MethodName: "GetCareRuleV1",
@@ -342,6 +376,10 @@ var PlantsAPI_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetFilteredPlantsV1",
 			Handler:    _PlantsAPI_GetFilteredPlantsV1_Handler,
+		},
+		{
+			MethodName: "BuyPlantV1",
+			Handler:    _PlantsAPI_BuyPlantV1_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
