@@ -11,6 +11,10 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
+type valsType interface {
+	string | primitive.ObjectID
+}
+
 func (s *Storage) GetPlantsWithCareRules(ctx context.Context) ([]*models.Plant, error) {
 	collection := s.DataBase.Collection("plants")
 	filter := bson.M{"care_rules": bson.M{"$ne": nil}}
@@ -153,6 +157,30 @@ func (s *Storage) SoldPlant(ctx context.Context, id string) error {
 
 }
 
+func (s *Storage) GetPlantsByIds(ctx context.Context, ids []string, fltr *models.Filter) ([]*models.Plant, error) {
+	var (
+		plants []*models.Plant
+	)
+	collection := s.DataBase.Collection("plants")
+	objIDs, err := convertStringToIDs(ids)
+	if err != nil {
+		return nil, err
+	}
+	filter := createOrFilter("_id", objIDs)
+	cur, err := collection.Find(ctx, filter)
+	if err != nil {
+		return nil, err
+	}
+	for cur.Next(ctx) {
+		var plant models.Plant
+		if err := cur.Decode(&plant); err != nil {
+			return nil, err
+		}
+		plants = append(plants, &plant)
+	}
+	return plants, nil
+}
+
 func parseSortType(isDesc bool) int8 {
 	if isDesc {
 		return -1
@@ -167,12 +195,7 @@ func parseLabelsToBSON(labels map[string]interface{}) bson.D {
 		case string:
 			bsonFltr = append(bsonFltr, bson.E{Key: k, Value: v})
 		case []string:
-			listOfV := vc
-			listFltr := make([]bson.D, len(listOfV))
-			for i, e := range listOfV {
-				listFltr[i] = bson.D{{Key: k, Value: e}}
-			}
-			bsonFltr = append(bsonFltr, bson.E{Key: "$or", Value: listFltr})
+			bsonFltr = createOrFilter(k, vc)
 		}
 	}
 	if v, ok := labels["price_to"]; ok && v != -1 {
@@ -183,5 +206,26 @@ func parseLabelsToBSON(labels map[string]interface{}) bson.D {
 	}
 	bsonFltr = append(bsonFltr, bson.E{Key: "sold_at", Value: time.Time{}})
 	return bsonFltr
+}
 
+func createOrFilter[T valsType](k string, vals []T) bson.D {
+	bsonFltr := bson.D{}
+	listFltr := make([]bson.D, len(vals))
+	for i, e := range vals {
+		listFltr[i] = bson.D{{Key: k, Value: e}}
+	}
+	bsonFltr = append(bsonFltr, bson.E{Key: "$or", Value: listFltr})
+	return bsonFltr
+}
+
+func convertStringToIDs(ids []string) ([]primitive.ObjectID, error) {
+	objIDs := make([]primitive.ObjectID, len(ids))
+	for i, id := range ids {
+		objID, err := primitive.ObjectIDFromHex(id)
+		if err != nil {
+			return nil, err
+		}
+		objIDs[i] = objID
+	}
+	return objIDs, nil
 }

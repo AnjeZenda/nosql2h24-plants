@@ -7,7 +7,6 @@ import (
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
-	"plants/internal/models"
 	api "plants/internal/pkg/pb/plants/v1"
 )
 
@@ -15,7 +14,10 @@ func (h *Handler) GetPlantsV1(
 	ctx context.Context,
 	req *api.GetPlantsV1Request,
 ) (*api.GetPlantsV1Response, error) {
-	filter := parseFilter(req)
+	filter := parseFilterLabels(req.Filter)
+	filter.Page = req.Page
+	filter.Size = req.Size
+	filter.SortBy = req.Sort
 	plants, err := h.storage.GetPlants(ctx, filter)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "could not get plants. Error %v", err)
@@ -34,47 +36,4 @@ func (h *Handler) GetPlantsV1(
 	return &api.GetPlantsV1Response{
 		Plants: result,
 	}, nil
-}
-
-func parseFilter(req *api.GetPlantsV1Request) *models.Filter {
-	var labels = make(map[string]interface{})
-	if len(req.Filter.Species) != 0 {
-		labels["species"] = req.Filter.Species
-	}
-	if len(req.Filter.Type) != 0 {
-		labels["type"] = req.Filter.Type
-	}
-	if len(req.Filter.Size) != 0 {
-		labels["size"] = req.Filter.Size
-	}
-	if len(req.Filter.LightCondition) != 0 {
-		labels["light_condition"] = req.Filter.LightCondition
-	}
-	if len(req.Filter.WateringFrequency) != 0 {
-		labels["watering_frequency"] = req.Filter.WateringFrequency
-	}
-	if len(req.Filter.TemperatureRegime) != 0 {
-		labels["temperature_regime"] = req.Filter.TemperatureRegime
-	}
-	if len(req.Filter.CareComplexity) != 0 {
-		labels["care_complexity"] = req.Filter.CareComplexity
-	}
-	if len(req.Filter.Description) != 0 {
-		labels["description"] = req.Filter.Description
-	}
-	if len(req.Filter.Place) != 0 {
-		labels["place"] = req.Filter.Place
-	}
-	if req.Filter.PriceFrom != 0 {
-		labels["price_from"] = req.Filter.PriceFrom
-	}
-	if req.Filter.PriceTo != 0 {
-		labels["price_to"] = req.Filter.PriceTo
-	}
-	return &models.Filter{
-		Page:   req.Page,
-		Size:   req.Size,
-		SortBy: req.Sort,
-		Labels: labels,
-	}
 }
