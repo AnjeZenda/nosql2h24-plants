@@ -81,7 +81,7 @@ func (s *Storage) GetPlants(ctx context.Context, fltr *models.Filter) ([]*models
 	opts.SetLimit(fltr.Size)
 	opts.SetSkip((fltr.Page - 1) * fltr.Size)
 	if len(fltr.Labels) != 0 {
-		filter = parseLabelsToBSON(fltr.Labels)
+		filter = append(filter, parseLabelsToBSON(fltr.Labels)...)
 	}
 	collection := s.DataBase.Collection("plants")
 	cursor, err := collection.Find(ctx, filter, opts)
@@ -166,7 +166,8 @@ func (s *Storage) GetPlantsByIds(ctx context.Context, ids []string, fltr *models
 	if err != nil {
 		return nil, err
 	}
-	filter := createOrFilter("_id", objIDs)
+	filter := parseLabelsToBSON(fltr.Labels)
+	filter = append(filter, createOrFilter("_id", objIDs)...)
 	cur, err := collection.Find(ctx, filter)
 	if err != nil {
 		return nil, err
@@ -193,7 +194,11 @@ func parseLabelsToBSON(labels map[string]interface{}) bson.D {
 	for k, v := range labels {
 		switch vc := v.(type) {
 		case string:
-			bsonFltr = append(bsonFltr, bson.E{Key: k, Value: v})
+			if k == "species" {
+				bsonFltr = append(bsonFltr, bson.E{Key: k, Value: bson.M{"$regex": vc, "$options": "i"}})
+			} else {
+				bsonFltr = append(bsonFltr, bson.E{Key: k, Value: vc})
+			}
 		case []string:
 			bsonFltr = createOrFilter(k, vc)
 		}
@@ -204,7 +209,6 @@ func parseLabelsToBSON(labels map[string]interface{}) bson.D {
 	if v, ok := labels["price_from"]; ok && v != -1 {
 		bsonFltr = append(bsonFltr, bson.E{Key: "price", Value: bson.M{"$gte": v}})
 	}
-	bsonFltr = append(bsonFltr, bson.E{Key: "sold_at", Value: time.Time{}})
 	return bsonFltr
 }
 
