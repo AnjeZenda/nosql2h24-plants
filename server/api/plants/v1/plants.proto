@@ -10,7 +10,8 @@ import "google/protobuf/timestamp.proto";
 service PlantsAPI {
     rpc GetPlantsWithCareRulesV1 (GetPlantsWithCareRulesV1Request) returns (GetPlantsWithCareRulesV1Response) {
         option (google.api.http) = {
-            get: "/api/care"
+            post: "/api/care/{page}/{size}"
+            body: "*"
         };
     };
 
@@ -108,11 +109,11 @@ message CreatePlantV1Request {
     string lightCondition = 5;
     string wateringFrequency = 6;
     string temperatureRegime = 7;
-    string care_complexity = 8;
+    string careComplexity = 8;
     string description = 9;
     string type = 10;
     string species = 11;
-    string care_rules = 12;
+    string careRules = 12;
     google.protobuf.Timestamp createdAt = 13;
     string userId = 14;
 }
@@ -155,11 +156,25 @@ message CreateNewCareRuleV1Request {
     string species = 1;
     string userId = 2;
     string descriptionAddition = 3;
+    string type = 4;
+    string lightCondition = 5;
+    string temperatureRegime = 6;
+    string image = 7;
 }
 
 message CreateNewCareRuleV1Response {}
 
-message GetPlantsWithCareRulesV1Request {}
+message GetPlantsWithCareRulesV1Request {
+    message Filter {
+        string species = 1;
+        string type = 2;
+        repeated string lightCondition = 3;
+        repeated string temperatureRegime = 4;
+    }
+    Filter filter = 1;
+    int64 page = 2;
+    int64 size = 3;
+}
     
 message GetPlantsWithCareRulesV1Response {
     message PlantInfo {

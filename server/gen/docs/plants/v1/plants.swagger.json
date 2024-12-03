@@ -16,28 +16,6 @@
     "application/json"
   ],
   "paths": {
-    "/api/care": {
-      "get": {
-        "operationId": "PlantsAPI_GetPlantsWithCareRulesV1",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1GetPlantsWithCareRulesV1Response"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "tags": [
-          "PlantsAPI"
-        ]
-      }
-    },
     "/api/care/new": {
       "post": {
         "operationId": "PlantsAPI_CreateNewCareRuleV1",
@@ -62,6 +40,52 @@
             "required": true,
             "schema": {
               "$ref": "#/definitions/v1CreateNewCareRuleV1Request"
+            }
+          }
+        ],
+        "tags": [
+          "PlantsAPI"
+        ]
+      }
+    },
+    "/api/care/{page}/{size}": {
+      "post": {
+        "operationId": "PlantsAPI_GetPlantsWithCareRulesV1",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetPlantsWithCareRulesV1Response"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "page",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "size",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PlantsAPIGetPlantsWithCareRulesV1Body"
             }
           }
         ],
@@ -416,7 +440,7 @@
       "type": "object",
       "properties": {
         "filter": {
-          "$ref": "#/definitions/v1Filter"
+          "$ref": "#/definitions/plantsv1Filter"
         }
       }
     },
@@ -427,7 +451,15 @@
           "type": "boolean"
         },
         "filter": {
-          "$ref": "#/definitions/v1Filter"
+          "$ref": "#/definitions/plantsv1Filter"
+        }
+      }
+    },
+    "PlantsAPIGetPlantsWithCareRulesV1Body": {
+      "type": "object",
+      "properties": {
+        "filter": {
+          "$ref": "#/definitions/v1GetPlantsWithCareRulesV1RequestFilter"
         }
       }
     },
@@ -435,7 +467,62 @@
       "type": "object",
       "properties": {
         "filter": {
-          "$ref": "#/definitions/v1Filter"
+          "$ref": "#/definitions/plantsv1Filter"
+        }
+      }
+    },
+    "plantsv1Filter": {
+      "type": "object",
+      "properties": {
+        "species": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "size": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "lightCondition": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "wateringFrequency": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "temperatureRegime": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "careComplexity": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "description": {
+          "type": "string"
+        },
+        "place": {
+          "type": "string"
+        },
+        "priceFrom": {
+          "type": "number",
+          "format": "float"
+        },
+        "priceTo": {
+          "type": "number",
+          "format": "float"
         }
       }
     },
@@ -534,6 +621,18 @@
         },
         "descriptionAddition": {
           "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "lightCondition": {
+          "type": "string"
+        },
+        "temperatureRegime": {
+          "type": "string"
+        },
+        "image": {
+          "type": "string"
         }
       }
     },
@@ -591,61 +690,6 @@
     },
     "v1CreatePlantV1Response": {
       "type": "object"
-    },
-    "v1Filter": {
-      "type": "object",
-      "properties": {
-        "species": {
-          "type": "string"
-        },
-        "type": {
-          "type": "string"
-        },
-        "size": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "lightCondition": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "wateringFrequency": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "temperatureRegime": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "careComplexity": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "description": {
-          "type": "string"
-        },
-        "place": {
-          "type": "string"
-        },
-        "priceFrom": {
-          "type": "number",
-          "format": "float"
-        },
-        "priceTo": {
-          "type": "number",
-          "format": "float"
-        }
-      }
     },
     "v1GetActivePlantsV1Response": {
       "type": "object",
@@ -800,6 +844,29 @@
           "items": {
             "type": "object",
             "$ref": "#/definitions/v1Plant"
+          }
+        }
+      }
+    },
+    "v1GetPlantsWithCareRulesV1RequestFilter": {
+      "type": "object",
+      "properties": {
+        "species": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "lightCondition": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "temperatureRegime": {
+          "type": "array",
+          "items": {
+            "type": "string"
           }
         }
       }

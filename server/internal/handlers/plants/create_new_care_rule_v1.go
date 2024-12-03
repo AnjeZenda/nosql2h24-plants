@@ -20,6 +20,10 @@ func (h *Handler) CreateNewCareRuleV1(
 	if err != nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid user id")
 	}
+	user, err := h.storage.GetUserById(ctx, req.UserId)
+	if err != nil {
+		return nil, status.Errorf(codes.NotFound, "user not found %v", err)
+	}
 	err = h.storage.CreateNewCareRule(ctx, &models.CareRules{
 		Species:   req.Species,
 		CreatedAt: time.Now().UTC(),
@@ -29,8 +33,15 @@ func (h *Handler) CreateNewCareRuleV1(
 				UserID:              userId,
 				DescriptionAddition: req.DescriptionAddition,
 				CreatedAt:           time.Now().UTC(),
+				UserName:            user.Name,
+				UserSurname:         user.Surname,
+				UserFatherName:      user.FatherName,
 			},
 		},
+		LightCondition:    req.LightCondition,
+		Image:             req.Image,
+		Type:              req.Type,
+		TemperatureRegime: req.TemperatureRegime,
 	})
 	if err != nil {
 		return nil, status.Error(codes.Internal, "Internal error occured")
