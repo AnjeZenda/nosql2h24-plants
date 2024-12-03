@@ -182,6 +182,33 @@ func (s *Storage) GetPlantsByIds(ctx context.Context, ids []string, fltr *models
 	return plants, nil
 }
 
+func (s *Storage) GetPlantsByUserId(ctx context.Context, userId string, isSold bool) ([]*models.Plant, error) {
+	var plants []*models.Plant
+	objID, err := primitive.ObjectIDFromHex(userId)
+	if err != nil {
+		return nil, err
+	}
+	collection := s.DataBase.Collection("plants")
+	filter := bson.D{{"user_id", objID}}
+	if isSold {
+		filter = append(filter, bson.E{"sold_at", bson.M{"$ne": time.Time{}}})
+	} else {
+		filter = append(filter, bson.E{"sold_at", time.Time{}})
+	}
+	cur, err := collection.Find(ctx, filter)
+	if err != nil {
+		return nil, err
+	}
+	for cur.Next(ctx) {
+		var plant models.Plant
+		if err = cur.Decode(&plant); err != nil {
+			return nil, err
+		}
+		plants = append(plants, &plant)
+	}
+	return plants, nil
+}
+
 func parseSortType(isDesc bool) int8 {
 	if isDesc {
 		return -1

@@ -29,6 +29,8 @@ const (
 	PlantsAPI_BuyPlantV1_FullMethodName               = "/plants.v1.PlantsAPI/BuyPlantV1"
 	PlantsAPI_GetBoughtPlantsV1_FullMethodName        = "/plants.v1.PlantsAPI/GetBoughtPlantsV1"
 	PlantsAPI_GetTradedPlantsV1_FullMethodName        = "/plants.v1.PlantsAPI/GetTradedPlantsV1"
+	PlantsAPI_GetActivePlantsV1_FullMethodName        = "/plants.v1.PlantsAPI/GetActivePlantsV1"
+	PlantsAPI_GetArchivedPlantsV1_FullMethodName      = "/plants.v1.PlantsAPI/GetArchivedPlantsV1"
 )
 
 // PlantsAPIClient is the client API for PlantsAPI service.
@@ -45,6 +47,8 @@ type PlantsAPIClient interface {
 	BuyPlantV1(ctx context.Context, in *BuyPlantV1Request, opts ...grpc.CallOption) (*BuyPlantV1Response, error)
 	GetBoughtPlantsV1(ctx context.Context, in *GetBoughtPlantsV1Request, opts ...grpc.CallOption) (*GetBoughtPlantsV1Response, error)
 	GetTradedPlantsV1(ctx context.Context, in *GetTradedPlantsV1Request, opts ...grpc.CallOption) (*GetTradedPlantsV1Response, error)
+	GetActivePlantsV1(ctx context.Context, in *GetActivePlantsV1Request, opts ...grpc.CallOption) (*GetActivePlantsV1Response, error)
+	GetArchivedPlantsV1(ctx context.Context, in *GetArchivedPlantsV1Request, opts ...grpc.CallOption) (*GetArchivedPlantsV1Response, error)
 }
 
 type plantsAPIClient struct {
@@ -155,6 +159,26 @@ func (c *plantsAPIClient) GetTradedPlantsV1(ctx context.Context, in *GetTradedPl
 	return out, nil
 }
 
+func (c *plantsAPIClient) GetActivePlantsV1(ctx context.Context, in *GetActivePlantsV1Request, opts ...grpc.CallOption) (*GetActivePlantsV1Response, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetActivePlantsV1Response)
+	err := c.cc.Invoke(ctx, PlantsAPI_GetActivePlantsV1_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *plantsAPIClient) GetArchivedPlantsV1(ctx context.Context, in *GetArchivedPlantsV1Request, opts ...grpc.CallOption) (*GetArchivedPlantsV1Response, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetArchivedPlantsV1Response)
+	err := c.cc.Invoke(ctx, PlantsAPI_GetArchivedPlantsV1_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // PlantsAPIServer is the server API for PlantsAPI service.
 // All implementations must embed UnimplementedPlantsAPIServer
 // for forward compatibility.
@@ -169,6 +193,8 @@ type PlantsAPIServer interface {
 	BuyPlantV1(context.Context, *BuyPlantV1Request) (*BuyPlantV1Response, error)
 	GetBoughtPlantsV1(context.Context, *GetBoughtPlantsV1Request) (*GetBoughtPlantsV1Response, error)
 	GetTradedPlantsV1(context.Context, *GetTradedPlantsV1Request) (*GetTradedPlantsV1Response, error)
+	GetActivePlantsV1(context.Context, *GetActivePlantsV1Request) (*GetActivePlantsV1Response, error)
+	GetArchivedPlantsV1(context.Context, *GetArchivedPlantsV1Request) (*GetArchivedPlantsV1Response, error)
 	mustEmbedUnimplementedPlantsAPIServer()
 }
 
@@ -208,6 +234,12 @@ func (UnimplementedPlantsAPIServer) GetBoughtPlantsV1(context.Context, *GetBough
 }
 func (UnimplementedPlantsAPIServer) GetTradedPlantsV1(context.Context, *GetTradedPlantsV1Request) (*GetTradedPlantsV1Response, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetTradedPlantsV1 not implemented")
+}
+func (UnimplementedPlantsAPIServer) GetActivePlantsV1(context.Context, *GetActivePlantsV1Request) (*GetActivePlantsV1Response, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetActivePlantsV1 not implemented")
+}
+func (UnimplementedPlantsAPIServer) GetArchivedPlantsV1(context.Context, *GetArchivedPlantsV1Request) (*GetArchivedPlantsV1Response, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetArchivedPlantsV1 not implemented")
 }
 func (UnimplementedPlantsAPIServer) mustEmbedUnimplementedPlantsAPIServer() {}
 func (UnimplementedPlantsAPIServer) testEmbeddedByValue()                   {}
@@ -410,6 +442,42 @@ func _PlantsAPI_GetTradedPlantsV1_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _PlantsAPI_GetActivePlantsV1_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetActivePlantsV1Request)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PlantsAPIServer).GetActivePlantsV1(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PlantsAPI_GetActivePlantsV1_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PlantsAPIServer).GetActivePlantsV1(ctx, req.(*GetActivePlantsV1Request))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PlantsAPI_GetArchivedPlantsV1_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetArchivedPlantsV1Request)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PlantsAPIServer).GetArchivedPlantsV1(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PlantsAPI_GetArchivedPlantsV1_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PlantsAPIServer).GetArchivedPlantsV1(ctx, req.(*GetArchivedPlantsV1Request))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // PlantsAPI_ServiceDesc is the grpc.ServiceDesc for PlantsAPI service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -456,6 +524,14 @@ var PlantsAPI_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetTradedPlantsV1",
 			Handler:    _PlantsAPI_GetTradedPlantsV1_Handler,
+		},
+		{
+			MethodName: "GetActivePlantsV1",
+			Handler:    _PlantsAPI_GetActivePlantsV1_Handler,
+		},
+		{
+			MethodName: "GetArchivedPlantsV1",
+			Handler:    _PlantsAPI_GetArchivedPlantsV1_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

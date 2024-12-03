@@ -72,6 +72,18 @@ service PlantsAPI {
             body: "*"
         };
     };
+
+    rpc GetActivePlantsV1 (GetActivePlantsV1Request) returns (GetActivePlantsV1Response) {
+        option (google.api.http) = {
+            get: "/api/plants/active/{userId}"
+        };
+    };
+    
+    rpc GetArchivedPlantsV1 (GetArchivedPlantsV1Request) returns (GetArchivedPlantsV1Response) {
+        option (google.api.http) = {
+            get: "/api/plants/archive/{userId}"
+        };
+    };
 }
 
 message Filter {
@@ -237,4 +249,18 @@ message Plant {
     float price = 4; 
     google.protobuf.Timestamp createdAt = 5;
     string place = 6;
+}
+
+message GetActivePlantsV1Request{
+    string userId = 1;
+}
+message GetActivePlantsV1Response{
+    repeated Plant plants = 1;
+}
+
+message GetArchivedPlantsV1Request{
+    string userId = 1;
+}
+message GetArchivedPlantsV1Response{
+    repeated Plant plants = 1;
 }

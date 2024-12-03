@@ -182,6 +182,36 @@
         ]
       }
     },
+    "/api/plants/active/{userId}": {
+      "get": {
+        "operationId": "PlantsAPI_GetActivePlantsV1",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetActivePlantsV1Response"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "PlantsAPI"
+        ]
+      }
+    },
     "/api/plants/add": {
       "post": {
         "operationId": "PlantsAPI_CreatePlantV1",
@@ -207,6 +237,36 @@
             "schema": {
               "$ref": "#/definitions/v1CreatePlantV1Request"
             }
+          }
+        ],
+        "tags": [
+          "PlantsAPI"
+        ]
+      }
+    },
+    "/api/plants/archive/{userId}": {
+      "get": {
+        "operationId": "PlantsAPI_GetArchivedPlantsV1",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetArchivedPlantsV1Response"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "type": "string"
           }
         ],
         "tags": [
@@ -584,6 +644,30 @@
         "priceTo": {
           "type": "number",
           "format": "float"
+        }
+      }
+    },
+    "v1GetActivePlantsV1Response": {
+      "type": "object",
+      "properties": {
+        "plants": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Plant"
+          }
+        }
+      }
+    },
+    "v1GetArchivedPlantsV1Response": {
+      "type": "object",
+      "properties": {
+        "plants": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Plant"
+          }
         }
       }
     },
