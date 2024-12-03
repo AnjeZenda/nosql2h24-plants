@@ -39,15 +39,15 @@ func (h *Handler) BuyPlantV1(
 			Name:       offerer.Name,
 			Surname:    offerer.Surname,
 			FatherName: offerer.FatherName,
-		},
-		Accepter: models.TradeUser{
-			ID: accepter.ID,
 			Plant: models.TradePlant{
 				ID:    plant.ID,
 				Name:  plant.Species,
 				Image: plant.Image,
 				Price: plant.Price,
 			},
+		},
+		Accepter: models.TradeUser{
+			ID:         accepter.ID,
 			Name:       accepter.Name,
 			Surname:    accepter.Surname,
 			FatherName: accepter.FatherName,
@@ -64,6 +64,14 @@ func (h *Handler) BuyPlantV1(
 	err = h.storage.CreateBuyTrade(ctx, &trade)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "could not create trade. Error %v", err)
+	}
+	err = h.storage.AddTradeToUser(ctx, accepter.ID, trade.ID)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "could not add trade to buyer. Error %v", err)
+	}
+	err = h.storage.AddTradeToUser(ctx, offerer.ID, trade.ID)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "could not add trade to seller. Error %v", err)
 	}
 	return &api.BuyPlantV1Response{}, nil
 }

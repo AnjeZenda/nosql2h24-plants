@@ -22,7 +22,7 @@ func (h *Handler) GetPlantByIdV1(
 		return nil, status.Errorf(codes.Internal, "could not get user. Error %v", err)
 	}
 	return &api.GetPlantByIdV1Response{
-		Plant: &api.GetPlantByIdV1Response_Plant{
+		Plant: &api.GetPlantByIdV1Response_PlantInfo{
 			Species:           plant.Species,
 			Type:              plant.Type,
 			Price:             plant.Price,

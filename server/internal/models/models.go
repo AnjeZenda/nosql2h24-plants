@@ -88,9 +88,9 @@ type CareDescriptionPart struct {
 	UserID              primitive.ObjectID `bson:"user_id" json:"user_id"`
 	DescriptionAddition string             `bson:"description_addition" json:"description_addition"`
 	CreatedAt           time.Time          `bson:"created_at" json:"created_at"`
-	UserName            string
-	UserSurname         string
-	UserFatherName      string
+	UserName            string             `bson:"user_name" json:"user_name"`
+	UserSurname         string             `bson:"user_surname" json:"user_surname"`
+	UserFatherName      string             `bson:"user_father_name" json:"user_father_name"`
 }
 
 type Filter struct {

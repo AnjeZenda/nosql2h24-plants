@@ -20,9 +20,9 @@ func (h *Handler) GetPlantsForTradeV1(
 		return nil, status.Error(codes.Internal, "cant get plants")
 	}
 
-	result := make([]*api.GetPlantsForTradeV1Response_Plant, len(plants))
+	result := make([]*api.GetPlantsForTradeV1Response_PlantInfo, len(plants))
 	for i, r := range plants {
-		result[i] = &api.GetPlantsForTradeV1Response_Plant{
+		result[i] = &api.GetPlantsForTradeV1Response_PlantInfo{
 			Species:   r.Species,
 			Price:     fmt.Sprintf("%f", r.Price),
 			Place:     r.Place,

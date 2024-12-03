@@ -3,24 +3,20 @@ package plants
 import (
 	"context"
 
+	api "plants/internal/pkg/pb/plants/v1"
+
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/timestamppb"
-
-	api "plants/internal/pkg/pb/plants/v1"
 )
 
-func (h *Handler) GetPlantsV1(
+func (h *Handler) GetArchivedPlantsV1(
 	ctx context.Context,
-	req *api.GetPlantsV1Request,
-) (*api.GetPlantsV1Response, error) {
-	filter := parseFilterLabels(req.Filter)
-	filter.Page = req.Page
-	filter.Size = req.Size
-	filter.SortBy = req.Sort
-	plants, err := h.storage.GetPlants(ctx, filter)
+	req *api.GetArchivedPlantsV1Request,
+) (*api.GetArchivedPlantsV1Response, error) {
+	plants, err := h.storage.GetPlantsByUserId(ctx, req.UserId, true)
 	if err != nil {
-		return nil, status.Errorf(codes.Internal, "could not get plants. Error %v", err)
+		return nil, status.Errorf(codes.Internal, "cannot find plants due to %v", err)
 	}
 	result := make([]*api.Plant, len(plants))
 	for i, p := range plants {
@@ -33,7 +29,7 @@ func (h *Handler) GetPlantsV1(
 			Place:     p.Place,
 		}
 	}
-	return &api.GetPlantsV1Response{
+	return &api.GetArchivedPlantsV1Response{
 		Plants: result,
 	}, nil
 }

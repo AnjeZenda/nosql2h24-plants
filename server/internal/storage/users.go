@@ -157,3 +157,26 @@ func (s *Storage) DeletePlantFromUser(ctx context.Context, userId, plantId strin
 	}
 	return nil
 }
+
+func (s *Storage) GetUserTrades(ctx context.Context, id string) ([]primitive.ObjectID, error) {
+	objID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return nil, err
+	}
+	collection := s.DataBase.Collection("users")
+	var user models.User
+	err = collection.FindOne(ctx, bson.D{{Key: "_id", Value: objID}}).Decode(&user)
+	if err != nil {
+		return nil, err
+	}
+	return user.Trades, nil
+}
+
+func (s *Storage) AddTradeToUser(ctx context.Context, userId, tradeId primitive.ObjectID) error {
+	collection := s.DataBase.Collection("users")
+	return collection.FindOneAndUpdate(
+		ctx,
+		bson.D{{Key: "_id", Value: userId}},
+		bson.D{{Key: "$push", Value: bson.D{{Key: "trades", Value: tradeId}}}},
+	).Err()
+}
