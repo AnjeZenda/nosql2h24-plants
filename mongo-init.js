@@ -525,7 +525,7 @@ db.users.insertMany([
         "species": "Финиковая пальма",
         "created_at": ISODate("2024-09-29T12:00:00Z"),
         "place": "Казань",
-        "sold_at": ISODate(ISODate("0001-01-01T00:00:00Z"))
+        "sold_at": ISODate("0001-01-01T00:00:00Z")
       }
     ],
     "trades": [
