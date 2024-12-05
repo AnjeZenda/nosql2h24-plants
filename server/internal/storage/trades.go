@@ -14,15 +14,30 @@ import (
 
 func (s *Storage) GetTrades(ctx context.Context, id primitive.ObjectID, role string) ([]models.Trade, error) {
 	collection := s.DataBase.Collection("trades")
-
+	var filter bson.D
 	var result []models.Trade
-	filter := bson.D{
-		{"id", id},
-		{"type", "buy"},
-		{"$or", bson.A{
-			bson.D{{"status", 0}},
-			bson.D{{"status", 1}},
-		}},
+	if role == "accepter" {
+		filter = bson.D{
+			{"type", "trade"},
+			{"accepter", bson.D{
+				{"_id", id},
+			}},
+			{"$or", bson.A{
+				bson.D{{"status", 0}},
+				bson.D{{"status", 1}},
+			}},
+		}
+	} else {
+		filter = bson.D{
+			{"type", "trade"},
+			{"offerer", bson.D{
+				{"_id", id},
+			}},
+			{"$or", bson.A{
+				bson.D{{"status", 0}},
+				bson.D{{"status", 1}},
+			}},
+		}
 	}
 	cur, err := collection.Find(ctx, filter)
 	if err != nil {
