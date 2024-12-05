@@ -124,36 +124,6 @@
         ]
       }
     },
-    "/api/palnts/{id}": {
-      "get": {
-        "operationId": "PlantsAPI_GetPlantByIdV1",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1GetPlantByIdV1Response"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "tags": [
-          "PlantsAPI"
-        ]
-      }
-    },
     "/api/palnts/{page}/{size}/{sort}": {
       "post": {
         "operationId": "PlantsAPI_GetPlantsV1",
@@ -427,6 +397,36 @@
             "schema": {
               "$ref": "#/definitions/PlantsAPIGetTradedPlantsV1Body"
             }
+          }
+        ],
+        "tags": [
+          "PlantsAPI"
+        ]
+      }
+    },
+    "/api/plants/{id}": {
+      "get": {
+        "operationId": "PlantsAPI_GetPlantByIdV1",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetPlantByIdV1Response"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
           }
         ],
         "tags": [
