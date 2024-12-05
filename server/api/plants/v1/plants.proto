@@ -29,7 +29,7 @@ service PlantsAPI {
     };
     rpc GetCareRuleV1 (GetCareRuleV1Request) returns (GetCareRuleV1Response) {
         option (google.api.http) = {
-            get: "/api/care/{species}"
+            get: "/api/care/{id}"
         };
     };
 
@@ -48,7 +48,7 @@ service PlantsAPI {
 
     rpc GetPlantsV1 (GetPlantsV1Request) returns (GetPlantsV1Response) {
         option (google.api.http) = {
-            post: "/api/palnts/{page}/{size}/{sort}"
+            post: "/api/plants/{page}/{size}/{sort}"
             body: "*"
         };
     };
@@ -113,8 +113,6 @@ message CreatePlantV1Request {
     string description = 9;
     string type = 10;
     string species = 11;
-    string careRules = 12;
-    google.protobuf.Timestamp createdAt = 13;
     string userId = 14;
 }
 
@@ -133,7 +131,7 @@ message GetPlantsV1Response {
 }
 
 message GetCareRuleV1Request {
-    string species = 1;
+    string id = 1;
 }
 
 message GetCareRuleV1Response {
@@ -180,7 +178,8 @@ message GetPlantsWithCareRulesV1Response {
     message PlantInfo {
         string species = 1;
         string image = 2;
-        string id = 3;
+        string ruleId = 3;
+        string type = 4;
     }
     repeated PlantInfo plants = 1;
 }

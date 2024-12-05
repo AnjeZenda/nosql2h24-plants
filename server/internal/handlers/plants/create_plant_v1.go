@@ -20,7 +20,7 @@ func (h *Handler) CreatePlantV1(
 	if err != nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid user id")
 	}
-	err = h.storage.AddPlant(ctx, &models.Plant{
+	plant := &models.Plant{
 		ID:                primitive.NewObjectID(),
 		UserID:            userId,
 		Image:             req.Image,
@@ -35,9 +35,14 @@ func (h *Handler) CreatePlantV1(
 		Species:           req.Species,
 		CreatedAt:         time.Now().UTC(),
 		Place:             req.Place,
-	})
+	}
+	err = h.storage.AddPlant(ctx, plant)
 	if err != nil {
 		return nil, status.Error(codes.Internal, "could not create plant")
+	}
+	err = h.storage.AddPlantToUser(ctx, plant)
+	if err != nil {
+		return nil, status.Error(codes.Internal, "could not add plants to user")
 	}
 	return &api.CreatePlantV1Response{}, nil
 }
