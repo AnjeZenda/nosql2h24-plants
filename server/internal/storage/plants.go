@@ -262,11 +262,12 @@ func parseLabelsToBSON(labels map[string]interface{}) bson.D {
 	for k, v := range labels {
 		switch vc := v.(type) {
 		case string:
-			if k == "species" {
-				bsonFltr = append(bsonFltr, bson.E{Key: k, Value: bson.M{"$regex": vc, "$options": "i"}})
-			} else {
-				bsonFltr = append(bsonFltr, bson.E{Key: k, Value: vc})
-			}
+			// if k == "species" {
+			// 	bsonFltr = append(bsonFltr, bson.E{Key: k, Value: bson.M{"$regex": vc, "$options": "i"}})
+			// } else {
+			// 	bsonFltr = append(bsonFltr, bson.E{Key: k, Value: vc})
+			// }
+			bsonFltr = append(bsonFltr, bson.E{Key: k, Value: bson.M{"$regex": vc, "$options": "i"}})
 		case []string:
 			bsonFltr = createOrFilter(k, vc)
 		}
