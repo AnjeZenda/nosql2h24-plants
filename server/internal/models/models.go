@@ -42,46 +42,61 @@ type Plant struct {
 	Description       string             `bson:"description" json:"description"`
 	Type              string             `bson:"type" json:"type"`
 	Species           string             `bson:"species" json:"species"`
-	CareRules         primitive.ObjectID `bson:"care_rules" json:"care_rules"`
 	CreatedAt         time.Time          `bson:"created_at" json:"created_at"`
 	Place             string             `bson:"place" json:"place"`
+	SoldAt            time.Time          `bson:"sold_at,omitempty" json:"sold_at"`
 }
 
 type TradeUser struct {
-	ID         primitive.ObjectID `bson:"_id" json:"id"`
-	Surname    string             `bson:"surname" json:"surname"`
-	Name       string             `bson:"name" json:"name"`
-	FatherName string             `bson:"father_name" json:"father_name"`
-	Plant      TradePlant         `bson:"plant" json:"plant"`
+	ID         primitive.ObjectID `bson:"_id,omitempty" json:"id"`
+	Surname    string             `bson:"surname,omitempty" json:"surname"`
+	Name       string             `bson:"name,omitempty" json:"name"`
+	FatherName string             `bson:"father_name,omitempty" json:"father_name"`
+	Plant      TradePlant         `bson:"plant,omitempty" json:"plant"`
 }
 
 type Trade struct {
 	ID        primitive.ObjectID `bson:"_id,omitempty" json:"id"`
-	Offerer   TradeUser          `bson:"offerer" json:"offerer"`
-	Accepter  TradeUser          `bson:"accepter" json:"accepter"`
+	Offerer   TradeUser          `bson:"offerer,omitempty" json:"offerer"`
+	Accepter  TradeUser          `bson:"accepter,omitempty" json:"accepter"`
 	CreatedAt time.Time          `bson:"created_at" json:"created_at"`
 	UpdatedAt time.Time          `bson:"updated_at" json:"updated_at"`
 	Status    int                `bson:"status" json:"status"`
+	Type      string             `bson:"type" json:"type"`
 }
 
 type TradePlant struct {
-	ID   primitive.ObjectID `bson:"_id" json:"id"`
-	Name string             `bson:"species" json:"species"`
+	ID    primitive.ObjectID `bson:"_id,omitempty" json:"id"`
+	Name  string             `bson:"species,omitempty" json:"species"`
+	Image string             `bson:"image,omitempty" json:"image"`
+	Price float32            `bson:"price,omitempty" json:"price"`
 }
 
 type CareRules struct {
-	ID          primitive.ObjectID    `bson:"_id,omitempty" json:"id"`
-	Species     string                `bson:"species" json:"species"`
-	Description []CareDescriptionPart `bson:"description" json:"description"`
-	CreatedAt   time.Time             `bson:"created_at" json:"created_at"`
-	UpdatedAt   time.Time             `bson:"updated_at" json:"updated_at"`
+	ID                primitive.ObjectID    `bson:"_id,omitempty" json:"id"`
+	Species           string                `bson:"species" json:"species"`
+	Description       []CareDescriptionPart `bson:"description" json:"description"`
+	CreatedAt         time.Time             `bson:"created_at" json:"created_at"`
+	UpdatedAt         time.Time             `bson:"updated_at" json:"updated_at"`
+	Image             string                `bson:"image" json:"image"`
+	Type              string                `bson:"type" json:"type"`
+	LightCondition    string                `bson:"light_condition" json:"light_condition"`
+	TemperatureRegime string                `bson:"temperature_regime" json:"temperature_regime"`
 }
 
 type CareDescriptionPart struct {
 	UserID              primitive.ObjectID `bson:"user_id" json:"user_id"`
 	DescriptionAddition string             `bson:"description_addition" json:"description_addition"`
 	CreatedAt           time.Time          `bson:"created_at" json:"created_at"`
-	UserName            string
-	UserSurname         string
-	UserFatherName      string
+	UserName            string             `bson:"user_name" json:"user_name"`
+	UserSurname         string             `bson:"user_surname" json:"user_surname"`
+	UserFatherName      string             `bson:"user_father_name" json:"user_father_name"`
+}
+
+type Filter struct {
+	Page   int64
+	Size   int64
+	SortBy string
+	IsDesc bool
+	Labels map[string]interface{}
 }

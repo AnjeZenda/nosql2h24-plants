@@ -14,13 +14,18 @@ func (h *Handler) GetPlantsV1(
 	ctx context.Context,
 	req *api.GetPlantsV1Request,
 ) (*api.GetPlantsV1Response, error) {
-	plants, err := h.storage.GetPlants(ctx)
+	filter := parseFilterLabels(req.Filter)
+	filter.Page = req.Page
+	filter.Size = req.Size
+	filter.SortBy = req.Sort
+	plants, err := h.storage.GetPlants(ctx, filter)
 	if err != nil {
-		return nil, status.Error(codes.Internal, "could not get plants")
+		return nil, status.Errorf(codes.Internal, "could not get plants. Error %v", err)
 	}
-	result := make([]*api.GetPlantsV1Response_Plant, len(plants))
+	result := make([]*api.Plant, len(plants))
 	for i, p := range plants {
-		result[i] = &api.GetPlantsV1Response_Plant{
+		result[i] = &api.Plant{
+			Id:        p.ID.Hex(),
 			Image:     p.Image,
 			Species:   p.Species,
 			Price:     p.Price,

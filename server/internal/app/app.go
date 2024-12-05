@@ -7,14 +7,16 @@ import (
 	"net"
 	"net/http"
 
-	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
+	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"golang.org/x/sync/errgroup"
 	"google.golang.org/grpc"
 
 	"plants/internal/config"
+	"plants/internal/handlers/data"
 	"plants/internal/handlers/plants"
 	"plants/internal/handlers/trades"
 	"plants/internal/handlers/users"
+	dataAPI "plants/internal/pkg/pb/data/v1"
 	plantsAPI "plants/internal/pkg/pb/plants/v1"
 	tradesAPI "plants/internal/pkg/pb/trades/v1"
 	usersAPI "plants/internal/pkg/pb/users/v1"
@@ -47,6 +49,9 @@ func Run(cfg *config.Config) error {
 	tradesHandler := trades.New(repo)
 	tradesAPI.RegisterTradesServer(gRPCServer, tradesHandler)
 
+	dataHandler := data.New(repo)
+	dataAPI.RegisterDataAPIServer(gRPCServer, dataHandler)
+
 	mux := runtime.NewServeMux()
 	if err = plantsAPI.RegisterPlantsAPIHandlerServer(ctx, mux, plantsHandler); err != nil {
 		return err
@@ -57,6 +62,9 @@ func Run(cfg *config.Config) error {
 	}
 
 	if err = tradesAPI.RegisterTradesHandlerServer(ctx, mux, tradesHandler); err != nil {
+		return err
+	}
+	if err = dataAPI.RegisterDataAPIHandlerServer(ctx, mux, dataHandler); err != nil {
 		return err
 	}
 

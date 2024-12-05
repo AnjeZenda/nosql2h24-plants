@@ -29,7 +29,7 @@
           "default": {
             "description": "An unexpected error response.",
             "schema": {
-              "$ref": "#/definitions/googlerpcStatus"
+              "$ref": "#/definitions/rpcStatus"
             }
           }
         },
@@ -61,7 +61,7 @@
           "default": {
             "description": "An unexpected error response.",
             "schema": {
-              "$ref": "#/definitions/googlerpcStatus"
+              "$ref": "#/definitions/rpcStatus"
             }
           }
         },
@@ -87,13 +87,13 @@
           "200": {
             "description": "",
             "schema": {
-              "$ref": "#/definitions/v1GetUserV1ResponseUser"
+              "$ref": "#/definitions/GetUserV1ResponseUser"
             }
           },
           "default": {
             "description": "An unexpected error response.",
             "schema": {
-              "$ref": "#/definitions/googlerpcStatus"
+              "$ref": "#/definitions/rpcStatus"
             }
           }
         },
@@ -108,47 +108,47 @@
         "tags": [
           "User"
         ]
+      },
+      "post": {
+        "operationId": "User_UpdateUserV1",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1UpdateUserV1Response"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UserUpdateUserV1Body"
+            }
+          }
+        ],
+        "tags": [
+          "User"
+        ]
       }
     }
   },
   "definitions": {
-    "googlerpcStatus": {
-      "type": "object",
-      "properties": {
-        "code": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "message": {
-          "type": "string"
-        },
-        "details": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "$ref": "#/definitions/protobufAny"
-          }
-        }
-      }
-    },
-    "protobufAny": {
-      "type": "object",
-      "properties": {
-        "@type": {
-          "type": "string"
-        }
-      },
-      "additionalProperties": {}
-    },
-    "v1GetUserV1Response": {
-      "type": "object",
-      "properties": {
-        "user": {
-          "$ref": "#/definitions/v1GetUserV1ResponseUser"
-        }
-      }
-    },
-    "v1GetUserV1ResponseUser": {
+    "GetUserV1ResponseUser": {
       "type": "object",
       "properties": {
         "photo": {
@@ -179,6 +179,65 @@
         }
       }
     },
+    "UserUpdateUserV1Body": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "surname": {
+          "type": "string"
+        },
+        "fatherName": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "phoneNumber": {
+          "type": "string"
+        },
+        "photo": {
+          "type": "string"
+        }
+      }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "v1GetUserV1Response": {
+      "type": "object",
+      "properties": {
+        "user": {
+          "$ref": "#/definitions/GetUserV1ResponseUser"
+        }
+      }
+    },
     "v1Role": {
       "type": "string",
       "enum": [
@@ -187,6 +246,9 @@
         "ROLE_REGULAR"
       ],
       "default": "ROLE_UNSPECIFIED"
+    },
+    "v1UpdateUserV1Response": {
+      "type": "object"
     },
     "v1UserLoginV1Request": {
       "type": "object",
@@ -223,6 +285,9 @@
           "type": "string"
         },
         "email": {
+          "type": "string"
+        },
+        "phoneNumber": {
           "type": "string"
         },
         "password": {

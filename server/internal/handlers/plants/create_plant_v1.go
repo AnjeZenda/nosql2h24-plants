@@ -33,7 +33,6 @@ func (h *Handler) CreatePlantV1(
 		Description:       req.Description,
 		Type:              req.Type,
 		Species:           req.Species,
-		CareRules:         primitive.NilObjectID,
 		CreatedAt:         time.Now().UTC(),
 		Place:             req.Place,
 	})
