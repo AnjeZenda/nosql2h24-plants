@@ -1330,7 +1330,7 @@ var (
 
 	pattern_PlantsAPI_GetPlantsForTradeV1_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"api", "plants", "trade", "userId"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_PlantsAPI_GetPlantsV1_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 1, 0, 4, 1, 5, 3, 1, 0, 4, 1, 5, 4}, []string{"api", "palnts", "page", "size", "sort"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_PlantsAPI_GetPlantsV1_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 1, 0, 4, 1, 5, 3, 1, 0, 4, 1, 5, 4}, []string{"api", "plants", "page", "size", "sort"}, "", runtime.AssumeColonVerbOpt(true)))
 
 	pattern_PlantsAPI_BuyPlantV1_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "plants", "buy"}, "", runtime.AssumeColonVerbOpt(true)))
 

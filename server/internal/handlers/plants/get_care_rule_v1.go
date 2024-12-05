@@ -14,7 +14,7 @@ func (h *Handler) GetCareRuleV1(
 	ctx context.Context,
 	req *api.GetCareRuleV1Request,
 ) (*api.GetCareRuleV1Response, error) {
-	rules, err := h.storage.GetCareRulesForPlant(ctx, req.Species)
+	rules, err := h.storage.GetCareRulesForPlant(ctx, req.Id)
 	if err != nil {
 		return nil, status.Error(codes.Internal, "cant get plant")
 	}
