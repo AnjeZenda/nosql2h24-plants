@@ -224,15 +224,15 @@ func request_PlantsAPI_GetCareRuleV1_0(ctx context.Context, marshaler runtime.Ma
 		_   = err
 	)
 
-	val, ok = pathParams["species"]
+	val, ok = pathParams["id"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "species")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "id")
 	}
 
-	protoReq.Species, err = runtime.String(val)
+	protoReq.Id, err = runtime.String(val)
 
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "species", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "id", err)
 	}
 
 	msg, err := client.GetCareRuleV1(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
@@ -251,15 +251,15 @@ func local_request_PlantsAPI_GetCareRuleV1_0(ctx context.Context, marshaler runt
 		_   = err
 	)
 
-	val, ok = pathParams["species"]
+	val, ok = pathParams["id"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "species")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "id")
 	}
 
-	protoReq.Species, err = runtime.String(val)
+	protoReq.Id, err = runtime.String(val)
 
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "species", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "id", err)
 	}
 
 	msg, err := server.GetCareRuleV1(ctx, &protoReq)
@@ -1324,7 +1324,7 @@ var (
 
 	pattern_PlantsAPI_GetPlantByIdV1_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"api", "plants", "id"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_PlantsAPI_GetCareRuleV1_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"api", "care", "species"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_PlantsAPI_GetCareRuleV1_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"api", "care", "id"}, "", runtime.AssumeColonVerbOpt(true)))
 
 	pattern_PlantsAPI_CreatePlantV1_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "plants", "add"}, "", runtime.AssumeColonVerbOpt(true)))
 

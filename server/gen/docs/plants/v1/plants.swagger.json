@@ -48,6 +48,36 @@
         ]
       }
     },
+    "/api/care/{id}": {
+      "get": {
+        "operationId": "PlantsAPI_GetCareRuleV1",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetCareRuleV1Response"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "PlantsAPI"
+        ]
+      }
+    },
     "/api/care/{page}/{size}": {
       "post": {
         "operationId": "PlantsAPI_GetPlantsWithCareRulesV1",
@@ -87,36 +117,6 @@
             "schema": {
               "$ref": "#/definitions/PlantsAPIGetPlantsWithCareRulesV1Body"
             }
-          }
-        ],
-        "tags": [
-          "PlantsAPI"
-        ]
-      }
-    },
-    "/api/care/{species}": {
-      "get": {
-        "operationId": "PlantsAPI_GetCareRuleV1",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1GetCareRuleV1Response"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "species",
-            "in": "path",
-            "required": true,
-            "type": "string"
           }
         ],
         "tags": [
@@ -892,7 +892,10 @@
         "image": {
           "type": "string"
         },
-        "id": {
+        "ruleId": {
+          "type": "string"
+        },
+        "type": {
           "type": "string"
         }
       }
