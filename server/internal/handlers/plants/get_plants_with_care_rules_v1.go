@@ -41,7 +41,8 @@ func (h *Handler) GetPlantsWithCareRulesV1(
 		result = append(result, &api.GetPlantsWithCareRulesV1Response_PlantInfo{
 			Species: r.Species,
 			Image:   r.Image,
-			Id:      r.ID.Hex(),
+			RuleId:  r.ID.Hex(),
+			Type:    r.Type,
 		})
 	}
 	return &api.GetPlantsWithCareRulesV1Response{

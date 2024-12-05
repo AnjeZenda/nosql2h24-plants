@@ -12,7 +12,7 @@ import (
 type Storage interface {
 	GetPlantsWithCareRules(ctx context.Context, fltr *models.Filter) ([]*models.CareRules, error)
 	CreateNewCareRule(ctx context.Context, rule *models.CareRules) error
-	GetCareRulesForPlant(ctx context.Context, species string) (*models.CareRules, error)
+	GetCareRulesForPlant(ctx context.Context, id string) (*models.CareRules, error)
 	GetPlants(ctx context.Context, fltr *models.Filter) ([]*models.Plant, error)
 	AddPlant(ctx context.Context, plant *models.Plant) error
 	GetPlantsForTrade(ctx context.Context, id string) ([]*models.Plant, error)
