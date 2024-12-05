@@ -44,6 +44,7 @@
               v-model="password"
               placeholder="Пароль"
               required
+              type="password"
           />
         </div>
 
@@ -108,7 +109,15 @@ export default {
       });
     },
 
-    success() {
+    errorAuth() {
+      this.$notify({
+        title: "Ошибка!",
+        text: "Произошла ошибка при входе, попробуйте еще раз.",
+        type: 'error'
+      });
+    },
+
+    successRegister() {
       this.$notify({
         title: "Получилось!",
         text: "Регистрация прошла успешно.",
@@ -117,30 +126,23 @@ export default {
     },
 
     async auth() {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      const phoneRegex = /^\+?\d{10,15}$/;
-      let userData = {};
+      const userData = {
+        login: this.login,
+        password: this.password
+      };
 
-      if (emailRegex.test(this.login)) {
-        userData = {
-          email: this.login,
-          password: this.password
-        };
-      } else if (phoneRegex.test(this.login)) {
-        userData = {
-          phone_number: this.login,
-          password: this.password
-        };
+      try {
+        const response = await axios.post(AUTH_URL, userData);
+        sessionStorage.setItem("id", response.data.id);
+        sessionStorage.setItem("role", response.data.role);
+        this.$router.push('/plants/sale');
+      } catch (error) {
+        this.errorAuth();
       }
-
-      const response = await axios.post(AUTH_URL, userData);
-      sessionStorage.setItem("id", response.data.id);
-      sessionStorage.setItem("role", response.data.role);
-      this.$router.push('/plants/sale');
     },
 
     async register() {
-      const [name, surname, fatherName] = this.name.split(" ");
+      const [surname, name, fatherName] = this.name.split(" ");
 
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       const phoneRegex = /^\+?\d{10,15}$/;
@@ -159,14 +161,14 @@ export default {
           name: name,
           surname: surname,
           fatherName: fatherName,
-          phone_number: this.login,
+          phoneNumber: this.login,
           password: this.password
         };
       }
 
       try {
         await axios.post(REGISTER_URL, userData);
-        this.success();
+        this.successRegister();
       } catch (error) {
         this.errorRegister();
       }
@@ -206,7 +208,7 @@ export default {
 #auth-button.active {
   background-color: #ffffff;
   color: #000000;
-  cursor: default;
+  cursor: none;
 }
 
 #auth-button:not(.active):hover {
