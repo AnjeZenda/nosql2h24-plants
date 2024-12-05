@@ -35,6 +35,7 @@ func (h *Handler) CreatePlantV1(
 		Species:           req.Species,
 		CreatedAt:         time.Now().UTC(),
 		Place:             req.Place,
+		SoldAt:            time.Time{},
 	}
 	err = h.storage.AddPlant(ctx, plant)
 	if err != nil {
