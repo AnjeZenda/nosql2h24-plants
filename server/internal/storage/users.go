@@ -100,7 +100,7 @@ func (s *Storage) UpdateUser(ctx context.Context,
 
 	filter := bson.M{"_id": objID}
 	var usr models.User
-
+	err = collection.FindOne(ctx, filter).Decode(&usr)
 	if name != "" {
 		usr.Name = name
 	}
