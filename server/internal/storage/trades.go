@@ -14,15 +14,30 @@ import (
 
 func (s *Storage) GetTrades(ctx context.Context, id primitive.ObjectID, role string) ([]models.Trade, error) {
 	collection := s.DataBase.Collection("trades")
-
+	var filter bson.D
 	var result []models.Trade
-	filter := bson.D{
-		{"id", id},
-		{"type", "buy"},
-		{"$or", bson.A{
-			bson.D{{"status", 0}},
-			bson.D{{"status", 1}},
-		}},
+	if role == "accepter" {
+		filter = bson.D{
+			{"type", "trade"},
+			{"accepter", bson.D{
+				{"_id", id},
+			}},
+			{"$or", bson.A{
+				bson.D{{"status", 0}},
+				bson.D{{"status", 1}},
+			}},
+		}
+	} else {
+		filter = bson.D{
+			{"type", "trade"},
+			{"offerer", bson.D{
+				{"_id", id},
+			}},
+			{"$or", bson.A{
+				bson.D{{"status", 0}},
+				bson.D{{"status", 1}},
+			}},
+		}
 	}
 	cur, err := collection.Find(ctx, filter)
 	if err != nil {
@@ -143,28 +158,31 @@ func (s *Storage) UpdateTrade(ctx context.Context,
 	collection = s.DataBase.Collection("plants")
 	offPlantId := trade.Offerer.Plant.ID
 	filter = bson.M{"_id": offPlantId}
-	update = bson.D{
-		{"$set", bson.D{
-			{"sold_at", time.Now().UTC()},
-		}},
-	}
-	_, errres = collection.UpdateOne(ctx, filter, update)
-	if errres != nil {
-		return ErrTradeNotUpdated
+	if status != 3 {
+		update = bson.D{
+			{"$set", bson.D{
+				{"sold_at", time.Now().UTC()},
+			}},
+		}
+		_, errres = collection.UpdateOne(ctx, filter, update)
+		if errres != nil {
+			return ErrTradeNotUpdated
+		}
 	}
 
 	accPlantId := trade.Accepter.Plant.ID
 	filter = bson.M{"_id": accPlantId}
-	update = bson.D{
-		{"$set", bson.D{
-			{"sold_at", time.Now().UTC()},
-		}},
+	if status != 3 {
+		update = bson.D{
+			{"$set", bson.D{
+				{"sold_at", time.Now().UTC()},
+			}},
+		}
+		_, errres = collection.UpdateOne(ctx, filter, update)
+		if errres != nil {
+			return ErrTradeNotUpdated
+		}
 	}
-	_, errres = collection.UpdateOne(ctx, filter, update)
-	if errres != nil {
-		return ErrTradeNotUpdated
-	}
-
 	return nil
 }
 
