@@ -15,8 +15,9 @@ func (h *Handler) GetPlantsWithCareRulesV1(
 	req *api.GetPlantsWithCareRulesV1Request,
 ) (*api.GetPlantsWithCareRulesV1Response, error) {
 	filter := &models.Filter{
-		Page: req.Page,
-		Size: req.Size,
+		Page:   req.Page,
+		Size:   req.Size,
+		Labels: map[string]interface{}{},
 	}
 	if req.Filter.Species != "" {
 		filter.Labels["species"] = req.Filter.Species
