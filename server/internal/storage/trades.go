@@ -170,15 +170,16 @@ func (s *Storage) UpdateTrade(ctx context.Context,
 
 	accPlantId := trade.Accepter.Plant.ID
 	filter = bson.M{"_id": accPlantId}
-	update = bson.D{
-		{"$set", bson.D{
-			{"sold_at", time.Now().UTC()},
-		}},
+	if status != 3 {
+		update = bson.D{
+			{"$set", bson.D{
+				{"sold_at", time.Now().UTC()},
+			}},
+		}
+		_, errres = collection.UpdateOne(ctx, filter, update)
+		if errres != nil {
+			return ErrTradeNotUpdated
+		}
 	}
-	_, errres = collection.UpdateOne(ctx, filter, update)
-	if errres != nil {
-		return ErrTradeNotUpdated
-	}
-
 	return nil
 }
