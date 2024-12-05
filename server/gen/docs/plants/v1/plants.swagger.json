@@ -124,58 +124,6 @@
         ]
       }
     },
-    "/api/palnts/{page}/{size}/{sort}": {
-      "post": {
-        "operationId": "PlantsAPI_GetPlantsV1",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1GetPlantsV1Response"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "page",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "format": "int64"
-          },
-          {
-            "name": "size",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "format": "int64"
-          },
-          {
-            "name": "sort",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/PlantsAPIGetPlantsV1Body"
-            }
-          }
-        ],
-        "tags": [
-          "PlantsAPI"
-        ]
-      }
-    },
     "/api/plants/active/{userId}": {
       "get": {
         "operationId": "PlantsAPI_GetActivePlantsV1",
@@ -433,6 +381,58 @@
           "PlantsAPI"
         ]
       }
+    },
+    "/api/plants/{page}/{size}/{sort}": {
+      "post": {
+        "operationId": "PlantsAPI_GetPlantsV1",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetPlantsV1Response"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "page",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "size",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "sort",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PlantsAPIGetPlantsV1Body"
+            }
+          }
+        ],
+        "tags": [
+          "PlantsAPI"
+        ]
+      }
     }
   },
   "definitions": {
@@ -675,13 +675,6 @@
         },
         "species": {
           "type": "string"
-        },
-        "careRules": {
-          "type": "string"
-        },
-        "createdAt": {
-          "type": "string",
-          "format": "date-time"
         },
         "userId": {
           "type": "string"

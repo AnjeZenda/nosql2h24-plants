@@ -48,7 +48,7 @@ service PlantsAPI {
 
     rpc GetPlantsV1 (GetPlantsV1Request) returns (GetPlantsV1Response) {
         option (google.api.http) = {
-            post: "/api/palnts/{page}/{size}/{sort}"
+            post: "/api/plants/{page}/{size}/{sort}"
             body: "*"
         };
     };
@@ -113,8 +113,6 @@ message CreatePlantV1Request {
     string description = 9;
     string type = 10;
     string species = 11;
-    string careRules = 12;
-    google.protobuf.Timestamp createdAt = 13;
     string userId = 14;
 }
 

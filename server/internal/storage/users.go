@@ -180,3 +180,12 @@ func (s *Storage) AddTradeToUser(ctx context.Context, userId, tradeId primitive.
 		bson.D{{Key: "$push", Value: bson.D{{Key: "trades", Value: tradeId}}}},
 	).Err()
 }
+
+func (s *Storage) AddPlantToUser(ctx context.Context, plant *models.Plant) error {
+	collection := s.DataBase.Collection("users")
+	return collection.FindOneAndUpdate(
+		ctx,
+		bson.D{{Key: "_id", Value: plant.UserID}},
+		bson.D{{Key: "$push", Value: bson.D{{Key: "plants", Value: plant}}}},
+	).Err()
+}
