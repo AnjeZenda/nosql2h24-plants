@@ -21,7 +21,7 @@ type Storage interface {
 	CreateBuyTrade(ctx context.Context, trade *models.Trade) error
 	DeletePlantFromUser(ctx context.Context, userId, plantId string) error
 	SoldPlant(ctx context.Context, id string) error
-	GetTradesByIds(ctx context.Context, ids []primitive.ObjectID, tradeType string) ([]*models.Trade, error)
+	GetTradesByIds(ctx context.Context, ids []primitive.ObjectID, tradeType string, tradeStatus int8) ([]*models.Trade, error)
 	GetUserTrades(ctx context.Context, id string) ([]primitive.ObjectID, error)
 	GetPlantsByIds(ctx context.Context, ids []string, fltr *models.Filter) ([]*models.Plant, error)
 	AddTradeToUser(ctx context.Context, userId, tradeId primitive.ObjectID) error

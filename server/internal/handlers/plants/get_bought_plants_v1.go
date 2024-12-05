@@ -18,7 +18,7 @@ func (h *Handler) GetBoughtPlantsV1(
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "cannot get users trades %v", err)
 	}
-	trades, err := h.storage.GetTradesByIds(ctx, tradeIds, "buy")
+	trades, err := h.storage.GetTradesByIds(ctx, tradeIds, "buy", 2)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "cannot get trades %v", err)
 	}

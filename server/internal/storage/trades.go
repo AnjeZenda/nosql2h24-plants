@@ -178,7 +178,7 @@ func (s *Storage) UpdateTrade(ctx context.Context,
 	return nil
 }
 
-func (s *Storage) GetTradesByIds(ctx context.Context, ids []primitive.ObjectID, tradeType string) ([]*models.Trade, error) {
+func (s *Storage) GetTradesByIds(ctx context.Context, ids []primitive.ObjectID, tradeType string, tradeStatus int8) ([]*models.Trade, error) {
 	var (
 		trades []*models.Trade
 		fltr   bson.D
@@ -186,7 +186,7 @@ func (s *Storage) GetTradesByIds(ctx context.Context, ids []primitive.ObjectID, 
 	collection := s.DataBase.Collection("trades")
 	orFltr := createOrFilter("_id", ids)
 	fltr = append(fltr, orFltr...)
-	fltr = append(fltr, bson.E{Key: "type", Value: tradeType})
+	fltr = append(fltr, bson.E{Key: "type", Value: tradeType}, bson.E{Key: "status", Value: tradeStatus})
 	cur, err := collection.Find(ctx, fltr)
 	if err != nil {
 		return nil, err
