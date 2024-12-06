@@ -16,26 +16,30 @@ type valsType interface {
 	string | primitive.ObjectID
 }
 
-func (s *Storage) GetPlantsWithCareRules(ctx context.Context, fltr *models.Filter) ([]*models.CareRules, error) {
+func (s *Storage) GetPlantsWithCareRules(ctx context.Context, fltr *models.Filter) ([]*models.CareRules, int64, error) {
 	collection := s.DataBase.Collection("care_rules")
 	filter := parseLabelsToBSON(fltr.Labels)
 	opts := options.Find()
 	opts.SetLimit(fltr.Size)
 	opts.SetSkip((fltr.Page - 1) * fltr.Size)
+	count, err := collection.CountDocuments(ctx, filter)
+	if err != nil {
+		return nil, 0, err
+	}
 	cursor, err := collection.Find(ctx, filter, opts)
 	if err != nil {
-		return nil, err
+		return nil, 0, err
 	}
 	defer cursor.Close(ctx)
 	rules := make([]*models.CareRules, 0)
 	for cursor.Next(ctx) {
 		var rule models.CareRules
 		if err = cursor.Decode(&rule); err != nil {
-			return nil, err
+			return nil, 0, err
 		}
 		rules = append(rules, &rule)
 	}
-	return rules, nil
+	return rules, count, nil
 }
 
 func (s *Storage) CreateNewCareRule(ctx context.Context, rule *models.CareRules) error {
@@ -95,7 +99,7 @@ func (s *Storage) GetCareRulesForPlant(ctx context.Context, id string) (*models.
 	return &result, nil
 }
 
-func (s *Storage) GetPlants(ctx context.Context, fltr *models.Filter) ([]*models.Plant, error) {
+func (s *Storage) GetPlants(ctx context.Context, fltr *models.Filter) ([]*models.Plant, int64, error) {
 	filter := bson.D{{"sold_at", time.Time{}}}
 	opts := options.Find()
 	if fltr.SortBy != "" {
@@ -107,19 +111,23 @@ func (s *Storage) GetPlants(ctx context.Context, fltr *models.Filter) ([]*models
 		filter = append(filter, parseLabelsToBSON(fltr.Labels)...)
 	}
 	collection := s.DataBase.Collection("plants")
+	count, err := collection.CountDocuments(ctx, filter)
+	if err != nil {
+		return nil, 0, err
+	}
 	cursor, err := collection.Find(ctx, filter, opts)
 	if err != nil {
-		return nil, err
+		return nil, 0, err
 	}
 	plants := make([]*models.Plant, 0)
 	for cursor.Next(ctx) {
 		var plant models.Plant
 		if err := cursor.Decode(&plant); err != nil {
-			return nil, err
+			return nil, 0, err
 		}
 		plants = append(plants, &plant)
 	}
-	return plants, nil
+	return plants, count, nil
 }
 
 func (s *Storage) AddPlant(ctx context.Context, plant *models.Plant) error {
@@ -133,11 +141,10 @@ func (s *Storage) AddPlant(ctx context.Context, plant *models.Plant) error {
 
 func (s *Storage) GetPlantsForTrade(ctx context.Context, id string) ([]*models.Plant, error) {
 	collection := s.DataBase.Collection("plants")
-	objID, err := primitive.ObjectIDFromHex(id)
 
 	filter := bson.D{
-		{"user_id", objID},
-		{"sold_at", time.Time{}},
+		{"user_id", id},
+		{"sold_at", ""},
 	}
 	doc, err := collection.Find(ctx, filter)
 	if err != nil {
