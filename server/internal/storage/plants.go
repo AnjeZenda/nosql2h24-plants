@@ -259,7 +259,7 @@ func parseLabelsToBSON(labels map[string]interface{}) bson.D {
 			// }
 			bsonFltr = append(bsonFltr, bson.E{Key: k, Value: bson.M{"$regex": vc, "$options": "i"}})
 		case []string:
-			bsonFltr = createOrFilter(k, vc)
+			bsonFltr = append(bsonFltr, createOrFilter(k, vc)...)
 		}
 	}
 	if v, ok := labels["price_to"]; ok && v != -1 {
