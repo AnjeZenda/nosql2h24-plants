@@ -150,3 +150,24 @@ textarea {
     cursor: pointer;
     margin-right: 10px;
 }
+
+.white-button-green-text-sale{
+    margin-top: 4%;
+    width: 100%;
+    font-family: 'Century Gothic', sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    color: #89A758;
+    background-color: transparent;
+    border: 2px solid #89A758;
+    border-radius: 10px;
+    padding: 10px;
+    cursor: pointer;
+    align-items: center;
+    position: relative;
+}
+
+.white-button-green-text-sale:hover {
+    color: #77934a;
+    border: 2px solid #77934a;
+}

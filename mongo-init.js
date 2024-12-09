@@ -16,7 +16,7 @@ db.plants.insertMany([
     "species": "Фикус",
     "created_at": ISODate("2024-01-31T10:00:00Z"),
     "place": "Москва",
-    "sold_at": ISODate("0001-01-01T00:00:00Z")
+    "sold_at": ISODate("2024-12-01T00:00:00Z")
   },
   {
     "_id": ObjectId("5f1d7c1d1d8e2f1a1a2b3c4e"),

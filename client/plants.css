@@ -8,9 +8,16 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
+    min-height: 100vh;
 }
 
 .plant-card {
+    width: 19%;
+    box-sizing: border-box;
+    margin-bottom: 30px;
+}
+
+.plant-card-hide {
     width: 19%;
     box-sizing: border-box;
     margin-bottom: 30px;
@@ -97,7 +104,7 @@
 .plant-info-grid {
     display: flex;
     flex-wrap: wrap;
-    margin-top: 3%;
+    margin-top: 2%;
 }
 
 p {
