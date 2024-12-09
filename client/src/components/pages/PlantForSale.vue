@@ -27,7 +27,7 @@
           <h2 style="color: #89A758; font-family: 'Century Gothic', sans-serif">{{ species }}</h2>
           <img :src="plantImage" alt="Plant Photo" class="specific-plant-photo">
         </div>
-        <div>
+        <div style="margin-left: 2%">
           <h2 style="color: #000000; font-family: 'Century Gothic', sans-serif; margin-bottom: 0">{{ price }}</h2>
           <p style="color: #7E7E7E; font-size: 14px; margin-bottom: 0; margin-top: 0">{{ place }}</p>
           <p style="color: #000000; font-size: 16px; font-weight: bold; margin-bottom: 0">Характеристики</p>
@@ -41,11 +41,43 @@
           <p style="color: #000000; font-size: 16px; font-weight: bold; margin-bottom: 0">Тип</p>
           <p style="color: #000000; font-size: 16px; margin-bottom: 0; margin-top: 0">{{ type }}</p>
           <div>
-            <button class="white-button-green-text">Купить</button>
-            <button class="white-button-green-text">Обменяться</button>
+            <button class="white-button-green-text-sale">Купить</button>
+            <button class="white-button-green-text-sale">Обменяться</button>
           </div>
         </div>
       </div>
+    </div>
+  </div>
+
+  <div v-if="isOpen" class="modal-overlay" @click="close">
+    <div class="trade-modal-content" @click.stop>
+      <header class="trade-modal-header">
+        <div style="display: flex; justify-content: space-between; width: 100%;">
+          <h2 style="font-family: 'Century Gothic', sans-serif; color: black">Обмен</h2>
+          <button @click="closeModal" class="close-button">X</button>
+        </div>
+        <div style="margin-top: 2%;">
+            <span :style="{ fontWeight: 'bold', color: 'black', fontSize: '14px'}">
+              Выберете одно из своих объявлений для совершения обмена
+            </span>
+        </div>
+      </header>
+
+      <section class="modal-body" v-for="(ads, index) in userAds" :key="index">
+        <div style="display: flex;flex-direction: row">
+          <div style="display: flex;flex-direction: row">
+            <input v-model="trade_plant_id" type="radio" value="Холодостойкие (до 15°C)" />
+            <img v-if="ads.image" :src="ads.image" alt="Plant Image" class="trade-plant-image" />
+          </div>
+          <div style="margin-left: 4%">
+            <p :style="{fontWeight: 'bold', color: '#89A758'}">{{ ads.species }}</p>
+            <p :style="{fontWeight: 'bold'}">{{ ads.price }}</p>
+            <p>{{ ads.place }}</p>
+            <p>{{ ads.data }}</p>
+          </div>
+        </div>
+        <hr style="margin-top: 10px; border: 1px solid #ccc;" />
+      </section>
     </div>
   </div>
 </template>
@@ -76,7 +108,10 @@ export default {
       place: '',
       plantImage: '',
       price: null,
-      userId: ''
+      userId: '',
+      isOpen: false,
+      userAds: [],
+      trade_plant_id: ''
     };
   },
 
@@ -108,6 +143,28 @@ export default {
           })
     },
 
+    async getPlantsForTrade() {
+      axios
+          .get(`/api/plants/${this.plantID}`)
+          .then((response) => {
+            this.species = response.data.plant.species;
+            this.type = response.data.plant.type;
+            this.size = response.data.plant.size;
+            this.lighting = response.data.plant.lightCondition;
+            this.wateringFrequency = response.data.plant.wateringFrequency;
+            this.temperature = response.data.plant.temperatureRegime;
+            this.careLevel = response.data.plant.careComplexity;
+            this.description = response.data.plant.description;
+            this.place = response.data.plant.place;
+            this.plantImage = response.data.plant.image;
+            this.price = response.data.plant.price;
+            this.firstName = response.data.user.name;
+            this.lastName = response.data.user.surname;
+            this.patronymic = response.data.user.fatherName;
+            this.photo = response.data.user.photo;
+          })
+    },
+
     formatDate(date) {
       return new Date(date).toLocaleDateString("ru-RU", {
         year: 'numeric',
@@ -118,7 +175,17 @@ export default {
 
     formatPrice(price) {
       return `${price} ₽`;
-    }
+    },
+
+    openModal() {
+      this.isOpen = true;
+      this.getIn();
+      this.getOut();
+    },
+
+    closeModal() {
+      this.isOpen = false;
+    },
   }
 }
 </script>
@@ -127,4 +194,28 @@ export default {
 @import "../../../main.css";
 @import "../../../plants.css";
 @import "../../../user.css";
+
+.trade-modal-content {
+  background: #fff;
+  width: 60%;
+  max-width: 500px;
+  padding: 20px;
+  border-radius: 8px;
+  position: relative;
+}
+
+.trade-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  flex-direction: column;
+}
+
+.trade-modal-header h2 {
+  font-size: 1.5em;
+  margin: 0;
+}
 </style>
