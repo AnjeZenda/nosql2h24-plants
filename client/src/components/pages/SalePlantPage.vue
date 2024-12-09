@@ -78,17 +78,17 @@
       <div class="select-sort">
         <select class="custom-select" v-model="sort_type">
           <option disabled value="">Сортировка</option>
-          <option>По умолчанию</option>
-          <option>Дешевле</option>
-          <option>Дороже</option>
-          <option>По дате</option>
+          <option value="">По умолчанию</option>
+          <option value="price">Дешевле</option>
+          <option value="price">Дороже</option>
+          <option value="date">По дате</option>
         </select>
       </div>
 
       <div class="plant-grid">
         <div v-for="plant in plants" class="plant-card">
           <div class="plant-content">
-            <img v-if="plant.image" :src="plant.image" alt="Plant Image" class="plant-image" />
+            <img @click="navigate(plant.id, plant.species)" v-if="plant.image" :src="plant.image" alt="Plant Image" class="plant-image" />
             <div class="plant-info">
               <div v-if="plant.species" class="plant-title">{{ plant.species }}</div>
               <div v-if="plant.price" class="plant-price">{{ formatPrice(plant.price) }}</div>
@@ -106,8 +106,8 @@
       <div style="display: flex">
         <vue-awesome-paginate
             :total-items="plantsCount"
-            :items-per-page="4"
-            :max-pages-shown="Math.ceil(plantsCount / 4)"
+            :items-per-page="15"
+            :max-pages-shown="Math.ceil(plantsCount / 15)"
             v-model="currentPage"
             @click="getPlants"
         />
@@ -120,7 +120,7 @@
 import Navbar from "@/components/Navbar.vue";
 import axios from "axios";
 import {VueAwesomePaginate} from "vue-awesome-paginate";
-import { ref } from "vue";
+import {ref} from "vue";
 
 export default {
   name: "Sale",
@@ -161,15 +161,13 @@ export default {
 
     async getPlants() {
       this.plants = [];
-      this.plantsCount = 0;
-      this.isDesc = this.sort_type !== "Дешевле";
       const plantData = {
         isDesc: this.isDesc,
         filter: {
           place: this.filter.place,
           size: this.filter.size,
-          priceFrom: this.normalizePrice(this.filter.price),
-          priceTo: this.normalizePrice(this.filter.price),
+          priceFrom: this.normalizePrice(this.filter.priceFrom),
+          priceTo: this.normalizePrice(this.filter.priceToe),
           lightCondition: this.filter.lighting,
           wateringFrequency: this.filter.wateringFrequency,
           temperatureRegime: this.filter.temperature,
@@ -181,7 +179,7 @@ export default {
       };
 
       axios
-          .post(`/api/plants/${this.currentPage}/4/`, plantData)
+          .post(`/api/plants/${this.currentPage}/15/${this.sort_type}`, plantData)
           .then((response) => {
             response.data.plants.forEach(elem => {
               let plant = {
@@ -193,8 +191,8 @@ export default {
                 place: elem.place
               };
               this.plants.push(plant);
-              this.plantsCount += 1;
-            })
+            });
+            this.plantsCount = parseInt(response.data.count);
           })
     },
 
@@ -212,6 +210,11 @@ export default {
 
     formatPrice(price) {
       return `${price} ₽`;
+    },
+
+    navigate(plant_id, species) {
+      sessionStorage.setItem("specificPlant", plant_id);
+      this.$router.push(`/plants/sale/${species}`)
     }
   }
 }

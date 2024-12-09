@@ -60,7 +60,8 @@
 .pagination-container {
     display: flex;
     column-gap: 10px;
-    margin-left: auto
+    margin-left: auto;
+    margin-right: 5%;
 }
 
 .paginate-buttons {
@@ -85,4 +86,20 @@
 
 .active-page:hover {
     background-color: #88a658;
+}
+
+.specific-plant-photo {
+    width: 350px;
+    height: 350px;
+    margin-bottom: 5px;
+}
+
+.plant-info-grid {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 3%;
+}
+
+p {
+    font-family: 'Century Gothic', sans-serif;
 }
