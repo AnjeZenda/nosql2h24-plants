@@ -76,11 +76,11 @@
       </div>
 
       <div class="select-sort">
-        <select class="custom-select" v-model="sort_type">
+        <select class="custom-select" v-model="sort_type" @change="getPlants">
           <option disabled value="">Сортировка</option>
           <option value="">По умолчанию</option>
-          <option value="price">Дешевле</option>
-          <option value="price">Дороже</option>
+          <option value="cheap">Дешевле</option>
+          <option value="expensive">Дороже</option>
           <option value="date">По дате</option>
         </select>
       </div>
@@ -103,7 +103,7 @@
             class="plant-card placeholder"
         ></div>
       </div>
-      <div style="display: flex">
+      <div style="display: flex; position: sticky;">
         <vue-awesome-paginate
             :total-items="plantsCount"
             :items-per-page="15"
@@ -144,6 +144,7 @@ export default {
         priceTo: null,
       },
       sort_type: '',
+      sort: '',
       isDesc: true,
       userId: '',
       plantsCount: 0
@@ -161,13 +162,27 @@ export default {
 
     async getPlants() {
       this.plants = [];
+
+      if (this.sort_type === "cheap") {
+        this.sort = "price";
+        this.isDesc = false;
+      } else if (this.sort_type === "expensive") {
+        this.sort = "price";
+        this.isDesc = true;
+      } else if (this.sort_type === "date") {
+        this.sort = "date";
+        this.isDesc = true;
+      } else {
+        this.sort = "";
+      }
+
       const plantData = {
         isDesc: this.isDesc,
         filter: {
           place: this.filter.place,
           size: this.filter.size,
           priceFrom: this.normalizePrice(this.filter.priceFrom),
-          priceTo: this.normalizePrice(this.filter.priceToe),
+          priceTo: this.normalizePrice(this.filter.priceTo),
           lightCondition: this.filter.lighting,
           wateringFrequency: this.filter.wateringFrequency,
           temperatureRegime: this.filter.temperature,
@@ -179,7 +194,7 @@ export default {
       };
 
       axios
-          .post(`/api/plants/${this.currentPage}/15/${this.sort_type}`, plantData)
+          .post(`/api/plants/${this.currentPage}/15/${this.sort}`, plantData)
           .then((response) => {
             response.data.plants.forEach(elem => {
               let plant = {
@@ -197,6 +212,7 @@ export default {
     },
 
     submitForm() {
+      this.currentPage = ref(1);
       this.getPlants();
     },
 
