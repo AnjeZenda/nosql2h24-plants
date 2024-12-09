@@ -141,10 +141,11 @@ func (s *Storage) AddPlant(ctx context.Context, plant *models.Plant) error {
 
 func (s *Storage) GetPlantsForTrade(ctx context.Context, id string) ([]*models.Plant, error) {
 	collection := s.DataBase.Collection("plants")
+	objID, err := primitive.ObjectIDFromHex(id)
 
 	filter := bson.D{
-		{"user_id", id},
-		{"sold_at", ""},
+		{"user_id", objID},
+		{"sold_at", time.Time{}},
 	}
 	doc, err := collection.Find(ctx, filter)
 	if err != nil {
