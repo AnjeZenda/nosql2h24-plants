@@ -1,30 +1,55 @@
 package data
 
 import (
-	"context"
-	"io/ioutil"
+	"fmt"
+	"io"
 	"os"
 
 	api "plants/internal/pkg/pb/data/v1"
 )
 
-func (h *Handler) ExportDBV1(
-	ctx context.Context,
+func (h *Handler) StreamExportDBV1(
 	req *api.ExportDBV1Request,
-) (*api.ExportDBV1Response, error) {
-	res, err := h.storage.ExportDB(ctx)
-	if err != nil {
-		return &api.ExportDBV1Response{}, err
-	}
+	stream api.DataAPI_ExportDBV1Server,
+) error {
+	ctx := stream.Context()
+
+	// Экспортируем базу данных в файл
 	filePath := "exported_db.json"
-	err = ioutil.WriteFile(filePath, res, 0644)
+	jsonData, err := h.storage.ExportDB(ctx)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	defer os.Remove(filePath)
-	fileData, err := os.ReadFile(filePath)
+
+	if err := os.WriteFile(filePath, jsonData, 0644); err != nil {
+		return fmt.Errorf("ошибка сохранения файла: %w", err)
+	}
+
+	// Открываем файл для стриминга
+	file, err := os.Open(filePath)
 	if err != nil {
-		return nil, err
+		return fmt.Errorf("ошибка открытия файла: %w", err)
 	}
-	return &api.ExportDBV1Response{Db: res}, nil
+	defer file.Close()
+
+	// Читаем файл по частям и отправляем
+	buffer := make([]byte, 1024) // Размер буфера
+	for {
+		n, err := file.Read(buffer)
+		if err != nil {
+			if err == io.EOF {
+				break
+			}
+			return fmt.Errorf("ошибка чтения файла: %w", err)
+		}
+
+		// Отправляем часть данных клиенту
+		if err := stream.Send(&api.ExportDBV1Response{
+			Db: buffer[:n],
+		}); err != nil {
+			return fmt.Errorf("ошибка отправки данных: %w", err)
+		}
+	}
+
+	return nil
 }
