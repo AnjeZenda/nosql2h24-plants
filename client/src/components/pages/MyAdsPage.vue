@@ -69,7 +69,17 @@
             <input class="inputs" v-model="formData.price" type="number" placeholder="Введите цену" required/>
           </div>
 
-          <button class="white-button-green-text" style="margin-bottom: 2%">Добавить изображения</button>
+          <div class="inputs-labels">
+            Добавлено изображений: {{ formData.image === '' ? 0 : 1 }}
+          </div>
+
+          <input
+              type="file"
+              ref="fileInput"
+              @change="addImage"
+              style="display: none"
+          />
+          <button @click="triggerFileInput($event)"  class="white-button-green-text" style="margin-bottom: 2%">Добавить изображение</button>
           <button type="submit" class="green-button-white-text">Опубликовать</button>
         </form>
       </div>
@@ -82,15 +92,34 @@
             :style="{ color: selected === 'active' ? '#000000' : '#7E7E7E', fontWeight: 'bold', fontSize: '14px', fontFamily: 'Century Gothic,sans-serif'}"
             @click="select('active')"
             class="clickable">
-          Входящие
+          Активные
         </span>
         <span
             :style="{ color: selected === 'archive' ? '#000000' : '#7E7E7E', fontWeight: 'bold', fontSize: '14px', fontFamily: 'Century Gothic,sans-serif' }"
             @click="select('archive')"
             class="clickable">
-          Исходящие
+          Архивные
         </span>
       </header>
+
+      <div class="plant-grid">
+        <div v-for="plant in plants" class="plant-card">
+          <div class="plant-content">
+            <img v-if="plant.image" :src="plant.image" alt="Plant Image" class="plant-image" />
+            <div class="plant-info">
+              <div v-if="plant.species" class="plant-title">{{ plant.species }}</div>
+              <div v-if="plant.price" class="plant-price">{{ formatPrice(plant.price) }}</div>
+              <div v-if="plant.place" class="plant-place">{{ plant.place }}</div>
+              <div v-if="plant.createdAt" class="plant-date">{{ formatDate(plant.createdAt) }}</div>
+            </div>
+          </div>
+        </div>
+        <div
+            v-for="n in (5 - (plants.length % 5))"
+            v-if="plants.length % 5 !== 0"
+            class="plant-card placeholder"
+        ></div>
+      </div>
     </div>
   </div>
 </template>
@@ -99,11 +128,10 @@
 import Navbar from "@/components/Navbar.vue";
 import axios from "axios";
 
-const PLANTS_URL = '/api/plants';
 const NEW_PLANT_URL = '/api/plants/add';
 
 export default {
-  name: "Sale",
+  name: "Ads",
   components: { Navbar },
 
   data() {
@@ -128,14 +156,15 @@ export default {
   },
 
   mounted() {
-    this.getPlants();
     this.userId = sessionStorage.getItem("id");
+    this.getActivePlants();
   },
 
   methods: {
-    async getPlants() {
+    async getActivePlants() {
+      this.plants = [];
       axios
-          .get(PLANTS_URL)
+          .get(`/api/plants/active/${this.userId}`)
           .then((response) => {
             response.data.plants.forEach(elem => {
               let plant = {
@@ -150,6 +179,29 @@ export default {
           })
     },
 
+    async getArchivePlants() {
+      this.plants = [];
+      axios
+          .get(`/api/plants/archive/${this.userId}`)
+          .then((response) => {
+            response.data.plants.forEach(elem => {
+              let plant = {
+                image: elem.image,
+                species: elem.species,
+                price: elem.price,
+                createdAt: elem.createdAt,
+                place: elem.place
+              };
+              this.plants.push(plant)
+            })
+          })
+    },
+
+    triggerFileInput(event) {
+      event.preventDefault();
+      this.$refs.fileInput.click();
+    },
+
     addImage(event) {
       const file = event.target.files[0];
       if (file) {
@@ -161,14 +213,29 @@ export default {
       }
     },
 
+    successAddPlant() {
+      this.$notify({
+        title: "Получилось!",
+        text: "Объявление успешно добавлено.",
+        type: 'success'
+      });
+    },
+
+    errorAddPlant() {
+      this.$notify({
+        title: "Ошибка!",
+        text: "Произошла ошибка при добавлении объявления. Попробуйте снова.",
+        type: 'error'
+      });
+    },
+
     submitForm() {
-      console.log(this.formData.image)
       this.createPlant();
     },
 
     async createPlant() {
       const plantData = {
-        image: 'https://i.pinimg.com/736x/c2/ad/d9/c2add9a552ba76ebe2c1c42e487766f7.jpg',
+        image: this.formData.image,
         place: this.formData.city,
         size: this.formData.size,
         price: this.formData.price,
@@ -179,17 +246,20 @@ export default {
         description: this.formData.description,
         type: this.formData.type,
         species: this.formData.species,
-        createdAt: new Date(),
         userId: this.userId
       };
 
       try {
         await axios.post(NEW_PLANT_URL, plantData);
-        alert('Объявление успешно добавлено!');
+        this.successAddPlant();
         this.clearForm();
-        location.reload();
+        if (this.selected === "active") {
+          await this.getActivePlants();
+        } else {
+          await this.getArchivePlants();
+        }
       } catch (error) {
-        alert('Произошла ошибка при добавлении объявления. Попробуйте снова.');
+        this.errorAddPlant();
       }
     },
 
@@ -204,10 +274,16 @@ export default {
       this.formData.description = '';
       this.formData.type = '';
       this.formData.species = '';
+      this.formData.image = ''
     },
 
     select(type) {
       this.selected = type;
+      if (this.selected === 'active') {
+        this.getActivePlants();
+      } else {
+        this.getArchivePlants();
+      }
     },
 
     formatDate(date) {
@@ -233,25 +309,7 @@ export default {
   display: flex;
 }
 
-#search-button {
-  margin-left: 1%;
-  width: 8%;
-}
-
 #create-ads {
   color: #89A758;
-}
-
-.plant-price {
-  font-family: 'Century Gothic', sans-serif;
-  color: black;
-  font-weight: bold;
-}
-
-.plant-place,
-.plant-date {
-  font-size: 13px;
-  font-family: 'Century Gothic', sans-serif;
-  color: #7E7E7E;
 }
 </style>
