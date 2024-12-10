@@ -28,11 +28,13 @@ func (s *Storage) ImportDB(ctx context.Context, jsonData []byte) error {
 	var data map[string][]bson.M
 	if err := json.Unmarshal(jsonData, &data); err != nil {
 		return errors.New("ошибка парсинга JSON: " + err.Error())
+		log.Println("парсинг")
 	}
 
 	// Импортируем данные в каждую коллекцию
 	for collectionName, documents := range data {
 		if len(documents) == 0 {
+			log.Println("пустой док.")
 			continue
 		}
 
@@ -43,6 +45,7 @@ func (s *Storage) ImportDB(ctx context.Context, jsonData []byte) error {
 		}
 		_, err := collection.InsertMany(ctx, interfaceDoc)
 		if err != nil {
+			log.Println("косяк вставки.")
 			return errors.New("ошибка вставки данных в коллекцию " + collectionName + ": " + err.Error())
 		}
 	}
