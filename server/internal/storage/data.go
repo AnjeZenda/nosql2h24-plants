@@ -2,8 +2,10 @@ package storage
 
 import (
 	"context"
+	"encoding/base64"
 	"encoding/json"
 	"errors"
+	"html"
 	"log"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -14,6 +16,7 @@ func (s *Storage) ImportDB(ctx context.Context, jsonData []byte) error {
 	// Очистка базы данных
 	log.Println("bytes after import")
 	log.Println(jsonData)
+
 	collections, err := s.Client.Database("plants_market").ListCollectionNames(ctx, bson.D{})
 	if err != nil {
 		return errors.New("ошибка получения списка коллекций: " + err.Error())
@@ -24,6 +27,12 @@ func (s *Storage) ImportDB(ctx context.Context, jsonData []byte) error {
 		}
 	}
 	log.Println("База данных успешно очищена.")
+	jsonData, err = decodeBase64(jsonData)
+	if err != nil {
+		return errors.New("ошибка декодирования")
+	}
+	log.Println("декод.")
+	log.Println(jsonData)
 
 	// Парсим JSON-данные
 	var data map[string][]bson.M
@@ -66,7 +75,7 @@ func (s *Storage) ExportDB(ctx context.Context) ([]byte, error) {
 		if err != nil {
 			return nil, err
 		}
-		//data[col] = sanitizeData(collectionData)
+		data[col] = sanitizeData(collectionData)
 	}
 
 	// Преобразуем данные в JSON
@@ -82,16 +91,16 @@ func (s *Storage) ExportDB(ctx context.Context) ([]byte, error) {
 	return jsonData, nil
 }
 
-// func sanitizeData(data []bson.M) []bson.M {
-// 	for _, doc := range data {
-// 		for key, value := range doc {
-// 			if str, ok := value.(string); ok {
-// 				doc[key] = html.EscapeString(str) // Очистка строк
-// 			}
-// 		}
-// 	}
-// 	return data
-// }
+func sanitizeData(data []bson.M) []bson.M {
+	for _, doc := range data {
+		for key, value := range doc {
+			if str, ok := value.(string); ok {
+				doc[key] = html.EscapeString(str) // Очистка строк
+			}
+		}
+	}
+	return data
+}
 
 func readCollection(ctx context.Context, client *mongo.Client, dbName, colName string) ([]bson.M, error) {
 	collection := client.Database(dbName).Collection(colName)
@@ -107,4 +116,13 @@ func readCollection(ctx context.Context, client *mongo.Client, dbName, colName s
 	}
 
 	return results, nil
+}
+
+func decodeBase64(encodedData []byte) ([]byte, error) {
+	decodedData := make([]byte, base64.StdEncoding.DecodedLen(len(encodedData)))
+	n, err := base64.StdEncoding.Decode(decodedData, encodedData)
+	if err != nil {
+		return nil, err
+	}
+	return decodedData[:n], nil
 }
