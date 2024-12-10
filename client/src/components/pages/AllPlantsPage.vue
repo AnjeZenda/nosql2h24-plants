@@ -123,7 +123,7 @@ import {VueAwesomePaginate} from "vue-awesome-paginate";
 import {ref} from "vue";
 
 export default {
-  name: "AllSalePlants",
+  name: "AllPlants",
   components: {VueAwesomePaginate, Navbar },
 
   data() {

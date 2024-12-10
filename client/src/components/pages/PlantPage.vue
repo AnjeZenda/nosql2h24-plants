@@ -87,7 +87,7 @@ import Navbar from "@/components/Navbar.vue";
 import axios from "axios";
 
 export default {
-  name: "SpecificPlant",
+  name: "Plant",
   components: { Navbar },
 
   data() {
@@ -111,7 +111,8 @@ export default {
       userId: '',
       isOpen: false,
       userAds: [],
-      trade_plant_id: ''
+      trade_plant_id: '',
+      plants_for_trade: []
     };
   },
 
@@ -144,24 +145,42 @@ export default {
     },
 
     async getPlantsForTrade() {
+      this.plants_for_trade = [];
       axios
           .get(`/api/plants/${this.plantID}`)
           .then((response) => {
-            this.species = response.data.plant.species;
-            this.type = response.data.plant.type;
-            this.size = response.data.plant.size;
-            this.lighting = response.data.plant.lightCondition;
-            this.wateringFrequency = response.data.plant.wateringFrequency;
-            this.temperature = response.data.plant.temperatureRegime;
-            this.careLevel = response.data.plant.careComplexity;
-            this.description = response.data.plant.description;
-            this.place = response.data.plant.place;
-            this.plantImage = response.data.plant.image;
-            this.price = response.data.plant.price;
-            this.firstName = response.data.user.name;
-            this.lastName = response.data.user.surname;
-            this.patronymic = response.data.user.fatherName;
-            this.photo = response.data.user.photo;
+            response.data.plants.forEach(elem => {
+              let plant = {
+                id: elem.id,
+                image: elem.image,
+                species: elem.species,
+                price: elem.price,
+                createdAt: elem.createdAt,
+                place: elem.place
+              };
+              this.plants.push(plant);
+            });
+            this.plantsCount = parseInt(response.data.count);
+          })
+    },
+
+    async buyPlant() {
+      this.plants_for_trade = [];
+      axios
+          .get(`/api/plants/${this.plantID}`)
+          .then((response) => {
+            response.data.plants.forEach(elem => {
+              let plant = {
+                id: elem.id,
+                image: elem.image,
+                species: elem.species,
+                price: elem.price,
+                createdAt: elem.createdAt,
+                place: elem.place
+              };
+              this.plants.push(plant);
+            });
+            this.plantsCount = parseInt(response.data.count);
           })
     },
 
