@@ -162,6 +162,8 @@ func (s *Storage) GetPlantsForTrade(ctx context.Context, id string) ([]*models.P
 			{Key: "$or", Value: bson.A{
 				bson.D{{Key: "offerer.plant.id", Value: plant.ID}},
 				bson.D{{Key: "accepter.plant.id", Value: plant.ID}},
+				bson.D{{Key: "status", Value: 1}},
+				bson.D{{Key: "status", Value: 2}},
 			}},
 		}
 		var tmpTrade models.Trade
