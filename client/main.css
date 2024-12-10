@@ -72,11 +72,11 @@ textarea {
     font-family: 'Century Gothic', sans-serif;
     width: 100%;
     font-size: 14px;
+    border: 2px solid #89A758;
     font-weight: bold;
     background-color: #89A758;
     color: #fff;
     padding: 10px;
-    border: none;
     border-radius: 10px;
     cursor: pointer;
 }

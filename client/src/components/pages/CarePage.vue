@@ -1,8 +1,8 @@
 <template>
   <Navbar />
   <div class="page-layout">
-    <div class="sidebar">
-      <div class="side-form" style="width: 30%">
+    <div style="flex-direction: column; align-items: center; padding-top: 50px; width: 20%">
+      <div>
         <img src="../../../public/logo.png" alt="Plant Shop Logo" class="logo"/>
         <form @submit.prevent="submitFilter">
           <div class="inputs-labels">
@@ -25,7 +25,7 @@
           <label class="checkbox-labels"><input v-model="filter.temperatureRegime" type="checkbox" value="Теплолюбивые (более 22°C)" /> Теплолюбивые (более 22°C)</label>
 
           <button type="submit" class="green-button-white-text">Отфильтровать</button>
-          <button class="white-button-green-text" @click="showModal = true">Добавить информацию</button>
+          <button class="white-button-green-text" @click="isAddOpen = true">Добавить информацию</button>
         </form>
       </div>
     </div>
@@ -33,19 +33,24 @@
     <div class="plant-container">
       <div class="search-plants" style="margin-bottom: 1%">
         <input class="search-input" v-model="filter.species" type="text" placeholder="Поиск растений"/>
-        <button class="green-button-white-text" id="search-button" @click="submitForm">Найти</button>
+        <button class="green-button-white-text" id="search-button" @click="submitFilter">Найти</button>
       </div>
 
       <div class="plant-grid">
         <div v-for="(care, index) in carePlants" :key="index" class="plant-card">
           <div class="plant-content">
-            <img v-if="care.image" :src="care.image" alt="Plant Image" class="plant-image" @click="getCare(care.id)"/>
+            <img v-if="care.image" :src="care.image" alt="Plant Image" class="plant-image" @click="getCare(care.species, care.id)"/>
             <div class="plant-info">
               <div v-if="care.species" class="plant-title">{{ care.species }}</div>
               <div v-if="care.type" class="plant-place">{{ care.type }}</div>
             </div>
           </div>
         </div>
+        <div
+            v-for="n in (5 - (carePlants.length % 5))"
+            v-if="carePlants.length % 5 !== 0"
+            class="plant-card placeholder"
+        ></div>
       </div>
 
       <div style="display: flex; position: sticky;">
@@ -60,81 +65,76 @@
     </div>
   </div>
 
-  <div v-if="showModal" class="modal-overlay" @click.self="clearForm">
-    <div class="modal-content">
-
-      <button class="close-modal" @click="clearForm">X</button>
-      <h1>Информация по уходу</h1>
-      <h3>Заполните основную информацию о растении</h3>
+  <div v-if="isAddOpen" class="modal-overlay" @click="close">
+    <div class="trade-modal-content" @click.stop>
+      <header class="trade-modal-header">
+        <div style="display: flex; justify-content: space-between; width: 100%;">
+          <h2 style="font-family: 'Century Gothic', sans-serif; color: black">Информация по уходу</h2>
+          <button @click="closeAddModal" class="close-button">X</button>
+        </div>
+        <div style="margin-top: 2%;">
+          <h3 style="font-family: 'Century Gothic', sans-serif; color: black; margin: 0">Заполните основную информацию по уходу</h3>
+        </div>
+      </header>
 
       <form @submit.prevent="submitForm">
-        <div class="form-group">
-          <input placeholder="Тип растения" type="text" class="inputs" v-model="type" />
+        <div class="inputs-labels">
+          Тип растения
+          <input class="inputs" v-model="formData.type" placeholder="Наименование типа" required/>
         </div>
 
-        <div class="form-group">
-          <input placeholder="Вид растения" type="text" class="inputs"  v-model="species" />
+        <div class="inputs-labels">
+          Вид растения
+          <input class="inputs" v-model="formData.species" type="text" placeholder="Наименование вида" required/>
         </div>
 
-        <div class="form-group">
-          <div class="inputs-labels">Условия освещения</div>
-          <div>
-            <input type="radio" value="Тенелюбивые" v-model="lightCondition" />
-            <label style="font-size: 14px" >Тенелюбивые</label>
-          </div>
-          <div>
-            <input type="radio" value="Полутеневые" v-model="lightCondition" />
-            <label style="font-size: 14px" >Полутеневые</label>
-          </div>
-          <div>
-            <input type="radio" value="Светолюбивые" v-model="lightCondition" />
-            <label style="font-size: 14px" >Светолюбивые</label>
-          </div>
+        <div class="inputs-labels">Условия освещения</div>
+        <label class="checkbox-labels"><input v-model="formData.lightCondition" type="radio" value="Тенелюбивые" /> Тенелюбивые</label>
+        <br>
+        <label class="checkbox-labels"><input v-model="formData.lightCondition" type="radio" value="Полутеневые" /> Полутеневые</label>
+        <br>
+        <label class="checkbox-labels"><input v-model="formData.lightCondition" type="radio" value="Светолюбивые" /> Светолюбивые</label>
+
+        <div class="inputs-labels">Температурный режим</div>
+        <label class="checkbox-labels"><input v-model="formData.temperatureRegime" type="radio" value="Холодостойкие (до 15°C)" /> Холодостойкие (до 15°C)</label>
+        <br>
+        <label class="checkbox-labels"><input v-model="formData.temperatureRegime" type="radio" value="Средний режим (15-22°C)" /> Средний режим (15-22°C)</label>
+        <br>
+        <label class="checkbox-labels"><input v-model="formData.temperatureRegime" type="radio" value="Теплолюбивые (более 22°C)" /> Теплолюбивые (более 22°C)</label>
+
+        <div class="inputs-labels">
+          Описание
+          <textarea class="inputs" v-model="formData.descriptionAddition" placeholder="Описание ухода"></textarea>
         </div>
 
-        <div class="form-group">
-          <div class="inputs-labels">Температурный режим</div>
-          <div>
-            <input type="radio" value="Холодостойкие (до 15°C)" v-model="temperatureRegime" />
-            <label style="font-size: 14px" >Холодостойкие (до 15°C)</label>
-          </div>
-          <div>
-            <input type="radio" value="Средний режим (15-22°C)" v-model="temperatureRegime" />
-            <label style="font-size: 14px" >Средний режим (15-22°C)</label>
-          </div>
-          <div>
-            <input type="radio" value="Теплолюбивые (более 22°C)" v-model="temperatureRegime" />
-            <label style="font-size: 14px" >Теплолюбивые (более 22°C)</label>
-          </div>
+        <div class="inputs-labels">
+          Добавлено изображений: {{ formData.image === '' ? 0 : 1 }}
         </div>
 
-        <div class="form-group">
-          <div class="inputs-labels">Введите описание ухода за растением</div>
-          <textarea class="inputs" v-model="descriptionAddition"></textarea>
-        </div>
-
-        <button class="white-button-green-text" style="margin-top: -1%">
-          Изображение
-        </button>
-
-        <div class="modal-footer">
-          <button type="submit" class="green-button-white-text" style="margin-top: -2%">
-            Опубликовать
-          </button>
+        <div style="display: flex; align-items: center; justify-content: flex-end">
+          <input
+              type="file"
+              ref="fileInput"
+              @change="addImage"
+              style="display: none"
+          />
+          <button @click="triggerFileInput($event)"  class="white-button-green-text" style="width: 40%; margin-top: 0; margin-right: 1%">Добавить изображение</button>
+          <button type="submit" class="green-button-white-text" style="width: 30%">Опубликовать</button>
         </div>
       </form>
     </div>
   </div>
 
-  <div v-if="isCareModalOpen" class="modal-overlay-care" @click="closeCareModal">
+  <div v-if="isCareOpen" class="modal-overlay" @click="close">
     <div class="modal-content-care" @click.stop>
-      <header class="modal-header-care">
+      <header class="care-modal-header">
         <h2>{{ this.curCareSpec }}. Правила ухода.</h2>
-        <button @click="closeModal" class="close-button-care">X</button>
+        <button @click="closeCareModal" class="close-button">X</button>
       </header>
       <section class="modal-body-care" v-for="(care, index) in currentCare" :key="index">
         <p>{{ care.description }}</p>
         <p class="author">{{ care.author }} {{ formatDate(care.createdAt) }}</p>
+        <hr style="margin-top: 10px; border: 1px solid #ccc;" />
       </section>
     </div>
   </div>
@@ -145,8 +145,6 @@ import Navbar from "@/components/Navbar.vue";
 import axios from "axios";
 import {VueAwesomePaginate} from "vue-awesome-paginate";
 import {ref} from "vue";
-
-const CARE_PLANTS_URL = '/api/care';
 const POST_CARE_URL = '/api/care/new';
 
 export default {
@@ -156,7 +154,7 @@ export default {
   data() {
     return {
       carePlants: [],
-      showModal: false,
+      isAddOpen: false,
       filter: {
         species: '',
         type: '',
@@ -181,7 +179,7 @@ export default {
       userId: '',
       currentCare: [],
       curCareSpec: '',
-      isCareModalOpen: false
+      isCareOpen: false
     };
   },
 
@@ -191,28 +189,47 @@ export default {
   },
 
   methods: {
+    successAdd() {
+      this.$notify({
+        title: "Получилось!",
+        text: "Описание ухода успешно добавлено.",
+        type: 'success'
+      });
+    },
+
+    errorAdd() {
+      this.$notify({
+        title: "Ошибка!",
+        text: "Произошла ошибка при добавлении описания ухода. Попробуйте снова.",
+        type: 'error'
+      });
+    },
+
+    closeCareModal() {
+      this.isCareOpen = false;
+    },
+
     submitForm() {
       this.postCare();
     },
 
-    closeModal() {
-      this.isCareModalOpen = false;
-      this.currentCare = []
+    closeAddModal() {
+      this.isAddOpen = false;
+      this.clearForm();
     },
 
     clearForm() {
-      this.showModal = false;
-      this.lightCondition = '';
-      this.type = '';
-      this.species = '';
-      this.image = '';
-      this.temperatureRegime = '';
-      this.descriptionAddition = ''
+      this.formData.lightCondition = '';
+      this.formData.type = '';
+      this.formData.species = '';
+      this.formData.image = '';
+      this.formData.temperatureRegime = '';
+      this.formData.descriptionAddition = ''
     },
 
     submitFilter() {
       this.currentPage = ref(1);
-      this.getPlants();
+      this.getCarePlants();
     },
 
     async getCarePlants() {
@@ -243,27 +260,47 @@ export default {
           });
     },
 
+    triggerFileInput(event) {
+      event.preventDefault();
+      this.$refs.fileInput.click();
+    },
 
+    addImage(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          this.formData.image = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    },
 
     async postCare() {
       const careData = {
-        species: this.species,
-        descriptionAddition: this.descriptionAddition,
+        species: this.formData.species,
+        descriptionAddition: this.formData.descriptionAddition,
+        type: this.formData.type,
+        lightCondition: this.formData.lightCondition,
+        temperatureRegime: this.formData.temperatureRegime,
+        image: this.formData.image,
         userId: this.userId
       }
       try {
         await axios.post(POST_CARE_URL, careData);
-        alert('Правило ухода успешно добавлено!');
-        this.clearForm();
+        this.successAdd();
+        this.closeAddModal();
+        await this.getCarePlants();
       } catch (error) {
-        alert('Произошла ошибка при добавлении правила ухода. Попробуйте снова.');
+        this.errorAdd();
       }
     },
 
-    async getCare(species) {
+    async getCare(species, id) {
+      this.currentCare = [];
       this.curCareSpec = species;
       axios
-          .get(`/api/care/${species}`)
+          .get(`/api/care/${id}`)
           .then((response) => {
             response.data.careRules.forEach(elem => {
               const str1 = elem.user.userSurname;
@@ -278,7 +315,7 @@ export default {
               this.currentCare.push(care)
             })
           })
-      this.isCareModalOpen = true;
+      this.isCareOpen = true;
     },
 
     formatDate(dateString) {
@@ -313,5 +350,45 @@ export default {
   font-size: 0.9em;
   margin-top: 15px;
   text-align: right;
+}
+
+.care-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+}
+
+.trade-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  flex-direction: column;
+}
+
+.trade-modal-header h2 {
+  font-size: 1.5em;
+  margin: 0;
+}
+
+.trade-modal-content {
+  background: #fff;
+  width: 60%;
+  max-width: 500px;
+  padding: 20px;
+  border-radius: 8px;
+  position: relative;
+}
+
+.modal-body p {
+  margin: 1px 0;
+  line-height: 1.2;
+  font-size: 14px;
+  color: black;
 }
 </style>
