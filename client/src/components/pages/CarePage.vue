@@ -2,32 +2,27 @@
   <Navbar />
   <div class="page-layout">
     <div class="sidebar">
-      <div class="side-form">
+      <div class="side-form" style="width: 30%">
         <img src="../../../public/logo.png" alt="Plant Shop Logo" class="logo"/>
-        <form @submit.prevent="filterData">
+        <form @submit.prevent="submitFilter">
           <div class="inputs-labels">
             Тип растения
-            <input class="inputs" v-model="type" placeholder="Наименование типа" />
-          </div>
-
-          <div class="inputs-labels">
-            Вид растения
-            <input class="inputs" v-model="species" type="text" placeholder="Наименование вида" />
+            <input class="inputs" v-model="filter.type" type="text" placeholder="Наименование типа" />
           </div>
 
           <div class="inputs-labels">Условия освещения</div>
-          <label class="checkbox-labels"><input v-model="lightCondition" type="checkbox" value="Тенелюбивые" /> Тенелюбивые</label>
+          <label class="checkbox-labels"><input v-model="filter.lightCondition" type="checkbox" value="Тенелюбивые" /> Тенелюбивые</label>
           <br>
-          <label class="checkbox-labels"><input v-model="lightCondition" type="checkbox" value="Полутеневые" /> Полутеневые</label>
+          <label class="checkbox-labels"><input v-model="filter.lightCondition" type="checkbox" value="Полутеневые" /> Полутеневые</label>
           <br>
-          <label class="checkbox-labels"><input v-model="lightCondition" type="checkbox" value="Светолюбивые" /> Светолюбивые</label>
+          <label class="checkbox-labels"><input v-model="filter.lightCondition" type="checkbox" value="Светолюбивые" /> Светолюбивые</label>
 
           <div class="inputs-labels">Температурный режим</div>
-          <label class="checkbox-labels"><input v-model="temperatureRegime" type="checkbox" value="Холодостойкие (до 15°C)" /> Холодостойкие (до 15°C)</label>
+          <label class="checkbox-labels"><input v-model="filter.temperatureRegime" type="checkbox" value="Холодостойкие (до 15°C)" /> Холодостойкие (до 15°C)</label>
           <br>
-          <label class="checkbox-labels"><input v-model="temperatureRegime" type="checkbox" value="Средний режим (15-22°C)" /> Средний режим (15-22°C)</label>
+          <label class="checkbox-labels"><input v-model="filter.temperatureRegime" type="checkbox" value="Средний режим (15-22°C)" /> Средний режим (15-22°C)</label>
           <br>
-          <label class="checkbox-labels"><input v-model="temperatureRegime" type="checkbox" value="Теплолюбивые (более 22°C)" /> Теплолюбивые (более 22°C)</label>
+          <label class="checkbox-labels"><input v-model="filter.temperatureRegime" type="checkbox" value="Теплолюбивые (более 22°C)" /> Теплолюбивые (более 22°C)</label>
 
           <button type="submit" class="green-button-white-text">Отфильтровать</button>
           <button class="white-button-green-text" @click="showModal = true">Добавить информацию</button>
@@ -36,20 +31,31 @@
     </div>
 
     <div class="plant-container">
-      <div class="search-plants">
-        <input class="search-input" v-model="search" type="text" placeholder="Поиск растений" />
-        <button class="green-button-white-text" id="search-button">Найти</button>
+      <div class="search-plants" style="margin-bottom: 1%">
+        <input class="search-input" v-model="filter.species" type="text" placeholder="Поиск растений"/>
+        <button class="green-button-white-text" id="search-button" @click="submitForm">Найти</button>
       </div>
 
       <div class="plant-grid">
-        <div v-for="(plant, index) in carePlants" :key="index" class="plant-card">
+        <div v-for="(care, index) in carePlants" :key="index" class="plant-card">
           <div class="plant-content">
-            <img v-if="plant.image" :src="plant.image" alt="Plant Image" class="plant-image" @click="getCare(plant.species)"/>
+            <img v-if="care.image" :src="care.image" alt="Plant Image" class="plant-image" @click="getCare(care.id)"/>
             <div class="plant-info">
-              <div v-if="plant.species" class="plant-title">{{ plant.species }}</div>
+              <div v-if="care.species" class="plant-title">{{ care.species }}</div>
+              <div v-if="care.type" class="plant-place">{{ care.type }}</div>
             </div>
           </div>
         </div>
+      </div>
+
+      <div style="display: flex; position: sticky;">
+        <vue-awesome-paginate
+            :total-items="careCount"
+            :items-per-page="15"
+            :max-pages-shown="Math.ceil(careCount / 15)"
+            v-model="currentPage"
+            @click="getCarePlants"
+        />
       </div>
     </div>
   </div>
@@ -137,18 +143,28 @@
 <script>
 import Navbar from "@/components/Navbar.vue";
 import axios from "axios";
+import {VueAwesomePaginate} from "vue-awesome-paginate";
+import {ref} from "vue";
 
 const CARE_PLANTS_URL = '/api/care';
 const POST_CARE_URL = '/api/care/new';
 
 export default {
   name: "Care",
-  components: { Navbar },
+  components: { VueAwesomePaginate, Navbar },
 
   data() {
     return {
       carePlants: [],
       showModal: false,
+      filter: {
+        species: '',
+        type: '',
+        lightCondition: [],
+        temperatureRegime: []
+      },
+      currentPage: ref(1),
+      careCount: 0,
       formData: {
         type: '',
         species: '',
@@ -194,19 +210,40 @@ export default {
       this.descriptionAddition = ''
     },
 
+    submitFilter() {
+      this.currentPage = ref(1);
+      this.getPlants();
+    },
+
     async getCarePlants() {
+      this.carePlants = [];
+
+      const careFilter = {
+        filter: {
+          species: this.filter.species,
+          type: this.filter.type,
+          lightCondition: this.filter.lightCondition,
+          temperatureRegime: this.filter.temperatureRegime
+        }
+      }
+
       axios
-          .get(CARE_PLANTS_URL)
+          .post(`/api/care/${this.currentPage}/15`, careFilter)
           .then((response) => {
             response.data.plants.forEach(elem => {
               let plant = {
                 image: elem.image,
-                species: elem.species
+                species: elem.species,
+                id: elem.ruleId,
+                type: elem.type
               };
               this.carePlants.push(plant)
             })
-          })
+            this.careCount = parseInt(response.data.count);
+          });
     },
+
+
 
     async postCare() {
       const careData = {

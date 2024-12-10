@@ -40,7 +40,14 @@ export default {
         const response = await axios.get(`/api/data`, {});
         const jsonString = atob(response.data.db);
 
-        const blob = new Blob([jsonString], { type: "application/json" });
+        const byteArray = new Uint8Array(jsonString.length);
+        for (let i = 0; i < jsonString.length; i++) {
+          byteArray[i] = jsonString.charCodeAt(i);
+        }
+
+        const decodedString = new TextDecoder("utf-8").decode(byteArray);
+
+        const blob = new Blob([decodedString], { type: "application/json" });
 
         const url = URL.createObjectURL(blob);
         const link = document.createElement("a");
@@ -51,23 +58,40 @@ export default {
 
         document.body.removeChild(link);
         URL.revokeObjectURL(url);
-        this.successExport();
       } catch (error) {
         this.errorExport();
       }
     },
 
     addDB(event) {
+      const reader = new FileReader();
       const file = event.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          this.data = e.target.result;
-          console.log(this.data);
-        };
-        reader.readAsDataURL(file);
-        this.postData();
-      }
+      reader.readAsDataURL(file);
+
+      reader.onload = () => {
+        const base64Data = reader.result.split(',')[1];
+
+        fetch('/api/data', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            db: base64Data
+          }),
+        })
+            .then(response => response.json())
+            .then(data => {
+              this.successImport();
+            })
+            .catch(error => {
+              this.errorImport();
+            });
+      };
+
+      reader.onerror = (error) => {
+        console.error('Ошибка при чтении файла:', error);
+      };
     },
 
     triggerFileInput(event) {
@@ -80,6 +104,7 @@ export default {
         const data = {
           db: this.data
         }
+        console.log(this.data);
         await axios.post(`/api/data`, data);
         this.successImport();
       } catch (error) {

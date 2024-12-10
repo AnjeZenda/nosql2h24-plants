@@ -115,7 +115,7 @@ export default {
 
   computed: {
     menuItems() {
-      return this.role === 0 ? this.adminItems : this.regularItems;
+      return this.role === 1 ? this.adminItems : this.regularItems;
     }
   },
 

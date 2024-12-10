@@ -958,7 +958,7 @@ db.users.insertMany([
       ObjectId("672f5ee65d51777333752da0"),
       ObjectId("672f5ee65d51777333752da6")
     ],
-    "role": 2
+    "role": 1
   },
   {
     "_id": ObjectId("5f2d8c1d1d8e2f1a1a2b3c7b"),

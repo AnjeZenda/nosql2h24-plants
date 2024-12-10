@@ -152,6 +152,7 @@ export default {
   },
 
   mounted() {
+    this.userId = sessionStorage.getItem("id");
     this.getPlants();
   },
 
@@ -190,7 +191,8 @@ export default {
           description: this.filter.description,
           type: this.filter.type,
           species: this.filter.species,
-        }
+        },
+        userId: this.userId
       };
 
       axios
