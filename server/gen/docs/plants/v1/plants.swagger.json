@@ -838,6 +838,10 @@
             "type": "object",
             "$ref": "#/definitions/v1Plant"
           }
+        },
+        "count": {
+          "type": "string",
+          "format": "int64"
         }
       }
     },
@@ -873,6 +877,10 @@
             "type": "object",
             "$ref": "#/definitions/v1GetPlantsWithCareRulesV1ResponsePlantInfo"
           }
+        },
+        "count": {
+          "type": "string",
+          "format": "int64"
         }
       }
     },

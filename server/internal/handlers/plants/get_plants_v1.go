@@ -19,7 +19,7 @@ func (h *Handler) GetPlantsV1(
 	filter.Size = req.Size
 	filter.SortBy = req.Sort
 	filter.IsDesc = req.IsDesc
-	plants, err := h.storage.GetPlants(ctx, filter)
+	plants, count, err := h.storage.GetPlants(ctx, filter)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "could not get plants. Error %v", err)
 	}
@@ -36,5 +36,6 @@ func (h *Handler) GetPlantsV1(
 	}
 	return &api.GetPlantsV1Response{
 		Plants: result,
+		Count:  count,
 	}, nil
 }
