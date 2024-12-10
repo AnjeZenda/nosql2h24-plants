@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"html"
 	"log"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -13,6 +12,8 @@ import (
 
 func (s *Storage) ImportDB(ctx context.Context, jsonData []byte) error {
 	// Очистка базы данных
+	log.Println("bytes after import")
+	log.Println(jsonData)
 	collections, err := s.Client.Database("plants_market").ListCollectionNames(ctx, bson.D{})
 	if err != nil {
 		return errors.New("ошибка получения списка коллекций: " + err.Error())
@@ -27,9 +28,11 @@ func (s *Storage) ImportDB(ctx context.Context, jsonData []byte) error {
 	// Парсим JSON-данные
 	var data map[string][]bson.M
 	if err := json.Unmarshal(jsonData, &data); err != nil {
-		return errors.New("ошибка парсинга JSON: " + err.Error())
 		log.Println("парсинг")
+		return errors.New("ошибка парсинга JSON: " + err.Error())
 	}
+	log.Println("after unmarshal")
+	log.Println(data)
 
 	// Импортируем данные в каждую коллекцию
 	for collectionName, documents := range data {
@@ -63,11 +66,15 @@ func (s *Storage) ExportDB(ctx context.Context) ([]byte, error) {
 		if err != nil {
 			return nil, err
 		}
-		data[col] = sanitizeData(collectionData)
+		//data[col] = sanitizeData(collectionData)
 	}
 
 	// Преобразуем данные в JSON
+	log.Println("export before marshal")
+	log.Println(data)
 	jsonData, err := json.Marshal(data)
+	log.Println("export after marshal")
+	log.Println(jsonData)
 	if err != nil {
 		return nil, errors.New("ошибка преобразования данных в JSON: " + err.Error())
 	}
@@ -75,16 +82,16 @@ func (s *Storage) ExportDB(ctx context.Context) ([]byte, error) {
 	return jsonData, nil
 }
 
-func sanitizeData(data []bson.M) []bson.M {
-	for _, doc := range data {
-		for key, value := range doc {
-			if str, ok := value.(string); ok {
-				doc[key] = html.EscapeString(str) // Очистка строк
-			}
-		}
-	}
-	return data
-}
+// func sanitizeData(data []bson.M) []bson.M {
+// 	for _, doc := range data {
+// 		for key, value := range doc {
+// 			if str, ok := value.(string); ok {
+// 				doc[key] = html.EscapeString(str) // Очистка строк
+// 			}
+// 		}
+// 	}
+// 	return data
+// }
 
 func readCollection(ctx context.Context, client *mongo.Client, dbName, colName string) ([]bson.M, error) {
 	collection := client.Database(dbName).Collection(colName)
