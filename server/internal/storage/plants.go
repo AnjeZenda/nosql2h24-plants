@@ -265,11 +265,9 @@ func parseLabelsToBSON(labels map[string]interface{}) bson.D {
 	for k, v := range labels {
 		switch vc := v.(type) {
 		case string:
-			// if k == "species" {
-			// 	bsonFltr = append(bsonFltr, bson.E{Key: k, Value: bson.M{"$regex": vc, "$options": "i"}})
-			// } else {
-			// 	bsonFltr = append(bsonFltr, bson.E{Key: k, Value: vc})
-			// }
+			if k == "user_id" {
+				continue
+			}
 			bsonFltr = append(bsonFltr, bson.E{Key: k, Value: bson.M{"$regex": vc, "$options": "i"}})
 		case []string:
 			bsonFltr = append(bsonFltr, createOrFilter(k, vc)...)
@@ -280,6 +278,9 @@ func parseLabelsToBSON(labels map[string]interface{}) bson.D {
 	}
 	if v, ok := labels["price_from"]; ok && v != -1 {
 		bsonFltr = append(bsonFltr, bson.E{Key: "price", Value: bson.M{"$gte": v}})
+	}
+	if v, ok := labels["user_id"]; ok {
+		bsonFltr = append(bsonFltr, bson.E{Key: "user_id", Value: bson.M{"$ne": v}})
 	}
 	return bsonFltr
 }

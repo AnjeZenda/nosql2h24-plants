@@ -124,6 +124,7 @@ message GetPlantsV1Request {
     string sort = 3;
     bool isDesc = 4;
     Filter filter = 5;
+    string userId = 6;
 }
 
 message GetPlantsV1Response {
@@ -223,10 +224,11 @@ message GetPlantByIdV1Response{
         float price = 11;
     }
     message User {
-        string photo = 1;
-        string name = 2;
-        string surname = 3;
-        string fatherName = 4;
+        string id = 1;
+        string photo = 2;
+        string name = 3;
+        string surname = 4;
+        string fatherName = 5;
     }
     PlantInfo plant = 1;
     User user = 2;

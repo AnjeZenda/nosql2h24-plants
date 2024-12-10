@@ -21,9 +21,18 @@
         "operationId": "DataAPI_ExportDBV1",
         "responses": {
           "200": {
-            "description": "A successful response.",
+            "description": "A successful response.(streaming responses)",
             "schema": {
-              "$ref": "#/definitions/v1ExportDBV1Response"
+              "type": "object",
+              "properties": {
+                "result": {
+                  "$ref": "#/definitions/v1ExportDBV1Response"
+                },
+                "error": {
+                  "$ref": "#/definitions/rpcStatus"
+                }
+              },
+              "title": "Stream result of v1ExportDBV1Response"
             }
           },
           "default": {
@@ -56,6 +65,7 @@
         "parameters": [
           {
             "name": "body",
+            "description": " (streaming inputs)",
             "in": "body",
             "required": true,
             "schema": {
@@ -102,7 +112,8 @@
       "type": "object",
       "properties": {
         "db": {
-          "type": "string"
+          "type": "string",
+          "format": "byte"
         }
       }
     },
@@ -110,7 +121,8 @@
       "type": "object",
       "properties": {
         "db": {
-          "type": "string"
+          "type": "string",
+          "format": "byte"
         }
       }
     },
