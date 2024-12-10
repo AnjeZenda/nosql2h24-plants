@@ -24,22 +24,22 @@
 
       <div class="plant-info-grid">
         <div>
-          <h2 style="color: #89A758; font-family: 'Century Gothic', sans-serif">{{ species }}</h2>
-          <img :src="plantImage" alt="Plant Photo" class="specific-plant-photo">
+          <h2 style="color: #89A758; font-family: 'Century Gothic', sans-serif">{{ accepterPlant.species }}</h2>
+          <img :src="accepterPlant.image" alt="Plant Photo" class="specific-plant-photo">
         </div>
         <div style="margin-left: 2%">
-          <h2 style="color: #000000; font-family: 'Century Gothic', sans-serif; margin-bottom: 0">{{ price }}</h2>
-          <p style="color: #7E7E7E; font-size: 14px; margin-bottom: 0; margin-top: 0">{{ place }}</p>
+          <h2 style="color: #000000; font-family: 'Century Gothic', sans-serif; margin-bottom: 0">{{ accepterPlant.price }}</h2>
+          <p style="color: #7E7E7E; font-size: 14px; margin-bottom: 0; margin-top: 0">{{ accepterPlant.place }}</p>
           <p style="color: #000000; font-size: 16px; font-weight: bold; margin-bottom: 0">Характеристики</p>
-          <p style="color: #000000; font-size: 16px; margin-bottom: 0; margin-top: 0">Размер: {{size}}</p>
-          <p style="color: #000000; font-size: 16px; margin-bottom: 0; margin-top: 0">Условия освещения: {{lighting}}</p>
-          <p style="color: #000000; font-size: 16px; margin-bottom: 0; margin-top: 0">Частота полива: {{wateringFrequency}}</p>
-          <p style="color: #000000; font-size: 16px; margin-bottom: 0; margin-top: 0">Температурный режим: {{temperature}}</p>
-          <p style="color: #000000; font-size: 16px; margin-bottom: 0; margin-top: 0">Сложность ухода: {{careLevel}}</p>
+          <p style="color: #000000; font-size: 16px; margin-bottom: 0; margin-top: 0">Размер: {{accepterPlant.size}}</p>
+          <p style="color: #000000; font-size: 16px; margin-bottom: 0; margin-top: 0">Условия освещения: {{accepterPlant.lighting}}</p>
+          <p style="color: #000000; font-size: 16px; margin-bottom: 0; margin-top: 0">Частота полива: {{accepterPlant.wateringFrequency}}</p>
+          <p style="color: #000000; font-size: 16px; margin-bottom: 0; margin-top: 0">Температурный режим: {{accepterPlant.temperature}}</p>
+          <p style="color: #000000; font-size: 16px; margin-bottom: 0; margin-top: 0">Сложность ухода: {{accepterPlant.careLevel}}</p>
           <p style="color: #000000; font-size: 16px; font-weight: bold; margin-bottom: 0">Описание</p>
-          <p style="color: #000000; font-size: 16px; margin-bottom: 0; margin-top: 0">{{ description }}</p>
+          <p style="color: #000000; font-size: 16px; margin-bottom: 0; margin-top: 0">{{ accepterPlant.description }}</p>
           <p style="color: #000000; font-size: 16px; font-weight: bold; margin-bottom: 0">Тип</p>
-          <p style="color: #000000; font-size: 16px; margin-bottom: 0; margin-top: 0">{{ type }}</p>
+          <p style="color: #000000; font-size: 16px; margin-bottom: 0; margin-top: 0">{{ accepterPlant.type }}</p>
           <div>
             <button class="white-button-green-text-sale">Купить</button>
             <button class="white-button-green-text-sale">Обменяться</button>
@@ -96,19 +96,22 @@ export default {
       firstName: '',
       patronymic: '',
       photo: '',
-      plantID: '',
-      type: '',
-      species: '',
-      size: '',
-      lighting: '',
-      wateringFrequency: '',
-      temperature: '',
-      careLevel: '',
-      description: '',
-      place: '',
-      plantImage: '',
-      price: null,
-      userId: '',
+      accepterPlant: {
+        id: '',
+        type: '',
+        species: '',
+        size: '',
+        lighting: '',
+        wateringFrequency: '',
+        temperature: '',
+        careLevel: '',
+        description: '',
+        place: '',
+        image: '',
+        price: null
+      },
+      accepterID: '',
+      offererID: '',
       isOpen: false,
       userAds: [],
       trade_plant_id: '',
@@ -117,26 +120,43 @@ export default {
   },
 
   mounted() {
-    this.plantID = sessionStorage.getItem("specificPlant");
+    this.accepterPlant.id = sessionStorage.getItem("plant");
+    this.offererID = sessionStorage.getItem("id");
     this.getPlant();
   },
 
   methods: {
+    errorBuy() {
+      this.$notify({
+        title: "Ошибка!",
+        text: "Произошла ошибка при покупке, попробуйте еще раз.",
+        type: 'error'
+      });
+    },
+
+    successBuy() {
+      this.$notify({
+        title: "Получилось!",
+        text: "Вы приобрели новое растение.",
+        type: 'success'
+      });
+    },
+
     async getPlant() {
       axios
-          .get(`/api/plants/${this.plantID}`)
+          .get(`/api/plants/${this.accepterPlant.id}`)
           .then((response) => {
-            this.species = response.data.plant.species;
-            this.type = response.data.plant.type;
-            this.size = response.data.plant.size;
-            this.lighting = response.data.plant.lightCondition;
-            this.wateringFrequency = response.data.plant.wateringFrequency;
-            this.temperature = response.data.plant.temperatureRegime;
-            this.careLevel = response.data.plant.careComplexity;
-            this.description = response.data.plant.description;
-            this.place = response.data.plant.place;
-            this.plantImage = response.data.plant.image;
-            this.price = response.data.plant.price;
+            this.accepterPlant.species = response.data.plant.species;
+            this.accepterPlant.type = response.data.plant.type;
+            this.accepterPlant.size = response.data.plant.size;
+            this.accepterPlant.lighting = response.data.plant.lightCondition;
+            this.accepterPlant.wateringFrequency = response.data.plant.wateringFrequency;
+            this.accepterPlant.temperature = response.data.plant.temperatureRegime;
+            this.accepterPlant.careLevel = response.data.plant.careComplexity;
+            this.accepterPlant.description = response.data.plant.description;
+            this.accepterPlant.place = response.data.plant.place;
+            this.accepterPlant.image = response.data.plant.image;
+            this.accepterPlant.price = response.data.plant.price;
             this.firstName = response.data.user.name;
             this.lastName = response.data.user.surname;
             this.patronymic = response.data.user.fatherName;
@@ -165,23 +185,21 @@ export default {
     },
 
     async buyPlant() {
-      this.plants_for_trade = [];
-      axios
-          .get(`/api/plants/${this.plantID}`)
-          .then((response) => {
-            response.data.plants.forEach(elem => {
-              let plant = {
-                id: elem.id,
-                image: elem.image,
-                species: elem.species,
-                price: elem.price,
-                createdAt: elem.createdAt,
-                place: elem.place
-              };
-              this.plants.push(plant);
-            });
-            this.plantsCount = parseInt(response.data.count);
-          })
+      const buyData ={
+        sellerId: this.accepterID,
+        buyerId: this.offererID,
+        plantId: this.accepterPlant.id,
+        species: this.accepterPlant.species,
+        price: this.accepterPlant.id
+      }
+
+      try {
+        await axios.post(`/api/plants/buy`, buyData);
+        this.successBuy();
+        this.$router.push('/plants/sale');
+      } catch (error) {
+        this.errorBuy();
+      }
     },
 
     formatDate(date) {

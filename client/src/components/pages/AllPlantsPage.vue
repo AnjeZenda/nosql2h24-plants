@@ -229,7 +229,7 @@ export default {
     },
 
     navigate(plant_id, species) {
-      sessionStorage.setItem("specificPlant", plant_id);
+      sessionStorage.setItem("plant", plant_id);
       this.$router.push(`/plants/sale/${species}`)
     }
   }
