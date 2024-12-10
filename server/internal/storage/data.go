@@ -37,8 +37,11 @@ func (s *Storage) ImportDB(ctx context.Context, jsonData []byte) error {
 		}
 
 		collection := s.Client.Database("plants_market").Collection(collectionName)
-		s := []any{documents}
-		_, err := collection.InsertMany(ctx, s)
+		var interfaceDoc []interface{}
+		for _, doc := range documents {
+			interfaceDoc = append(interfaceDoc, doc)
+		}
+		_, err := collection.InsertMany(ctx, interfaceDoc)
 		if err != nil {
 			return errors.New("ошибка вставки данных в коллекцию " + collectionName + ": " + err.Error())
 		}
