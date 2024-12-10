@@ -7,14 +7,14 @@
         <div class="inputs-labels" id="create-ads">
           Работа с базой данных
         </div>
-        <button style="margin-top: 2%" class="white-button-green-text" @click="getData">Импортировать</button>
+        <button style="margin-top: 2%" class="white-button-green-text" @click="getData">Экспортировать</button>
         <input
             type="file"
             ref="fileInput"
             @change="addDB"
             style="display: none"
         />
-        <button style="margin-top: 2%" class="green-button-white-text">Экспортировать</button>
+        <button style="margin-top: 2%" class="green-button-white-text" @click="triggerFileInput($event)">Импортировать</button>
       </div>
     </div>
   </div>
@@ -37,21 +37,23 @@ export default {
   methods: {
     async getData() {
       try {
-        const response = await axios.get(`/api/data`, {
-          responseType: 'blob'
-        });
-        const url = window.URL.createObjectURL(new Blob([response.data]));
-        const link = document.createElement('a');
-        link.href = url;
+        const response = await axios.get(`/api/data`, {});
+        const jsonString = atob(response.data.db);
 
-        link.setAttribute('importDB', 'data.json');
+        const blob = new Blob([jsonString], { type: "application/json" });
+
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = "data.json";
         document.body.appendChild(link);
         link.click();
 
         document.body.removeChild(link);
-        this.successImport();
+        URL.revokeObjectURL(url);
+        this.successExport();
       } catch (error) {
-        this.errorImport();
+        this.errorExport();
       }
     },
 
@@ -61,6 +63,7 @@ export default {
         const reader = new FileReader();
         reader.onload = (e) => {
           this.data = e.target.result;
+          console.log(this.data);
         };
         reader.readAsDataURL(file);
         this.postData();
@@ -74,14 +77,17 @@ export default {
 
     async postData() {
       try {
-        await axios.post(`/api/data`, this.data);
-        this.successExport();
+        const data = {
+          db: this.data
+        }
+        await axios.post(`/api/data`, data);
+        this.successImport();
       } catch (error) {
-        this.errorExport();
+        this.errorImport();
       }
     },
 
-    successImport() {
+    successExport() {
       this.$notify({
         title: "Получилось!",
         text: "База данных успешно импортирована.",
@@ -89,7 +95,7 @@ export default {
       });
     },
 
-    errorImport() {
+    errorExport() {
       this.$notify({
         title: "Ошибка!",
         text: "Произошла ошибка при импортировании базы данных.",
@@ -97,7 +103,7 @@ export default {
       });
     },
 
-    successExport() {
+    successImport() {
       this.$notify({
         title: "Получилось!",
         text: "База данных успешно экспортирована.",
@@ -105,7 +111,7 @@ export default {
       });
     },
 
-    errorExport() {
+    errorImport() {
       this.$notify({
         title: "Ошибка!",
         text: "Произошла ошибка при экспортировании базы данных.",
