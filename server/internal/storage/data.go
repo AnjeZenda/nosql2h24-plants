@@ -2,7 +2,6 @@ package storage
 
 import (
 	"context"
-	"encoding/base64"
 	"encoding/json"
 	"errors"
 	"html"
@@ -13,10 +12,6 @@ import (
 )
 
 func (s *Storage) ImportDB(ctx context.Context, jsonData []byte) error {
-	// Очистка базы данных
-	log.Println("bytes after import")
-	log.Println(jsonData)
-
 	collections, err := s.Client.Database("plants_market").ListCollectionNames(ctx, bson.D{})
 	if err != nil {
 		return errors.New("ошибка получения списка коллекций: " + err.Error())
@@ -27,26 +22,14 @@ func (s *Storage) ImportDB(ctx context.Context, jsonData []byte) error {
 		}
 	}
 	log.Println("База данных успешно очищена.")
-	jsonData, err = decodeBase64(jsonData)
-	if err != nil {
-		return errors.New("ошибка декодирования")
-	}
-	log.Println("декод.")
-	log.Println(jsonData)
 
-	// Парсим JSON-данные
 	var data map[string][]bson.M
 	if err := json.Unmarshal(jsonData, &data); err != nil {
-		log.Println("парсинг")
 		return errors.New("ошибка парсинга JSON: " + err.Error())
 	}
-	log.Println("after unmarshal")
-	log.Println(data)
 
-	// Импортируем данные в каждую коллекцию
 	for collectionName, documents := range data {
 		if len(documents) == 0 {
-			log.Println("пустой док.")
 			continue
 		}
 
@@ -57,7 +40,6 @@ func (s *Storage) ImportDB(ctx context.Context, jsonData []byte) error {
 		}
 		_, err := collection.InsertMany(ctx, interfaceDoc)
 		if err != nil {
-			log.Println("косяк вставки.")
 			return errors.New("ошибка вставки данных в коллекцию " + collectionName + ": " + err.Error())
 		}
 	}
@@ -69,7 +51,6 @@ func (s *Storage) ExportDB(ctx context.Context) ([]byte, error) {
 	data := make(map[string]interface{})
 	collections := []string{"users", "plants", "trades", "care_rules"}
 
-	// Читаем данные из всех коллекций
 	for _, col := range collections {
 		collectionData, err := readCollection(ctx, s.Client, "plants_market", col)
 		if err != nil {
@@ -78,7 +59,6 @@ func (s *Storage) ExportDB(ctx context.Context) ([]byte, error) {
 		data[col] = sanitizeData(collectionData)
 	}
 
-	// Преобразуем данные в JSON
 	log.Println("export before marshal")
 	log.Println(data)
 	jsonData, err := json.Marshal(data)
@@ -116,13 +96,4 @@ func readCollection(ctx context.Context, client *mongo.Client, dbName, colName s
 	}
 
 	return results, nil
-}
-
-func decodeBase64(encodedData []byte) ([]byte, error) {
-	decodedData := make([]byte, base64.StdEncoding.DecodedLen(len(encodedData)))
-	n, err := base64.StdEncoding.Decode(decodedData, encodedData)
-	if err != nil {
-		return nil, err
-	}
-	return decodedData[:n], nil
 }
