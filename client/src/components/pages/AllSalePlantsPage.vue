@@ -123,7 +123,7 @@ import {VueAwesomePaginate} from "vue-awesome-paginate";
 import {ref} from "vue";
 
 export default {
-  name: "Sale",
+  name: "AllSalePlants",
   components: {VueAwesomePaginate, Navbar },
 
   data() {
@@ -170,7 +170,7 @@ export default {
         this.sort = "price";
         this.isDesc = true;
       } else if (this.sort_type === "date") {
-        this.sort = "date";
+        this.sort = "created_at";
         this.isDesc = true;
       } else {
         this.sort = "";
