@@ -452,6 +452,9 @@
         },
         "filter": {
           "$ref": "#/definitions/plantsv1Filter"
+        },
+        "userId": {
+          "type": "string"
         }
       }
     },
@@ -785,6 +788,9 @@
     "v1GetPlantByIdV1ResponseUser": {
       "type": "object",
       "properties": {
+        "id": {
+          "type": "string"
+        },
         "photo": {
           "type": "string"
         },

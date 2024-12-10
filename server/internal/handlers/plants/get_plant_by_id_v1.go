@@ -36,6 +36,7 @@ func (h *Handler) GetPlantByIdV1(
 			Image:             plant.Image,
 		},
 		User: &api.GetPlantByIdV1Response_User{
+			Id:         user.ID.Hex(),
 			Photo:      user.Photo,
 			Name:       user.Name,
 			Surname:    user.Surname,
