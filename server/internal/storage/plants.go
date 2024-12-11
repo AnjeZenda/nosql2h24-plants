@@ -3,6 +3,7 @@ package storage
 import (
 	"context"
 	"time"
+	"fmt"
 
 	"plants/internal/models"
 
@@ -30,11 +31,12 @@ func (s *Storage) GetPlantsWithCareRules(ctx context.Context, fltr *models.Filte
 	if err != nil {
 		return nil, 0, err
 	}
-	defer cursor.Close(ctx)
 	rules := make([]*models.CareRules, 0)
 	for cursor.Next(ctx) {
 		var rule models.CareRules
 		if err = cursor.Decode(&rule); err != nil {
+        	fmt.Println(err)
+        	fmt.Println(nil)
 			return nil, 0, err
 		}
 		rules = append(rules, &rule)

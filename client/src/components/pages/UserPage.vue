@@ -13,9 +13,9 @@
           />
           <img @click="triggerFileInput($event)" :src="user.photo" alt="User Photo" class="user-photo">
           <div class="user-details">
-            <p class="user-lastname">{{ user.lastName }}</p>
-            <p class="user-firstname">{{ user.firstName }}</p>
-            <p class="user-middlename">{{ user.patronymic }}</p>
+            <p class="user-lastname">{{ lastName }}</p>
+            <p class="user-firstname">{{ firstName }}</p>
+            <p class="user-middlename">{{ patronymic }}</p>
           </div>
         </div>
         <p class="create">Cоздание аккаунта: {{ formatDate(user.accountCreationDate) }}</p>
@@ -180,6 +180,9 @@ export default {
 
   data() {
     return {
+      lastName: '',
+      firstName: '',
+      patronymic: '',
       user: {
         photo: '',
         accountCreationDate: '',
@@ -223,6 +226,9 @@ export default {
           .get(`/api/v1/user/${id}`)
           .then((response) => {
             const curUser = response.data;
+            this.lastName = curUser.surname;
+            this.firstName = curUser.name;
+            this.patronymic = curUser.father_name;
             this.user.photo = curUser.photo;
             this.user.lastName = curUser.surname;
             this.user.firstName = curUser.name;
@@ -292,6 +298,9 @@ export default {
 
       try {
         await axios.post(`/api/v1/user/${this.user.userId}`, userData);
+        this.patronymic = this.user.patronymic;
+        this.firstName = this.user.firstName;
+        this.lastName = this.user.lastName;
         this.successChanges();
       } catch (error) {
         this.errorChanges();

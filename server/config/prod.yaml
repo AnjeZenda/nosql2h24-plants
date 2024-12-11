@@ -3,7 +3,7 @@ grpc:
   port: 8882
   timeout: 10h
 mongo:
-  host: "mongodb"
+  host: "db"
   database: "plants_market"
   password: "pass"
   user: "user"

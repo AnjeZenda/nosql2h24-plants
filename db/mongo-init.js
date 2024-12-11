@@ -1,7 +1,5 @@
 db = db.getSiblingDB('plants_market');
 
-db = db.getSiblingDB('plants_market');
-
 db.plants.insertMany([
   {
     "_id": ObjectId("5f1d7c1d1d8e2f1a1a2b3c4d"),
@@ -705,7 +703,7 @@ db.care_rules.insertMany([
     "image": "https://avatars.mds.yandex.net/i?id=02ff3c807e963cecee0fc557f14b75de_l-6505870-images-thumbs&n=13",
     "light_condition": "Тенелюбивые",
     "temperature_regime": "Средний режим (15-22°C)",
-    "type": "Папоротник",
+    "type": "Папоротник"
   },
   {
     "_id": ObjectId("5f3e8c1d1a9e3f1b1b2c3d15"),
@@ -722,18 +720,16 @@ db.care_rules.insertMany([
     "image": "https://i.pinimg.com/736x/72/51/b4/7251b45263cfcaea655e94aa81ec18e7.jpg",
     "light_condition": "Светолюбивые",
     "temperature_regime": "Теплолюбивые (более 22°C)",
-    "type": "Пальма",
+    "type": "Пальма"
   },
   {
     "_id": ObjectId("5f3e8c1d1a9e3f1b1b2c3d16"),
     "species": "Каланхоэ",
     "description": [
       {
-        "description_part": {
-          "user_id": ObjectId("5f2d8c1d1d8e2f1a1a2b3c7b"),
-          "description_addition": "Требует умеренного освещения, не любит прямой свет.",
-          "created_at": ISODate("2024-09-01T11:30:00Z")
-        }
+        "user_id": ObjectId("5f2d8c1d1d8e2f1a1a2b3c7b"),
+        "description_addition": "Требует умеренного освещения, не любит прямой свет.",
+        "created_at": ISODate("2024-09-01T11:30:00Z")
       }
     ],
     "created_at": ISODate("2024-09-01T11:30:00Z"),
@@ -741,7 +737,7 @@ db.care_rules.insertMany([
     "image": "https://avatars.mds.yandex.net/i?id=8428ff239edffbd66e53cce304e1bb0b_l-13095119-images-thumbs&n=13",
     "light_condition": "Полутеневые",
     "temperature_regime": "Средний режим (15-22°C)",
-    "type": "Суккулент",
+    "type": "Суккулент"
   },
   {
     "_id": ObjectId("5f3e8c1d1a9e3f1b1b2c3d17"),
@@ -758,7 +754,7 @@ db.care_rules.insertMany([
     "image": "https://flowry.ru/wp-content/uploads/2022/03/cay-van-nien-thanh-loc-khong-khi.jpg",
     "light_condition": "Тенелюбивые",
     "temperature_regime": "Холодостойкие (до 15°C)",
-    "type": "Комнатное растение",
+    "type": "Комнатное растение"
   },
   {
     "_id": ObjectId("5f3e8c1d1a9e3f1b1b2c3d18"),
@@ -775,8 +771,7 @@ db.care_rules.insertMany([
     "image": "https://avatars.mds.yandex.net/i?id=4a2c5e1bb0e5b6d6b425874ccd928902_l-9065769-images-thumbs&n=13",
     "light_condition": "Светолюбивые",
     "temperature_regime": "Теплолюбивые (более 22°C)",
-    "type": "Пальма",
-
+    "type": "Пальма"
   },
   {
     "_id": ObjectId("5f3e8c1d1a9e3f1b1b2c3d19"),
@@ -793,95 +788,95 @@ db.care_rules.insertMany([
     "image": "https://avatars.mds.yandex.net/i?id=8c2f8a972981d9594dbcbee96c16cace_l-6489726-images-thumbs&n=13",
     "light_condition": "Полутеневые",
     "temperature_regime": "Средний режим (15-22°C)",
-    "type": "Комнатное растение",
+    "type": "Комнатное растение"
   },
   {
-    "_id": "ObjectId('57e3713762e1bfc7ef51706b0f4764ce')",
+    "_id": ObjectId("5f3e8c1d1a9e3f1b1b2c3d20"),
     "species": "Цикламен",
     "description": [
       {
-        "user_id": "ObjectId('5f2d8c1d1d8e2f1a1a2b3c82')",
+        "user_id": ObjectId("5f2d8c1d1d8e2f1a1a2b3c82"),
         "description_addition": "Поливайте после полного высыхания верхнего слоя почвы.",
-        "created_at": "2024-12-11T09:27:26.446145"
+        "created_at": ISODate("2024-12-11T09:27:26Z")
       }
     ],
-    "created_at": "2024-12-11T09:27:26.446145",
-    "updated_at": "2024-12-11T09:27:26.446145",
+    "created_at": ISODate("2024-12-11T09:27:26Z"),
+    "updated_at": ISODate("2024-12-11T09:27:26Z"),
     "image": "https://krrot.net/wp-content/uploads/2018/04/image001-3.jpg",
     "light_condition": "Тенелюбивые",
     "temperature_regime": "Холодостойкие (до 15°C)",
     "type": "Растение"
   },
   {
-    "_id": "ObjectId('939427bf0606ace7dea28ea1250de449')",
+    "_id": ObjectId("6759c64e9d01a30bd118cda1"),
     "species": "Тюльпан",
     "description": [
       {
-        "user_id": "ObjectId('5f2d8c1d1d8e2f1a1a2b3c7c')",
+        "user_id": ObjectId("5f2d8c1d1d8e2f1a1a2b3c7c"),
         "description_addition": "Поливайте после полного высыхания верхнего слоя почвы.",
-        "created_at": "2024-12-11T09:27:26.446165"
+        "created_at": ISODate("2024-12-11T09:27:26Z")
       }
     ],
-    "created_at": "2024-12-11T09:27:26.446165",
-    "updated_at": "2024-12-11T09:27:26.446165",
+    "created_at": ISODate("2024-12-11T09:27:26Z"),
+    "updated_at": ISODate("2024-12-11T09:27:26Z"),
     "image": "http://view-photo.ru/wp-content/uploads/2016/11/tulpani0004.jpg",
     "light_condition": "Тенелюбивые",
     "temperature_regime": "Средний режим (15-22°C)",
     "type": "Растение"
   },
   {
-    "_id": "ObjectId('d24b98c0f6a29531ef7796c0a5c3269e')",
+    "_id": ObjectId("6759c64e9d01a30bd118cda2"),
     "species": "Герань",
     "description": [
       {
-        "user_id": "ObjectId('5f2d8c1d1d8e2f1a1a2b3c7a')",
+        "user_id": ObjectId("5f2d8c1d1d8e2f1a1a2b3c7a"),
         "description_addition": "Поливайте после полного высыхания верхнего слоя почвы.",
-        "created_at": "2024-12-11T09:27:26.446220"
+        "created_at": ISODate("2024-12-11T09:27:26Z")
       }
     ],
-    "created_at": "2024-12-11T09:27:26.446220",
-    "updated_at": "2024-12-11T09:27:26.446220",
+    "created_at": ISODate("2024-12-11T09:27:26Z"),
+    "updated_at": ISODate("2024-12-11T09:27:26Z"),
     "image": "https://i.pinimg.com/originals/ed/0f/22/ed0f22dba6a755b08f4402dafad3020a.jpg",
     "light_condition": "Светолюбивые",
     "temperature_regime": "Теплолюбивые (более 22°C)",
     "type": "Растение"
   },
   {
-    "_id": "ObjectId('5d06f67d2a59ec53ee2152702c16e476')",
+    "_id": ObjectId("6759c64e9d01a30bd118cda3"),
     "species": "Лаванда",
     "description": [
       {
-        "user_id": "ObjectId('5f2d8c1d1d8e2f1a1a2b3c7e')",
+        "user_id": ObjectId("5f2d8c1d1d8e2f1a1a2b3c7e"),
         "description_addition": "Поливайте после полного высыхания верхнего слоя почвы.",
-        "created_at": "2024-12-11T09:27:26.446225"
+        "created_at": "2024-12-11T09:27:26Z"
       }
     ],
-    "created_at": "2024-12-11T09:27:26.446225",
-    "updated_at": "2024-12-11T09:27:26.446225",
+    "created_at": ISODate("2024-12-11T09:27:26Z"),
+    "updated_at": ISODate("2024-12-11T09:27:26Z"),
     "image": "https://mobileimages.lowes.com/productimages/099bd9ee-f195-45d6-8a7a-62f91b213314/64336031.jpg?size=pdhism",
     "light_condition": "Полутеневые",
     "temperature_regime": "Холодостойкие (до 15°C)",
     "type": "Растение"
   },
   {
-    "_id": "ObjectId('fac9db9b53b736607e44695000653f8b')",
+    "_id": ObjectId("6759c64e9d01a30bd118cda4"),
     "species": "Роза",
     "description": [
       {
-        "user_id": "ObjectId('5f2d8c1d1d8e2f1a1a2b3c7b')",
+        "user_id": ObjectId("5f2d8c1d1d8e2f1a1a2b3c7b"),
         "description_addition": "Поливайте после полного высыхания верхнего слоя почвы.",
-        "created_at": "2024-12-11T09:27:26.446182"
+        "created_at": ISODate("2024-12-11T09:27:26Z")
       }
     ],
-    "created_at": "2024-12-11T09:27:26.446182",
-    "updated_at": "2024-12-11T09:27:26.446182",
-    "image": "https://agrostore.ua/tmp/images/products/19126-roza-chetyre-sezona-odnoletnij-zks-2.800x1000.jpg",
+    "created_at": ISODate("2024-12-11T09:27:26Z"),
+    "updated_at": ISODate("2024-12-11T09:27:26Z"),
+    "image": "https://ogorod.moe-online.ru/media/3/8/2/d4f70aae3b05a44f968ab93436e25410/Oni0dfoG2ZS4PPa0svdn8WgU5jFTYWAGga7UKMl5-thumb_1680.jpg",
     "light_condition": "Светолюбивые",
     "temperature_regime": "Холодостойкие (до 15°C)",
     "type": "Растение"
   },
   {
-    "_id": ObjectId("5f3e8c1d1a9e3f1b1b2c3d16"),
+    "_id": ObjectId("6759c64e9d01a30bd118cda5"),
     "species": "Сциндапсус золотистый",
     "description": [
       {
@@ -898,7 +893,7 @@ db.care_rules.insertMany([
     "type": "Лиана"
   },
   {
-    "_id": ObjectId("5f3e8c1d1a9e3f1b1b2c3d17"),
+    "_id": ObjectId("6759c64e9d01a30bd118cda6"),
     "species": "Хризантема",
     "description": [
       {
@@ -915,7 +910,6 @@ db.care_rules.insertMany([
     "type": "Цветущее"
   }
 ])
-
 
 db.trades.insertMany([
   {
