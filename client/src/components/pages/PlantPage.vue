@@ -18,8 +18,8 @@
 
     <div class="plant-container">
       <div class="search-plants">
-        <input class="search-input" type="text" placeholder="Поиск по объявлениям"/>
-        <button class="green-button-white-text" id="search-button">Найти</button>
+        <input class="search-input" type="text" v-model="search" placeholder="Поиск по объявлениям"/>
+        <button class="green-button-white-text" id="search-button" @click="Search">Найти</button>
       </div>
 
       <div class="plant-info-grid">
@@ -28,7 +28,7 @@
           <img :src="accepterPlant.image" alt="Plant Photo" class="specific-plant-photo">
         </div>
         <div style="margin-left: 2%">
-          <h2 style="color: #000000; font-family: 'Century Gothic', sans-serif; margin-bottom: 0">{{ accepterPlant.price }}</h2>
+          <h2 style="color: #000000; font-family: 'Century Gothic', sans-serif; margin-bottom: 0">{{ formatPrice(accepterPlant.price) }}</h2>
           <p style="color: #7E7E7E; font-size: 14px; margin-bottom: 0; margin-top: 0">{{ accepterPlant.place }}</p>
           <p style="color: #000000; font-size: 16px; font-weight: bold; margin-bottom: 0">Характеристики</p>
           <p style="color: #000000; font-size: 16px; margin-bottom: 0; margin-top: 0">Размер: {{accepterPlant.size}}</p>
@@ -41,8 +41,8 @@
           <p style="color: #000000; font-size: 16px; font-weight: bold; margin-bottom: 0">Тип</p>
           <p style="color: #000000; font-size: 16px; margin-bottom: 0; margin-top: 0">{{ accepterPlant.type }}</p>
           <div>
-            <button class="white-button-green-text-sale">Купить</button>
-            <button class="white-button-green-text-sale">Обменяться</button>
+            <button class="white-button-green-text-sale" @click="buyPlant">Купить</button>
+            <button class="white-button-green-text-sale" @click="openModal">Обменяться</button>
           </div>
         </div>
       </div>
@@ -63,21 +63,24 @@
         </div>
       </header>
 
-      <section class="modal-body" v-for="(ads, index) in userAds" :key="index">
+      <section class="modal-body" v-for="(ads, index) in plants_for_trade" :key="index">
         <div style="display: flex;flex-direction: row">
           <div style="display: flex;flex-direction: row">
-            <input v-model="trade_plant_id" type="radio" value="Холодостойкие (до 15°C)" />
+            <input v-model="trade_plant_id" type="radio" :value="ads.id"/>
             <img v-if="ads.image" :src="ads.image" alt="Plant Image" class="trade-plant-image" />
           </div>
           <div style="margin-left: 4%">
-            <p :style="{fontWeight: 'bold', color: '#89A758'}">{{ ads.species }}</p>
-            <p :style="{fontWeight: 'bold'}">{{ ads.price }}</p>
-            <p>{{ ads.place }}</p>
-            <p>{{ ads.data }}</p>
+            <p class="plant-title" style="color: #89A758">{{ ads.species }}</p>
+            <p class="plant-price">{{ formatPrice(ads.price) }}</p>
+            <p class="plant-place">{{ ads.place }}</p>
+            <p class="plant-date">{{ formatDate(ads.createdAt) }}</p>
           </div>
         </div>
         <hr style="margin-top: 10px; border: 1px solid #ccc;" />
       </section>
+      <div style="display: flex; align-items: center; justify-content: flex-end">
+        <button type="submit" class="green-button-white-text" style="width: 30%" @click="createTrade">Отправить</button>
+      </div>
     </div>
   </div>
 </template>
@@ -92,6 +95,7 @@ export default {
 
   data() {
     return {
+      search: '',
       lastName: '',
       firstName: '',
       patronymic: '',
@@ -126,6 +130,11 @@ export default {
   },
 
   methods: {
+    Search() {
+      sessionStorage.setItem("search", this.search);
+      this.$router.push('/plants/sale');
+    },
+
     errorBuy() {
       this.$notify({
         title: "Ошибка!",
@@ -138,6 +147,22 @@ export default {
       this.$notify({
         title: "Получилось!",
         text: "Вы приобрели новое растение.",
+        type: 'success'
+      });
+    },
+
+    errorTrade() {
+      this.$notify({
+        title: "Ошибка!",
+        text: "Произошла ошибка при отправке запроса на обмен, попробуйте еще раз.",
+        type: 'error'
+      });
+    },
+
+    successTrade() {
+      this.$notify({
+        title: "Получилось!",
+        text: "Вы отправили запрос на обмен.",
         type: 'success'
       });
     },
@@ -156,31 +181,52 @@ export default {
             this.accepterPlant.description = response.data.plant.description;
             this.accepterPlant.place = response.data.plant.place;
             this.accepterPlant.image = response.data.plant.image;
-            this.accepterPlant.price = response.data.plant.price;
+            this.accepterPlant.price = parseInt(response.data.plant.price);
             this.firstName = response.data.user.name;
             this.lastName = response.data.user.surname;
             this.patronymic = response.data.user.fatherName;
             this.photo = response.data.user.photo;
+            this.accepterID = response.data.user.id;
           })
+    },
+
+    openModal() {
+      this.getPlantsForTrade();
+      this.isOpen = true
+    },
+
+    formatPrice(price) {
+      return `${price} ₽`;
+    },
+
+    errorGetPlantsForTrade() {
+      this.$notify({
+        title: "Ошибка!",
+        text: "У вас нет доступных растений для обмена.",
+        type: 'error'
+      });
     },
 
     async getPlantsForTrade() {
       this.plants_for_trade = [];
       axios
-          .get(`/api/plants/${this.plantID}`)
+          .get(`/api/plants/trade/${this.offererID}`)
           .then((response) => {
-            response.data.plants.forEach(elem => {
-              let plant = {
-                id: elem.id,
-                image: elem.image,
-                species: elem.species,
-                price: elem.price,
-                createdAt: elem.createdAt,
-                place: elem.place
-              };
-              this.plants.push(plant);
-            });
-            this.plantsCount = parseInt(response.data.count);
+            if (response.data.plants.length === 0) {
+              this.errorGetPlantsForTrade();
+            } else {
+              response.data.plants.forEach(elem => {
+                let plant = {
+                  id: elem.id,
+                  image: "https://polinka.top/uploads/posts/2023-05/1683380217_polinka-top-p-dobroe-utro-kartinki-s-yumorom-prikolnie-p-6.jpg",
+                  species: elem.species,
+                  price: parseInt(elem.price),
+                  createdAt: elem.createdAt,
+                  place: elem.place
+                };
+                this.plants_for_trade.push(plant);
+              });
+            }
           })
     },
 
@@ -190,13 +236,15 @@ export default {
         buyerId: this.offererID,
         plantId: this.accepterPlant.id,
         species: this.accepterPlant.species,
-        price: this.accepterPlant.id
+        price: this.accepterPlant.price
       }
 
       try {
         await axios.post(`/api/plants/buy`, buyData);
         this.successBuy();
-        this.$router.push('/plants/sale');
+        setTimeout(() => {
+          this.$router.push('/plants/sale');
+        }, 2000);
       } catch (error) {
         this.errorBuy();
       }
@@ -210,19 +258,29 @@ export default {
       });
     },
 
-    formatPrice(price) {
-      return `${price} ₽`;
-    },
-
-    openModal() {
-      this.isOpen = true;
-      this.getIn();
-      this.getOut();
+    async createTrade() {
+      const tradeData ={
+        offererId: this.offererID,
+        offererPlantId: this.trade_plant_id,
+        accepterId: this.accepterID,
+        accepterPlantId: this.accepterPlant.id
+      }
+      console.log(tradeData);
+      try {
+        await axios.post(`/api/trade`, tradeData);
+        this.successTrade();
+        this.closeModal();
+        setTimeout(() => {
+          this.$router.push('/plants/sale');
+        }, 2000);
+      } catch (error) {
+        this.errorTrade();
+      }
     },
 
     closeModal() {
       this.isOpen = false;
-    },
+    }
   }
 }
 </script>
@@ -231,6 +289,12 @@ export default {
 @import "../../../main.css";
 @import "../../../plants.css";
 @import "../../../user.css";
+@import "../../../modal.css";
+
+.trade-plant-image {
+  width: 110px;
+  height: 110px;
+}
 
 .trade-modal-content {
   background: #fff;
@@ -243,7 +307,6 @@ export default {
 
 .trade-modal-header {
   display: flex;
-  justify-content: space-between;
   align-items: flex-start;
   border-bottom: 1px solid #ccc;
   padding-bottom: 10px;
