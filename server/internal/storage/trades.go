@@ -53,6 +53,14 @@ func (s *Storage) CreateBuyTrade(ctx context.Context, trade *models.Trade) error
 	if err != nil {
 		return err
 	}
+	err = s.AddTradeToUser(ctx, trade.Accepter.ID, trade.ID)
+	if err != nil {
+		return err
+	}
+	err = s.AddTradeToUser(ctx, trade.Offerer.ID, trade.ID)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
