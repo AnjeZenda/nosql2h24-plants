@@ -8,20 +8,23 @@ services:
       dockerfile: Dockerfile
     networks:
       - app
+    depends_on:
+      - db
     ports:
       - "8881:8881"
       - "8882:8882"
 
-  mongodb:
-    container_name: mongodb
-    image: mongodb/mongodb-community-server:6.0-ubi8
+  db:
+    container_name: db
+    build:
+      context: ./db
+      dockerfile: Dockerfile
     restart: unless-stopped
     ports:
       - "27017:27017"
     env_file:
       - .env
     volumes:
-      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
       - mongo-data:/data/db
     networks:
       - app
@@ -38,6 +41,8 @@ services:
     networks:
       - app
       - frontend
+    depends_on:
+      - app
 
 volumes:
   mongo-data:

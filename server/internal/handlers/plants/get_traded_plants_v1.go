@@ -24,7 +24,11 @@ func (h *Handler) GetTradedPlantsV1(
 	}
 	plantsIds := make([]string, len(trades))
 	for i, t := range trades {
-		plantsIds[i] = t.Offerer.Plant.ID.Hex()
+		if t.Offerer.ID.Hex() == req.UserId {
+			plantsIds[i] = t.Accepter.Plant.ID.Hex()
+		} else {
+			plantsIds[i] = t.Offerer.Plant.ID.Hex()
+		}
 	}
 	fltr := parseFilterLabels(req.Filter)
 	plants, err := h.storage.GetPlantsByIds(ctx, plantsIds, fltr)

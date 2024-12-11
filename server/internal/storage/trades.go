@@ -19,9 +19,7 @@ func (s *Storage) GetTrades(ctx context.Context, id primitive.ObjectID, role str
 	if role == "accepter" {
 		filter = bson.D{
 			{"type", "trade"},
-			{"accepter", bson.D{
-				{"_id", id},
-			}},
+			{"accepter._id", id},
 			{"$or", bson.A{
 				bson.D{{"status", 0}},
 				bson.D{{"status", 1}},
@@ -30,13 +28,7 @@ func (s *Storage) GetTrades(ctx context.Context, id primitive.ObjectID, role str
 	} else {
 		filter = bson.D{
 			{"type", "trade"},
-			{"offerer", bson.D{
-				{"_id", id},
-			}},
-			{"$or", bson.A{
-				bson.D{{"status", 0}},
-				bson.D{{"status", 1}},
-			}},
+			{"offerer._id", id},
 		}
 	}
 	cur, err := collection.Find(ctx, filter)
@@ -58,6 +50,14 @@ func (s *Storage) CreateBuyTrade(ctx context.Context, trade *models.Trade) error
 
 	collection := s.DataBase.Collection("trades")
 	_, err := collection.InsertOne(ctx, trade)
+	if err != nil {
+		return err
+	}
+	err = s.AddTradeToUser(ctx, trade.Accepter.ID, trade.ID)
+	if err != nil {
+		return err
+	}
+	err = s.AddTradeToUser(ctx, trade.Offerer.ID, trade.ID)
 	if err != nil {
 		return err
 	}

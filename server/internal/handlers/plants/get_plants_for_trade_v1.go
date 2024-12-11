@@ -27,6 +27,8 @@ func (h *Handler) GetPlantsForTradeV1(
 			Price:     fmt.Sprintf("%f", r.Price),
 			Place:     r.Place,
 			CreatedAt: timestamppb.New(r.CreatedAt),
+			Id:        r.ID.Hex(),
+			Image:     r.Image,
 		}
 	}
 	return &api.GetPlantsForTradeV1Response{

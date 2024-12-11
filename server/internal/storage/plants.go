@@ -3,6 +3,7 @@ package storage
 import (
 	"context"
 	"time"
+	"fmt"
 
 	"plants/internal/models"
 
@@ -30,7 +31,6 @@ func (s *Storage) GetPlantsWithCareRules(ctx context.Context, fltr *models.Filte
 	if err != nil {
 		return nil, 0, err
 	}
-	defer cursor.Close(ctx)
 	rules := make([]*models.CareRules, 0)
 	for cursor.Next(ctx) {
 		var rule models.CareRules
@@ -141,10 +141,12 @@ func (s *Storage) AddPlant(ctx context.Context, plant *models.Plant) error {
 
 func (s *Storage) GetPlantsForTrade(ctx context.Context, id string) ([]*models.Plant, error) {
 	collection := s.DataBase.Collection("plants")
+	collectionTrades := s.DataBase.Collection("trades")
+	objID, err := primitive.ObjectIDFromHex(id)
 
 	filter := bson.D{
-		{"user_id", id},
-		{"sold_at", ""},
+		{"user_id", objID},
+		{"sold_at", time.Time{}},
 	}
 	doc, err := collection.Find(ctx, filter)
 	if err != nil {
@@ -156,7 +158,26 @@ func (s *Storage) GetPlantsForTrade(ctx context.Context, id string) ([]*models.P
 		if err := doc.Decode(&plant); err != nil {
 			return nil, err
 		}
-		plants = append(plants, &plant)
+		filter := bson.D{
+        	{Key: "$and", Value: bson.A{
+        		bson.D{
+        			{Key: "$or", Value: bson.A{
+        				bson.D{{Key: "offerer.plant._id", Value: plant.ID}},
+        				bson.D{{Key: "accepter.plant._id", Value: plant.ID}},
+        			}},
+        		},
+        		bson.D{
+        			{Key: "$or", Value: bson.A{
+        				bson.D{{Key: "status", Value: 1}},
+        				bson.D{{Key: "status", Value: 2}},
+        			}},
+        		},
+        	}},
+        }
+		var tmpTrade models.Trade
+		if err = collectionTrades.FindOne(ctx, filter).Decode(&tmpTrade); err != nil {
+			plants = append(plants, &plant)
+		}
 	}
 	return plants, nil
 }

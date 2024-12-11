@@ -20,7 +20,7 @@ func (s *Storage) GetUserByLogin(
 	filter := bson.D{
 		{"$or", bson.A{
 			bson.D{{"email", login}},
-			bson.D{{"phone", login}},
+			bson.D{{"phone_number", login}},
 		}}}
 
 	var result models.User
@@ -43,7 +43,7 @@ func (s *Storage) GetUserByLoginAndPassword(
 	filter := bson.D{
 		{"$or", bson.A{
 			bson.D{{"email", login}},
-			bson.D{{"phone", login}},
+			bson.D{{"phone_number", login}},
 		}},
 		{"password", password},
 	}
