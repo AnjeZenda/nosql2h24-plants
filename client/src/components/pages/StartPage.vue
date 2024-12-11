@@ -209,6 +209,7 @@ export default {
   background-color: #ffffff;
   color: #000000;
   cursor: none;
+  border: none
 }
 
 #auth-button:not(.active):hover {
