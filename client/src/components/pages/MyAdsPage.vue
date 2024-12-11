@@ -86,20 +86,22 @@
     </div>
 
     <div class="plant-container">
-      <header class="modal-header">
+      <header class="modal-header-ads">
         <h1 style="font-family: Century Gothic,sans-serif">Мои объявления</h1>
-        <span
-            :style="{ color: selected === 'active' ? '#000000' : '#7E7E7E', fontWeight: 'bold', fontSize: '14px', fontFamily: 'Century Gothic,sans-serif'}"
-            @click="select('active')"
-            class="clickable">
+        <div style="margin-top: 2%;">
+          <span
+              :style="{ color: selected === 'active' ? '#000000' : '#7E7E7E', fontWeight: 'bold', fontSize: '14px', fontFamily: 'Century Gothic,sans-serif'}"
+              @click="select('active')"
+              class="clickable">
           Активные
         </span>
-        <span
-            :style="{ color: selected === 'archive' ? '#000000' : '#7E7E7E', fontWeight: 'bold', fontSize: '14px', fontFamily: 'Century Gothic,sans-serif' }"
-            @click="select('archive')"
-            class="clickable">
+          <span
+              :style="{ color: selected === 'archive' ? '#000000' : '#7E7E7E', fontWeight: 'bold', fontSize: '14px', fontFamily: 'Century Gothic,sans-serif' }"
+              @click="select('archive')"
+              class="clickable">
           Архивные
         </span>
+        </div>
       </header>
 
       <div class="plant-grid">
@@ -311,5 +313,13 @@ export default {
 
 #create-ads {
   color: #89A758;
+}
+
+.modal-header-ads {
+  display: grid;
+  align-items: center;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
 }
 </style>

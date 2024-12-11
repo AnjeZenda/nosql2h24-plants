@@ -153,6 +153,10 @@ export default {
 
   mounted() {
     this.userId = sessionStorage.getItem("id");
+    if (sessionStorage.getItem("search")) {
+      this.filter.species = sessionStorage.getItem("search");
+      sessionStorage.removeItem("search");
+    }
     this.getPlants();
   },
 

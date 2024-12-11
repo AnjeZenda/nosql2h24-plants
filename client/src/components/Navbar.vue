@@ -85,7 +85,7 @@ export default {
 
   data() {
     return {
-      role: '',
+      role: null,
       id: '',
       currentType: 'in',
       inT: [],
@@ -109,13 +109,18 @@ export default {
   },
 
   beforeMount() {
-    this.role = sessionStorage.getItem("role");
+    const string_role = sessionStorage.getItem("role");
+    if (string_role === "ROLE_ADMIN") {
+      this.role = 0
+    } else {
+      this.role = 1
+    }
     this.id = sessionStorage.getItem("id");
   },
 
   computed: {
     menuItems() {
-      return this.role === 1 ? this.adminItems : this.regularItems;
+      return this.role === 0 ? this.adminItems : this.regularItems;
     }
   },
 
