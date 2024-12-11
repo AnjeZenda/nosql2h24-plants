@@ -335,7 +335,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 @import "../../../main.css";
 @import "../../../plants.css";
 @import "../../../modal.css";
