@@ -158,14 +158,22 @@ func (s *Storage) GetPlantsForTrade(ctx context.Context, id string) ([]*models.P
 		if err := doc.Decode(&plant); err != nil {
 			return nil, err
 		}
-		filter = bson.D{
-			{Key: "$or", Value: bson.A{
-				bson.D{{Key: "offerer.plant.id", Value: plant.ID}},
-				bson.D{{Key: "accepter.plant.id", Value: plant.ID}},
-				bson.D{{Key: "status", Value: 1}},
-				bson.D{{Key: "status", Value: 2}},
-			}},
-		}
+		filter := bson.D{
+        	{Key: "$and", Value: bson.A{
+        		bson.D{
+        			{Key: "$or", Value: bson.A{
+        				bson.D{{Key: "offerer._id", Value: objID}},
+        				bson.D{{Key: "accepter._id", Value: objID}},
+        			}},
+        		},
+        		bson.D{
+        			{Key: "$or", Value: bson.A{
+        				bson.D{{Key: "status", Value: 1}},
+        				bson.D{{Key: "status", Value: 2}},
+        			}},
+        		},
+        	}},
+        }
 		var tmpTrade models.Trade
 		if err = collectionTrades.FindOne(ctx, filter).Decode(&tmpTrade); err != nil {
 			plants = append(plants, &plant)
