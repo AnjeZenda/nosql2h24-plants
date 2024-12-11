@@ -87,8 +87,8 @@
 
     <div class="plant-container">
       <header class="modal-header-ads">
-        <h1 style="font-family: Century Gothic,sans-serif">Мои объявления</h1>
-        <div style="margin-top: 2%;">
+        <h1 style="font-family: Century Gothic,sans-serif; margin: 0">Мои объявления</h1>
+        <div style="margin-top: 1%;">
           <span
               :style="{ color: selected === 'active' ? '#000000' : '#7E7E7E', fontWeight: 'bold', fontSize: '14px', fontFamily: 'Century Gothic,sans-serif'}"
               @click="select('active')"

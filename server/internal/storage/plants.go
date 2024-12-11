@@ -35,8 +35,6 @@ func (s *Storage) GetPlantsWithCareRules(ctx context.Context, fltr *models.Filte
 	for cursor.Next(ctx) {
 		var rule models.CareRules
 		if err = cursor.Decode(&rule); err != nil {
-        	fmt.Println(err)
-        	fmt.Println(nil)
 			return nil, 0, err
 		}
 		rules = append(rules, &rule)
