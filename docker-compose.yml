@@ -12,7 +12,6 @@ services:
       - db
     ports:
       - "127.0.0.1:8881:8881"
-      - "127.0.0.1:8882:8882"
 
   db:
     container_name: db
