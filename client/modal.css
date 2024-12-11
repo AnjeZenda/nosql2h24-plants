@@ -23,6 +23,8 @@
 }
 
 .modal-content-care {
+    max-height: 80vh;
+    overflow-y: auto;
     width: 70%;
     max-width: 40%;
     padding: 20px;

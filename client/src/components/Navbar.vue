@@ -304,6 +304,8 @@ export default {
 }
 
 .trade-modal-content {
+  max-height: 80vh; /* Максимальная высота модального окна */
+  overflow-y: auto;
   background: #fff;
   width: 60%;
   max-width: 500px;

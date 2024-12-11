@@ -8,7 +8,7 @@ const routes = [
     { path: '/plants/care', name: 'Care', component: () => import('./components/pages/CarePage.vue')},
     { path: '/plants/user', name: 'User', component: () => import('./components/pages/UserPage.vue')},
     { path: '/plants/ads', name: 'Ads', component: () => import('./components/pages/MyAdsPage.vue')},
-    { path: '/plants/statistic', name: 'Statistic', component: () => import('./components/pages/StatisticPage.vue')}
+    { path: '/plants/statistics', name: 'Statistic', component: () => import('./components/pages/StatisticPage.vue')}
 ]
 
 const router = createRouter({

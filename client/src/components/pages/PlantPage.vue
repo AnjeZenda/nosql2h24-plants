@@ -218,7 +218,7 @@ export default {
               response.data.plants.forEach(elem => {
                 let plant = {
                   id: elem.id,
-                  image: "https://polinka.top/uploads/posts/2023-05/1683380217_polinka-top-p-dobroe-utro-kartinki-s-yumorom-prikolnie-p-6.jpg",
+                  image: elem.image,
                   species: elem.species,
                   price: parseInt(elem.price),
                   createdAt: elem.createdAt,
@@ -265,7 +265,6 @@ export default {
         accepterId: this.accepterID,
         accepterPlantId: this.accepterPlant.id
       }
-      console.log(tradeData);
       try {
         await axios.post(`/api/trade`, tradeData);
         this.successTrade();
@@ -297,6 +296,8 @@ export default {
 }
 
 .trade-modal-content {
+  max-height: 80vh;
+  overflow-y: auto;
   background: #fff;
   width: 60%;
   max-width: 500px;
