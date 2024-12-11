@@ -28,6 +28,7 @@ func (h *Handler) GetPlantsForTradeV1(
 			Place:     r.Place,
 			CreatedAt: timestamppb.New(r.CreatedAt),
 			Id:        r.ID.Hex(),
+			Image:     r.Image,
 		}
 	}
 	return &api.GetPlantsForTradeV1Response{
