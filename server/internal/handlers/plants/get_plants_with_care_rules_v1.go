@@ -31,6 +31,9 @@ func (h *Handler) GetPlantsWithCareRulesV1(
 	if len(req.Filter.TemperatureRegime) != 0 {
 		filter.Labels["temperature_regime"] = req.Filter.TemperatureRegime
 	}
+	if req.Filter.Description != "" {
+		filter.Labels["description"] = req.Filter.Description
+	}
 	rules, count, err := h.storage.GetPlantsWithCareRules(ctx, filter)
 	if err != nil {
 		return nil, status.Error(codes.Internal, "internal error occured")

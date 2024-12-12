@@ -18,7 +18,15 @@ type valsType interface {
 
 func (s *Storage) GetPlantsWithCareRules(ctx context.Context, fltr *models.Filter) ([]*models.CareRules, int64, error) {
 	collection := s.DataBase.Collection("care_rules")
-	filter := parseLabelsToBSON(fltr.Labels)
+	filter := primitive.D{}
+	if v, ok := fltr.Labels["description"]; ok {
+		filter = append(filter, bson.E{
+			Key: "description", Value: bson.M{"$elemMatch": bson.M{"description_addition": bson.M{"$regex": v, "$options": "i"}}},
+		},
+		)
+		delete(fltr.Labels, "description")
+	}
+	filter = append(filter, parseLabelsToBSON(fltr.Labels)...)
 	opts := options.Find()
 	opts.SetLimit(fltr.Size)
 	opts.SetSkip((fltr.Page - 1) * fltr.Size)
