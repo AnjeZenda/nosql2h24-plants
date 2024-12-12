@@ -4,7 +4,35 @@
     <div class="sidebar">
       <div class="side-form">
         <img src="../../../public/logo.png" alt="Plant Shop Logo" class="logo"/>
-        <div class="inputs-labels" id="create-ads">
+        <div class="inputs-labels" id="statistic-label">
+          Параметры статистики
+        </div>
+        <div class="inputs-labels">
+          Тип статистики
+        </div>
+        <div class="select-sort">
+          <select class="custom-select-stat" v-model="statType">
+            <option disabled value="">Статистика</option>
+            <option value="plants">По растениям</option>
+            <option value="buy">По продажам</option>
+            <option value="trade">По обменам</option>
+          </select>
+        </div>
+        <div class="inputs-labels">
+          Период времени
+          <div style="display: flex; justify-content: space-between">
+            <div style="display: flex; flex-direction: column; margin-right: 1%">
+              <label style="font-weight: 500; font-size: 13px">С</label>
+              <input class="inputs" v-model="dateFrom" type="date"/>
+            </div>
+            <div style="display: flex; flex-direction: column">
+              <label style="font-weight: 500; font-size: 13px">По</label>
+              <input class="inputs" v-model="dateTo" type="date"/>
+            </div>
+          </div>
+        </div>
+        <button style="margin-top: 2%" class="green-button-white-text" @click="getStatistic">Отобразить</button>
+        <div class="inputs-labels">
           Работа с базой данных
         </div>
         <button style="margin-top: 2%" class="white-button-green-text" @click="getData">Экспортировать</button>
@@ -17,24 +45,129 @@
         <button style="margin-top: 2%" class="green-button-white-text" @click="triggerFileInput($event)">Импортировать</button>
       </div>
     </div>
+
+    <div class="plant-container">
+        <Bar v-if="chart===true" :data="data" :options="options" style="height: 500px"/>
+    </div>
   </div>
 </template>
 
 <script>
 import Navbar from "@/components/Navbar.vue";
 import axios from "axios";
+import {
+  Chart as ChartJS,
+  Title,
+  Tooltip,
+  Legend,
+  BarElement,
+  CategoryScale,
+  LinearScale,
+} from 'chart.js'
+import zoomPlugin from 'chartjs-plugin-zoom';
+import { Bar } from 'vue-chartjs'
+
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, zoomPlugin)
 
 export default {
   name: "Statistic",
-  components: { Navbar },
+  components: { Navbar, Bar },
 
   data() {
     return {
-      data: ''
+      statType: '',
+      dateFrom: '',
+      dateTo: '',
+      chart: false,
+      data: {
+        labels: [],
+        datasets: [
+          {
+            label: 'Данные',
+            backgroundColor: '#89A758',
+            data: []
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          title: {
+            display: true,
+            text: 'Мой график',
+            font: {
+              size: 18,
+              weight: 'bold'
+            },
+            padding: {
+              top: 10,
+              bottom: 20
+            },
+            align: 'center',
+            color: '#333'
+          },
+          legend: {
+            display: true,
+            position: 'top'
+          },
+          zoom: {
+            zoom: {
+              wheel: {
+                enabled: true
+              },
+              pinch: {
+                enabled: true
+              },
+              mode: 'x'
+            },
+            pan: {
+              enabled: true,
+              mode: 'x'
+            }
+          }
+        },
+        scales: {
+          y: {
+            ticks: {
+              drawBorder: false,
+              display: false // Отключает метки на оси Y
+            },
+            grid: {
+              drawBorder: false,
+              display: false // Убирает линии сетки
+            }
+          },
+          x: {
+            grid: {
+              drawBorder: false
+            }
+          }
+        }
+      }
     };
   },
 
   methods: {
+    getStatistic() {
+      this.chart = true
+      this.options.plugins.title.text = 'Данные по...'
+      // axios
+      //     .get(`/api/statistic/${this.statType}`)
+      //     .then((response) => {
+      //       response.data.plants.forEach(elem => {
+      //         let plant = {
+      //           image: elem.image,
+      //           species: elem.species,
+      //           price: elem.price,
+      //           createdAt: elem.createdAt,
+      //           place: elem.place
+      //         };
+      //         this.plants.push(plant)
+      //       })
+      //     })
+    },
+
     async getData() {
       try {
         const response = await axios.get(`/api/data`, {});
@@ -99,27 +232,6 @@ export default {
       this.$refs.fileInput.click();
     },
 
-    async postData() {
-      try {
-        const data = {
-          db: this.data
-        }
-        console.log(this.data);
-        await axios.post(`/api/data`, data);
-        this.successImport();
-      } catch (error) {
-        this.errorImport();
-      }
-    },
-
-    successExport() {
-      this.$notify({
-        title: "Получилось!",
-        text: "База данных успешно импортирована.",
-        type: 'success'
-      });
-    },
-
     errorExport() {
       this.$notify({
         title: "Ошибка!",
@@ -155,7 +267,43 @@ export default {
   display: flex;
 }
 
-#create-ads {
+#statistic-label {
+  color: #89A758;
+}
+
+.custom-select-stat {
+  font-family: 'Century Gothic', sans-serif;
+  font-size: 13px;
   color: #000000;
+  padding: 10px;
+  border: 1px solid #EEECEC;
+  background-color: #eeecec;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  cursor: pointer;
+  width: 100%;
+  border-radius: 10px;
+}
+
+.custom-select-stat:focus {
+  border-color: transparent;
+  outline: none;
+}
+
+.custom-select-stat::after {
+  position: absolute;
+  border: 2px solid transparent;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.custom-select-stat option {
+  font-weight: 400;
+  color: #000000;
+  padding: 10px;
+  background-color: #FFFFFF;
 }
 </style>
