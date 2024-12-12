@@ -24,6 +24,11 @@
           <br>
           <label class="checkbox-labels"><input v-model="filter.temperatureRegime" type="checkbox" value="Теплолюбивые (более 22°C)" /> Теплолюбивые (более 22°C)</label>
 
+          <div class="inputs-labels">
+            Слова в правилах ухода
+            <textarea class="inputs" v-model="filter.description" placeholder="Что-то важное для вас"></textarea>
+          </div>
+
           <button type="submit" class="green-button-white-text">Отфильтровать</button>
           <button class="white-button-green-text" @click="isAddOpen = true">Добавить информацию</button>
         </form>
@@ -159,7 +164,8 @@ export default {
         species: '',
         type: '',
         lightCondition: [],
-        temperatureRegime: []
+        temperatureRegime: [],
+        description: ''
       },
       currentPage: ref(1),
       careCount: 0,
@@ -240,7 +246,8 @@ export default {
           species: this.filter.species,
           type: this.filter.type,
           lightCondition: this.filter.lightCondition,
-          temperatureRegime: this.filter.temperatureRegime
+          temperatureRegime: this.filter.temperatureRegime,
+          description: this.filter.description
         }
       }
 
