@@ -832,6 +832,12 @@
         "createdAt": {
           "type": "string",
           "format": "date-time"
+        },
+        "id": {
+          "type": "string"
+        },
+        "image": {
+          "type": "string"
         }
       }
     },
@@ -871,6 +877,9 @@
           "items": {
             "type": "string"
           }
+        },
+        "description": {
+          "type": "string"
         }
       }
     },

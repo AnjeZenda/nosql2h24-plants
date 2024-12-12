@@ -18,6 +18,28 @@
 <a href=" ./../../../actions/workflows/7_app_is_ready.yml" >![7. App is ready]( ./../../actions/workflows/7_app_is_ready.yml/badge.svg)</a>
 
 ## Отладочные пользователи
-Логин: ivanov.alexey@example.com
+**Администратор**. Доступен импорт и экспорт + базовый функционал обычного пользователя.
 
-Пароль: password123
+Логин: 
+```
+ivanov.alexey@example.com
+```
+Пароль: 
+```
+password123
+```
+**Обычный пользователь**.
+
+Логин: 
+```
+morozov.oleg@example.com
+```
+Пароль: 
+```
+oleg_secure123
+```
+
+**После сборки перейти по ссылке**
+```
+http://localhost:8081/plants/start
+```

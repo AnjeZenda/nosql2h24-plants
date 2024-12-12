@@ -11,8 +11,7 @@ services:
     depends_on:
       - db
     ports:
-      - "8881:8881"
-      - "8882:8882"
+      - "127.0.0.1:8881:8881"
 
   db:
     container_name: db
@@ -20,8 +19,6 @@ services:
       context: ./db
       dockerfile: Dockerfile
     restart: unless-stopped
-    ports:
-      - "27017:27017"
     env_file:
       - .env
     volumes:
@@ -31,13 +28,12 @@ services:
 
   frontend:
     container_name: client
-    image: client
     build:
       context: ./client
       dockerfile: Dockerfile
     restart: unless-stopped
     ports:
-      - "8081:8080"
+      - "127.0.0.1:8081:8080"
     networks:
       - app
       - frontend

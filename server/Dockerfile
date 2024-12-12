@@ -1,9 +1,9 @@
-FROM golang:alpine as modules
+FROM golang:alpine3.21 as modules
 COPY go.mod go.sum /modules/
 WORKDIR /modules
 RUN go mod download
 
-FROM golang:alpine as builder
+FROM golang:alpine3.21 as builder
 COPY --from=modules /go/pkg /go/pkg
 COPY .. /app
 WORKDIR /app
