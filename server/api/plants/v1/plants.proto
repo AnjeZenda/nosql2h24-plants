@@ -223,6 +223,7 @@ message GetPlantByIdV1Response{
         string place = 9;
         string image = 10;
         float price = 11;
+        google.protobuf.Timestamp createdAt = 12;
     }
     message User {
         string id = 1;

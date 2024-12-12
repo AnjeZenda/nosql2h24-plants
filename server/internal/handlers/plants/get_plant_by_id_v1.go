@@ -5,6 +5,7 @@ import (
 
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/types/known/timestamppb"
 
 	api "plants/internal/pkg/pb/plants/v1"
 )
@@ -34,6 +35,7 @@ func (h *Handler) GetPlantByIdV1(
 			Description:       plant.Description,
 			Place:             plant.Place,
 			Image:             plant.Image,
+			CreatedAt:         timestamppb.New(plant.CreatedAt),
 		},
 		User: &api.GetPlantByIdV1Response_User{
 			Id:         user.ID.Hex(),

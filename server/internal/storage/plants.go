@@ -3,7 +3,6 @@ package storage
 import (
 	"context"
 	"time"
-	"fmt"
 
 	"plants/internal/models"
 
@@ -159,21 +158,21 @@ func (s *Storage) GetPlantsForTrade(ctx context.Context, id string) ([]*models.P
 			return nil, err
 		}
 		filter := bson.D{
-        	{Key: "$and", Value: bson.A{
-        		bson.D{
-        			{Key: "$or", Value: bson.A{
-        				bson.D{{Key: "offerer.plant._id", Value: plant.ID}},
-        				bson.D{{Key: "accepter.plant._id", Value: plant.ID}},
-        			}},
-        		},
-        		bson.D{
-        			{Key: "$or", Value: bson.A{
-        				bson.D{{Key: "status", Value: 1}},
-        				bson.D{{Key: "status", Value: 2}},
-        			}},
-        		},
-        	}},
-        }
+			{Key: "$and", Value: bson.A{
+				bson.D{
+					{Key: "$or", Value: bson.A{
+						bson.D{{Key: "offerer.plant._id", Value: plant.ID}},
+						bson.D{{Key: "accepter.plant._id", Value: plant.ID}},
+					}},
+				},
+				bson.D{
+					{Key: "$or", Value: bson.A{
+						bson.D{{Key: "status", Value: 1}},
+						bson.D{{Key: "status", Value: 2}},
+					}},
+				},
+			}},
+		}
 		var tmpTrade models.Trade
 		if err = collectionTrades.FindOne(ctx, filter).Decode(&tmpTrade); err != nil {
 			plants = append(plants, &plant)
