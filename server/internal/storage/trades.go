@@ -143,6 +143,7 @@ func (s *Storage) UpdateTrade(ctx context.Context,
 	update := bson.D{
 		{"$set", bson.D{
 			{"status", status},
+			{"updated_at", time.Now().UTC()},
 		}},
 	}
 	_, errres := collection.UpdateOne(ctx, filter, update)
