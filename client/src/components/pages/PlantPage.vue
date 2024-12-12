@@ -29,7 +29,8 @@
         </div>
         <div style="margin-left: 2%">
           <h2 style="color: #000000; font-family: 'Century Gothic', sans-serif; margin-bottom: 0">{{ formatPrice(accepterPlant.price) }}</h2>
-          <p style="color: #7E7E7E; font-size: 14px; margin-bottom: 0; margin-top: 0">{{ accepterPlant.place }}</p>
+          <p style="color: #6f6f6f; font-size: 14px; margin-bottom: 0; margin-top: 0; font-weight: bold">{{ accepterPlant.place }}</p>
+          <p class="plant-date" style="margin: 0">Дата размещения: {{ formatDate(accepterPlant.createdAt) }}</p>
           <p style="color: #000000; font-size: 16px; font-weight: bold; margin-bottom: 0">Характеристики</p>
           <p style="color: #000000; font-size: 16px; margin-bottom: 0; margin-top: 0">Размер: {{accepterPlant.size}}</p>
           <p style="color: #000000; font-size: 16px; margin-bottom: 0; margin-top: 0">Условия освещения: {{accepterPlant.lighting}}</p>
@@ -182,6 +183,7 @@ export default {
             this.accepterPlant.place = response.data.plant.place;
             this.accepterPlant.image = response.data.plant.image;
             this.accepterPlant.price = parseInt(response.data.plant.price);
+            this.accepterPlant.createdAt = response.data.plant.createdAt;
             this.firstName = response.data.user.name;
             this.lastName = response.data.user.surname;
             this.patronymic = response.data.user.fatherName;
