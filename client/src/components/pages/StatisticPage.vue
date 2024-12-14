@@ -81,13 +81,7 @@ export default {
       chart: false,
       data: {
         labels: [],
-        datasets: [
-          {
-            label: 'Данные',
-            backgroundColor: '#89A758',
-            data: []
-          }
-        ]
+        datasets: []
       },
       options: {
         responsive: true,
@@ -131,11 +125,11 @@ export default {
           y: {
             ticks: {
               drawBorder: false,
-              display: false // Отключает метки на оси Y
+              display: false
             },
             grid: {
               drawBorder: false,
-              display: false // Убирает линии сетки
+              display: false
             }
           },
           x: {
@@ -151,21 +145,75 @@ export default {
   methods: {
     getStatistic() {
       this.chart = true
-      this.options.plugins.title.text = 'Данные по...'
-      // axios
-      //     .get(`/api/statistic/${this.statType}`)
-      //     .then((response) => {
-      //       response.data.plants.forEach(elem => {
-      //         let plant = {
-      //           image: elem.image,
-      //           species: elem.species,
-      //           price: elem.price,
-      //           createdAt: elem.createdAt,
-      //           place: elem.place
-      //         };
-      //         this.plants.push(plant)
-      //       })
-      //     })
+      const datePeriod = {
+        startDate: this.dateFrom,
+        endDate: this.dateTo
+      }
+      this.data.labels = [];
+      this.data.datasets = [];
+
+      axios
+          .post(`/api/statistic/${this.statType}`, datePeriod)
+          .then((response) => {
+            if (this.statType === 'plants') {
+              const plantsCount = response.data.count;
+              this.options.plugins.title.text = `Данные по опубликованным растениям. Количество записей: ${plantsCount}`;
+              this.data.datasets = [
+                {
+                  label: 'Опубликовано',
+                  backgroundColor: '#89A758',
+                  data: []
+                }
+              ];
+              response.data.statistic.forEach(elem => {
+                this.data.labels.push(elem.species);
+                this.data.datasets.data.push(elem.count);
+              });
+            } else if (this.statType === 'buy') {
+              const plantsCount = response.data.count;
+              this.options.plugins.title.text = `Данные по продажам. Количество записей: ${plantsCount}`;
+              this.data.datasets = [
+                {
+                  label: 'Продано',
+                  backgroundColor: '#89A758',
+                  data: []
+                }
+              ];
+              response.data.statistic.forEach(elem => {
+                this.data.labels.push(elem.species);
+                this.data.datasets.data.push(elem.count);
+              });
+            } else {
+              const plantsCount = response.data.count;
+              this.options.plugins.title.text = `Данные по обменам. Количество записей: ${plantsCount}`;
+              let pend = [];
+              let accept = [];
+              let reject = [];
+              response.data.statistic.forEach(elem => {
+                this.data.labels.push(elem.species);
+                pend.push(elem.pend);
+                accept.push(elem.accept);
+                reject.push(elem.reject);
+              });
+              this.data.datasets = [
+                {
+                  label: 'Создано',
+                  backgroundColor: 'rgba(137,167,88,0.59)',
+                  data: pend
+                },
+                {
+                  label: 'Согласовано',
+                  backgroundColor: '#a9ce6d',
+                  data: accept
+                },
+                {
+                  label: 'Отменено',
+                  backgroundColor: 'rgba(137,167,88,0.11)',
+                  data: reject
+                },
+              ];
+            }
+          })
     },
 
     async getData() {
