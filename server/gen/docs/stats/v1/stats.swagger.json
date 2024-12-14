@@ -35,18 +35,12 @@
         },
         "parameters": [
           {
-            "name": "filter.timeFrom",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "format": "date-time"
-          },
-          {
-            "name": "filter.timeTo",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "format": "date-time"
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1GetAdsStatsV1Request"
+            }
           }
         ],
         "tags": [
@@ -177,6 +171,14 @@
             "type": "object",
             "$ref": "#/definitions/protobufAny"
           }
+        }
+      }
+    },
+    "v1GetAdsStatsV1Request": {
+      "type": "object",
+      "properties": {
+        "filter": {
+          "$ref": "#/definitions/v1TimeFilter"
         }
       }
     },
