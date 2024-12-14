@@ -114,7 +114,7 @@ func (s *Storage) GetTradeStats(ctx context.Context, filter map[string]interface
 							Value: bson.D{
 								{"$dateToString", bson.D{
 									{"format", "%Y-%m-%d"},
-									{"date", "$updated_at"},
+									{"date", "$created_at"},
 								}},
 							},
 						},
