@@ -119,8 +119,13 @@ type BuyStats struct {
 	Info  []InnerBuyStats    `bson:"info" json:"info"`
 }
 
+type AdsStats struct {
+	ID    primitive.ObjectID `bson:"_id,omitempty" json:"id"`
+	Count int64              `bson:"count" json:"count"`
+	Info  []InnerAdsStats    `bson:"info" json:"info"`
+}
+
 type InnerPlantsStats struct {
-	Date    string `bson:"date" json:"date"`
 	Species string `bson:"species" json:"species"`
 	Count   int64  `bson:"count" json:"count"`
 }
@@ -134,4 +139,9 @@ type InnerTradeStats struct {
 	Date   string `bson:"date" json:"date"`
 	Status int8   `bson:"status" json:"status"`
 	Count  int64  `bson:"count" json:"count"`
+}
+
+type InnerAdsStats struct {
+	Date  string `bson:"date" json:"date"`
+	Count int64  `bson:"count" json:"count"`
 }

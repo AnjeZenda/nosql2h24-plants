@@ -16,6 +16,44 @@
     "application/json"
   ],
   "paths": {
+    "/api/stats/ads": {
+      "post": {
+        "operationId": "StatsAPI_GetAdsStatsV1",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetAdsStatsV1Response"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "filter.timeFrom",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "filter.timeTo",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          }
+        ],
+        "tags": [
+          "StatsAPI"
+        ]
+      }
+    },
     "/api/stats/buy": {
       "post": {
         "operationId": "StatsAPI_GetBuyStatsV1",
@@ -142,6 +180,35 @@
         }
       }
     },
+    "v1GetAdsStatsV1Response": {
+      "type": "object",
+      "properties": {
+        "stats": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1GetAdsStatsV1ResponseStatsInfo"
+          }
+        },
+        "count": {
+          "type": "string",
+          "format": "int64"
+        }
+      }
+    },
+    "v1GetAdsStatsV1ResponseStatsInfo": {
+      "type": "object",
+      "properties": {
+        "date": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "count": {
+          "type": "string",
+          "format": "int64"
+        }
+      }
+    },
     "v1GetBuyStatsV1Request": {
       "type": "object",
       "properties": {
@@ -212,10 +279,6 @@
         "count": {
           "type": "string",
           "format": "int64"
-        },
-        "date": {
-          "type": "string",
-          "format": "date-time"
         }
       }
     },

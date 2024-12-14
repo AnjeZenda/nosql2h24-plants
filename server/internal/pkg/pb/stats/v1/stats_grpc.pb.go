@@ -22,6 +22,7 @@ const (
 	StatsAPI_GetPlantsStatsV1_FullMethodName = "/stats.v1.StatsAPI/GetPlantsStatsV1"
 	StatsAPI_GetBuyStatsV1_FullMethodName    = "/stats.v1.StatsAPI/GetBuyStatsV1"
 	StatsAPI_GetTradeStatsV1_FullMethodName  = "/stats.v1.StatsAPI/GetTradeStatsV1"
+	StatsAPI_GetAdsStatsV1_FullMethodName    = "/stats.v1.StatsAPI/GetAdsStatsV1"
 )
 
 // StatsAPIClient is the client API for StatsAPI service.
@@ -31,6 +32,7 @@ type StatsAPIClient interface {
 	GetPlantsStatsV1(ctx context.Context, in *GetPlantsStatsV1Request, opts ...grpc.CallOption) (*GetPlantsStatsV1Response, error)
 	GetBuyStatsV1(ctx context.Context, in *GetBuyStatsV1Request, opts ...grpc.CallOption) (*GetBuyStatsV1Response, error)
 	GetTradeStatsV1(ctx context.Context, in *GetTradeStatsV1Request, opts ...grpc.CallOption) (*GetTradeStatsV1Response, error)
+	GetAdsStatsV1(ctx context.Context, in *GetAdsStatsV1Request, opts ...grpc.CallOption) (*GetAdsStatsV1Response, error)
 }
 
 type statsAPIClient struct {
@@ -71,6 +73,16 @@ func (c *statsAPIClient) GetTradeStatsV1(ctx context.Context, in *GetTradeStatsV
 	return out, nil
 }
 
+func (c *statsAPIClient) GetAdsStatsV1(ctx context.Context, in *GetAdsStatsV1Request, opts ...grpc.CallOption) (*GetAdsStatsV1Response, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetAdsStatsV1Response)
+	err := c.cc.Invoke(ctx, StatsAPI_GetAdsStatsV1_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // StatsAPIServer is the server API for StatsAPI service.
 // All implementations must embed UnimplementedStatsAPIServer
 // for forward compatibility.
@@ -78,6 +90,7 @@ type StatsAPIServer interface {
 	GetPlantsStatsV1(context.Context, *GetPlantsStatsV1Request) (*GetPlantsStatsV1Response, error)
 	GetBuyStatsV1(context.Context, *GetBuyStatsV1Request) (*GetBuyStatsV1Response, error)
 	GetTradeStatsV1(context.Context, *GetTradeStatsV1Request) (*GetTradeStatsV1Response, error)
+	GetAdsStatsV1(context.Context, *GetAdsStatsV1Request) (*GetAdsStatsV1Response, error)
 	mustEmbedUnimplementedStatsAPIServer()
 }
 
@@ -96,6 +109,9 @@ func (UnimplementedStatsAPIServer) GetBuyStatsV1(context.Context, *GetBuyStatsV1
 }
 func (UnimplementedStatsAPIServer) GetTradeStatsV1(context.Context, *GetTradeStatsV1Request) (*GetTradeStatsV1Response, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetTradeStatsV1 not implemented")
+}
+func (UnimplementedStatsAPIServer) GetAdsStatsV1(context.Context, *GetAdsStatsV1Request) (*GetAdsStatsV1Response, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAdsStatsV1 not implemented")
 }
 func (UnimplementedStatsAPIServer) mustEmbedUnimplementedStatsAPIServer() {}
 func (UnimplementedStatsAPIServer) testEmbeddedByValue()                  {}
@@ -172,6 +188,24 @@ func _StatsAPI_GetTradeStatsV1_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _StatsAPI_GetAdsStatsV1_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAdsStatsV1Request)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(StatsAPIServer).GetAdsStatsV1(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: StatsAPI_GetAdsStatsV1_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(StatsAPIServer).GetAdsStatsV1(ctx, req.(*GetAdsStatsV1Request))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // StatsAPI_ServiceDesc is the grpc.ServiceDesc for StatsAPI service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -190,6 +224,10 @@ var StatsAPI_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetTradeStatsV1",
 			Handler:    _StatsAPI_GetTradeStatsV1_Handler,
+		},
+		{
+			MethodName: "GetAdsStatsV1",
+			Handler:    _StatsAPI_GetAdsStatsV1_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -171,11 +171,163 @@ func (s *Storage) GetTradeStats(ctx context.Context, filter map[string]interface
 			return nil, err
 		}
 	}
+	pipeline = []bson.D{
+		{
+			{
+				Key: "$match",
+				Value: bson.D{
+					{"created_at", bson.D{
+						{"$gte", filter["from"]},
+						{"$lte", filter["to"]},
+					}},
+					{"type", "trade"},
+					{"status", bson.M{"$ne": 0}},
+				},
+			},
+		},
+		{
+			{
+				Key: "$group",
+				Value: bson.D{
+					{"_id", bson.D{
+						{
+							Key: "date",
+							Value: bson.D{
+								{"$dateToString", bson.D{
+									{"format", "%Y-%m-%d"},
+									{"date", "$created_at"},
+								}},
+							},
+						},
+					}},
+					{"count", bson.D{{"$sum", 1}}},
+				},
+			},
+		},
+		{
+			{
+				Key: "$project",
+				Value: bson.D{
+					{"_id", 0},
+					{"date", "$_id.date"},
+					{"count", "$count"},
+				},
+			},
+		},
+		{
+			{
+				"$sort",
+				bson.D{{
+					"date",
+					1,
+				}},
+			},
+		},
+		{
+			{
+				Key: "$group",
+				Value: bson.D{
+					{"_id", nil},
+					{"count", bson.D{{"$sum", "$count"}}},
+					{"info", bson.D{{"$push", bson.D{
+						{"date", "$date"},
+						{"count", "$count"},
+					}}}},
+				},
+			},
+		},
+	}
+	cur, err = collection.Aggregate(ctx, pipeline)
+	if err != nil {
+		return nil, err
+	}
+	var addStats models.TradeStats
+	for cur.Next(ctx) {
+		if err = cur.Decode(&addStats); err != nil {
+			return nil, err
+		}
+	}
+
+	for i, s := range stats.Info {
+		if s.Status == 1 {
+			for _, a := range addStats.Info {
+				if s.Date == a.Date {
+					stats.Info[i].Count = a.Count
+					break
+				}
+			}
+		}
+	}
 	return &stats, nil
 }
 
 func (s *Storage) GetPlantsStats(ctx context.Context, filter map[string]interface{}) (*models.PlantsStats, error) {
 	var stats models.PlantsStats
+	collection := s.DataBase.Collection("plants")
+	pipeline := []bson.D{
+		{
+			{
+				Key: "$match",
+				Value: bson.D{
+					{"created_at", bson.D{
+						{"$gte", filter["from"]},
+						{"$lte", filter["to"]},
+					}},
+				},
+			},
+		},
+		{
+			{
+				Key: "$group",
+				Value: bson.D{
+					{"_id", bson.D{
+						{
+							Key:   "species",
+							Value: "$species",
+						},
+					}},
+					{"count", bson.D{{"$sum", 1}}},
+				},
+			},
+		},
+		{
+			{
+				Key: "$project",
+				Value: bson.D{
+					{"_id", 0},
+					{"species", "$_id.species"},
+					{"count", "$count"},
+				},
+			},
+		},
+		{
+			{
+				Key: "$group",
+				Value: bson.D{
+					{"_id", nil},
+					{"count", bson.D{{"$sum", "$count"}}},
+					{"info", bson.D{{"$push", bson.D{
+						{"species", "$species"},
+						{"count", "$count"},
+					}}}},
+				},
+			},
+		},
+	}
+	cur, err := collection.Aggregate(ctx, pipeline)
+	if err != nil {
+		return nil, err
+	}
+	for cur.Next(ctx) {
+		if err = cur.Decode(&stats); err != nil {
+			return nil, err
+		}
+	}
+	return &stats, nil
+}
+
+func (s *Storage) GetAdsStats(ctx context.Context, filter map[string]interface{}) (*models.AdsStats, error) {
+	var stats models.AdsStats
 	collection := s.DataBase.Collection("plants")
 	pipeline := []bson.D{
 		{
@@ -203,10 +355,6 @@ func (s *Storage) GetPlantsStats(ctx context.Context, filter map[string]interfac
 								}},
 							},
 						},
-						{
-							Key:   "species",
-							Value: "$species",
-						},
 					}},
 					{"count", bson.D{{"$sum", 1}}},
 				},
@@ -218,7 +366,6 @@ func (s *Storage) GetPlantsStats(ctx context.Context, filter map[string]interfac
 				Value: bson.D{
 					{"_id", 0},
 					{"date", "$_id.date"},
-					{"species", "$_id.species"},
 					{"count", "$count"},
 				},
 			},
@@ -240,7 +387,6 @@ func (s *Storage) GetPlantsStats(ctx context.Context, filter map[string]interfac
 					{"count", bson.D{{"$sum", "$count"}}},
 					{"info", bson.D{{"$push", bson.D{
 						{"date", "$date"},
-						{"species", "$species"},
 						{"count", "$count"},
 					}}}},
 				},
