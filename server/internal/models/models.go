@@ -100,3 +100,38 @@ type Filter struct {
 	IsDesc bool
 	Labels map[string]interface{}
 }
+
+type PlantsStats struct {
+	ID    primitive.ObjectID `bson:"_id,omitempty" json:"id"`
+	Count int64              `bson:"count" json:"count"`
+	Info  []InnerPlantsStats `bson:"info" json:"info"`
+}
+
+type TradeStats struct {
+	ID    primitive.ObjectID `bson:"_id,omitempty" json:"id"`
+	Count int64              `bson:"count" json:"count"`
+	Info  []InnerTradeStats  `bson:"info" json:"info"`
+}
+
+type BuyStats struct {
+	ID    primitive.ObjectID `bson:"_id,omitempty" json:"id"`
+	Count int64              `bson:"count" json:"count"`
+	Info  []InnerBuyStats    `bson:"info" json:"info"`
+}
+
+type InnerPlantsStats struct {
+	Date    string `bson:"date" json:"date"`
+	Species string `bson:"species" json:"species"`
+	Count   int64  `bson:"count" json:"count"`
+}
+
+type InnerBuyStats struct {
+	Date  string `bson:"date" json:"date"`
+	Count int64  `bson:"count" json:"count"`
+}
+
+type InnerTradeStats struct {
+	Date   string `bson:"date" json:"date"`
+	Status int8   `bson:"status" json:"status"`
+	Count  int64  `bson:"count" json:"count"`
+}

@@ -782,6 +782,10 @@
         "price": {
           "type": "number",
           "format": "float"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
         }
       }
     },
