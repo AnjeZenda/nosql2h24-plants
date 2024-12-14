@@ -14,7 +14,7 @@ func (h *Handler) GetBuyStatsV1(ctx context.Context,
 	req *api.GetBuyStatsV1Request,
 ) (*api.GetBuyStatsV1Response, error) {
 	fltr := parseFilter(req.Filter)
-	buyings, count, err := h.storage.GetBuyStats(ctx, fltr)
+	buyings, err := h.storage.GetBuyStats(ctx, fltr)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "Error occured %v", err)
 	}
@@ -30,7 +30,7 @@ func (h *Handler) GetBuyStatsV1(ctx context.Context,
 		}
 	}
 	return &api.GetBuyStatsV1Response{
-		Count: count,
+		Count: buyings.Count,
 		Stats: stats,
 	}, nil
 }

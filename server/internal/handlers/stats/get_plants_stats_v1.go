@@ -14,7 +14,7 @@ func (h *Handler) GetPlantsStatsV1(ctx context.Context,
 	req *api.GetPlantsStatsV1Request,
 ) (*api.GetPlantsStatsV1Response, error) {
 	fltr := parseFilter(req.Filter)
-	plants, count, err := h.storage.GetPlantsStats(ctx, fltr)
+	plants, err := h.storage.GetPlantsStats(ctx, fltr)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "Error occured %v", err)
 	}
@@ -31,7 +31,7 @@ func (h *Handler) GetPlantsStatsV1(ctx context.Context,
 		}
 	}
 	return &api.GetPlantsStatsV1Response{
-		Count: count,
+		Count: plants.Count,
 		Stats: stats,
 	}, nil
 }

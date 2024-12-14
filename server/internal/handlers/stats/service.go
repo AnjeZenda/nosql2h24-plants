@@ -7,9 +7,9 @@ import (
 )
 
 type Storage interface {
-	GetPlantsStats(ctx context.Context, filter map[string]interface{}) (*models.PlantsStats, int64, error)
-	GetBuyStats(ctx context.Context, filter map[string]interface{}) (*models.BuyStats, int64, error)
-	GetTradeStats(ctx context.Context, filter map[string]interface{}) (*models.TradeStats, int64, error)
+	GetPlantsStats(ctx context.Context, filter map[string]interface{}) (*models.PlantsStats, error)
+	GetBuyStats(ctx context.Context, filter map[string]interface{}) (*models.BuyStats, error)
+	GetTradeStats(ctx context.Context, filter map[string]interface{}) (*models.TradeStats, error)
 }
 
 type Handler struct {

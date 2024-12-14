@@ -7,7 +7,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
-func (s *Storage) GetBuyStats(ctx context.Context, filter map[string]interface{}) (*models.BuyStats, int64, error) {
+func (s *Storage) GetBuyStats(ctx context.Context, filter map[string]interface{}) (*models.BuyStats, error) {
 	var stats models.BuyStats
 	collection := s.DataBase.Collection("trades")
 	pipeline := []bson.D{
@@ -54,6 +54,15 @@ func (s *Storage) GetBuyStats(ctx context.Context, filter map[string]interface{}
 		},
 		{
 			{
+				"$sort",
+				bson.D{{
+					"date",
+					1,
+				}},
+			},
+		},
+		{
+			{
 				Key: "$group",
 				Value: bson.D{
 					{"_id", nil},
@@ -68,17 +77,17 @@ func (s *Storage) GetBuyStats(ctx context.Context, filter map[string]interface{}
 	}
 	cur, err := collection.Aggregate(ctx, pipeline)
 	if err != nil {
-		return nil, 0, err
+		return nil, err
 	}
 	for cur.Next(ctx) {
 		if err = cur.Decode(&stats); err != nil {
-			return nil, 0, err
+			return nil, err
 		}
 	}
-	return &stats, 0, nil
+	return &stats, nil
 }
 
-func (s *Storage) GetTradeStats(ctx context.Context, filter map[string]interface{}) (*models.TradeStats, int64, error) {
+func (s *Storage) GetTradeStats(ctx context.Context, filter map[string]interface{}) (*models.TradeStats, error) {
 	var stats models.TradeStats
 	collection := s.DataBase.Collection("trades")
 	pipeline := []bson.D{
@@ -105,7 +114,7 @@ func (s *Storage) GetTradeStats(ctx context.Context, filter map[string]interface
 							Value: bson.D{
 								{"$dateToString", bson.D{
 									{"format", "%Y-%m-%d"},
-									{"date", "$created_at"},
+									{"date", "$updated_at"},
 								}},
 							},
 						},
@@ -131,6 +140,15 @@ func (s *Storage) GetTradeStats(ctx context.Context, filter map[string]interface
 		},
 		{
 			{
+				"$sort",
+				bson.D{{
+					"date",
+					1,
+				}},
+			},
+		},
+		{
+			{
 				Key: "$group",
 				Value: bson.D{
 					{"_id", nil},
@@ -146,17 +164,17 @@ func (s *Storage) GetTradeStats(ctx context.Context, filter map[string]interface
 	}
 	cur, err := collection.Aggregate(ctx, pipeline)
 	if err != nil {
-		return nil, 0, err
+		return nil, err
 	}
 	for cur.Next(ctx) {
 		if err = cur.Decode(&stats); err != nil {
-			return nil, 0, err
+			return nil, err
 		}
 	}
-	return &stats, 0, nil
+	return &stats, nil
 }
 
-func (s *Storage) GetPlantsStats(ctx context.Context, filter map[string]interface{}) (*models.PlantsStats, int64, error) {
+func (s *Storage) GetPlantsStats(ctx context.Context, filter map[string]interface{}) (*models.PlantsStats, error) {
 	var stats models.PlantsStats
 	collection := s.DataBase.Collection("plants")
 	pipeline := []bson.D{
@@ -207,6 +225,15 @@ func (s *Storage) GetPlantsStats(ctx context.Context, filter map[string]interfac
 		},
 		{
 			{
+				"$sort",
+				bson.D{{
+					"date",
+					1,
+				}},
+			},
+		},
+		{
+			{
 				Key: "$group",
 				Value: bson.D{
 					{"_id", nil},
@@ -222,12 +249,12 @@ func (s *Storage) GetPlantsStats(ctx context.Context, filter map[string]interfac
 	}
 	cur, err := collection.Aggregate(ctx, pipeline)
 	if err != nil {
-		return nil, 0, err
+		return nil, err
 	}
 	for cur.Next(ctx) {
 		if err = cur.Decode(&stats); err != nil {
-			return nil, 0, err
+			return nil, err
 		}
 	}
-	return &stats, 0, nil
+	return &stats, nil
 }

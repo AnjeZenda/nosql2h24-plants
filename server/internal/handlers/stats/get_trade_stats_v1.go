@@ -14,7 +14,7 @@ func (h *Handler) GetTradeStatsV1(ctx context.Context,
 	req *api.GetTradeStatsV1Request,
 ) (*api.GetTradeStatsV1Response, error) {
 	fltr := parseFilter(req.Filter)
-	trades, count, err := h.storage.GetTradeStats(ctx, fltr)
+	trades, err := h.storage.GetTradeStats(ctx, fltr)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "Error occured %v", err)
 	}
@@ -31,7 +31,7 @@ func (h *Handler) GetTradeStatsV1(ctx context.Context,
 		}
 	}
 	return &api.GetTradeStatsV1Response{
-		Count: count,
+		Count: trades.Count,
 		Stats: stats,
 	}, nil
 }
