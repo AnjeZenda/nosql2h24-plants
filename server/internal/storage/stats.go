@@ -114,16 +114,13 @@ func (s *Storage) GetTradeStats(ctx context.Context, filter map[string]interface
 							Value: bson.D{
 								{"$dateToString", bson.D{
 									{"format", "%Y-%m-%d"},
-									{"date", "$updated_at"},
+									{"date", "$created_at"},
 								}},
 							},
 						},
-						{
-							Key:   "status",
-							Value: "$status",
-						},
 					}},
 					{"count", bson.D{{"$sum", 1}}},
+					{"status", bson.D{{"$avg", 1}}},
 				},
 			},
 		},
@@ -133,18 +130,9 @@ func (s *Storage) GetTradeStats(ctx context.Context, filter map[string]interface
 				Value: bson.D{
 					{"_id", 0},
 					{"date", "$_id.date"},
-					{"status", "$_id.status"},
+					{"status", "$status"},
 					{"count", "$count"},
 				},
-			},
-		},
-		{
-			{
-				"$sort",
-				bson.D{{
-					"date",
-					1,
-				}},
 			},
 		},
 		{
@@ -160,6 +148,84 @@ func (s *Storage) GetTradeStats(ctx context.Context, filter map[string]interface
 					}}}},
 				},
 			},
+		},
+		{
+			{"$lookup", bson.D{
+				{"from", "trades"},
+				{"let", bson.D{
+					{"filter_from", filter["from"]},
+					{"filter_to", filter["to"]},
+				}},
+				{"pipeline", []bson.D{
+					{{"$match", bson.D{
+						{"status", bson.D{{"$in", bson.A{2, 3}}}},
+						{"$expr", bson.D{
+							{"$and", bson.A{
+								bson.D{{"$gte", bson.A{"$updated_at", filter["from"]}}},
+								bson.D{{"$lte", bson.A{"$updated_at", filter["to"]}}},
+							}},
+						}},
+						{"type", "trade"},
+					}}},
+					{{"$group", bson.D{
+						{"_id", bson.D{
+							{"date", bson.D{
+								{"$dateToString", bson.D{
+									{"format", "%Y-%m-%d"},
+									{"date", "$updated_at"},
+								}},
+							}},
+							{"status", "$status"},
+						}},
+						{"count", bson.D{{"$sum", 1}}},
+					}}},
+					{{"$project", bson.D{
+						{"_id", 0},
+						{"date", "$_id.date"},
+						{"status", "$_id.status"},
+						{"count", "$count"},
+					}}},
+					{{"$sort", bson.D{
+						{"date", 1},
+					}}},
+				}},
+				{"as", "updatedAtData"},
+			}},
+		},
+		{
+			{"$set", bson.D{
+				{"info", bson.D{
+					{"$concatArrays", bson.A{
+						"$info",
+						bson.D{{
+							"$map", bson.D{
+								{"input", "$updatedAtData"},
+								{"as", "item"},
+								{"in", bson.D{
+									{"date", "$$item.date"},
+									{"count", "$$item.count"},
+									{"status", "$$item.status"},
+								}},
+							},
+						}},
+					}},
+				}},
+			}},
+		},
+		{
+			{"$unset", "updatedAtData"},
+		},
+		{
+			{"$set", bson.D{
+				{"info", bson.D{
+					{"$sortArray", bson.D{
+						{"input", "$info"},
+						{"sortBy", bson.D{
+							{"date", 1}, // Сортировка по возрастанию даты
+						}},
+					}},
+				}},
+			}},
 		},
 	}
 	cur, err := collection.Aggregate(ctx, pipeline)
@@ -195,15 +261,6 @@ func (s *Storage) GetPlantsStats(ctx context.Context, filter map[string]interfac
 				Value: bson.D{
 					{"_id", bson.D{
 						{
-							Key: "date",
-							Value: bson.D{
-								{"$dateToString", bson.D{
-									{"format", "%Y-%m-%d"},
-									{"date", "$created_at"},
-								}},
-							},
-						},
-						{
 							Key:   "species",
 							Value: "$species",
 						},
@@ -217,8 +274,77 @@ func (s *Storage) GetPlantsStats(ctx context.Context, filter map[string]interfac
 				Key: "$project",
 				Value: bson.D{
 					{"_id", 0},
-					{"date", "$_id.date"},
 					{"species", "$_id.species"},
+					{"count", "$count"},
+				},
+			},
+		},
+		{
+			{
+				Key: "$group",
+				Value: bson.D{
+					{"_id", nil},
+					{"count", bson.D{{"$sum", "$count"}}},
+					{"info", bson.D{{"$push", bson.D{
+						{"species", "$species"},
+						{"count", "$count"},
+					}}}},
+				},
+			},
+		},
+	}
+	cur, err := collection.Aggregate(ctx, pipeline)
+	if err != nil {
+		return nil, err
+	}
+	for cur.Next(ctx) {
+		if err = cur.Decode(&stats); err != nil {
+			return nil, err
+		}
+	}
+	return &stats, nil
+}
+
+func (s *Storage) GetAdsStats(ctx context.Context, filter map[string]interface{}) (*models.AdsStats, error) {
+	var stats models.AdsStats
+	collection := s.DataBase.Collection("plants")
+	pipeline := []bson.D{
+		{
+			{
+				Key: "$match",
+				Value: bson.D{
+					{"created_at", bson.D{
+						{"$gte", filter["from"]},
+						{"$lte", filter["to"]},
+					}},
+				},
+			},
+		},
+		{
+			{
+				Key: "$group",
+				Value: bson.D{
+					{"_id", bson.D{
+						{
+							Key: "date",
+							Value: bson.D{
+								{"$dateToString", bson.D{
+									{"format", "%Y-%m-%d"},
+									{"date", "$created_at"},
+								}},
+							},
+						},
+					}},
+					{"count", bson.D{{"$sum", 1}}},
+				},
+			},
+		},
+		{
+			{
+				Key: "$project",
+				Value: bson.D{
+					{"_id", 0},
+					{"date", "$_id.date"},
 					{"count", "$count"},
 				},
 			},
@@ -240,7 +366,6 @@ func (s *Storage) GetPlantsStats(ctx context.Context, filter map[string]interfac
 					{"count", bson.D{{"$sum", "$count"}}},
 					{"info", bson.D{{"$push", bson.D{
 						{"date", "$date"},
-						{"species", "$species"},
 						{"count", "$count"},
 					}}}},
 				},

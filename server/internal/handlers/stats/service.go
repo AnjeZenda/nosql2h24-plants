@@ -10,6 +10,7 @@ type Storage interface {
 	GetPlantsStats(ctx context.Context, filter map[string]interface{}) (*models.PlantsStats, error)
 	GetBuyStats(ctx context.Context, filter map[string]interface{}) (*models.BuyStats, error)
 	GetTradeStats(ctx context.Context, filter map[string]interface{}) (*models.TradeStats, error)
+	GetAdsStats(ctx context.Context, filter map[string]interface{}) (*models.AdsStats, error)
 }
 
 type Handler struct {
