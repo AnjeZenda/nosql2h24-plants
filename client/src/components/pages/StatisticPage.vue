@@ -119,6 +119,9 @@ export default {
               enabled: true,
               mode: 'x'
             }
+          },
+          tooltip: {
+            callback: {}
           }
         },
         scales: {
@@ -144,31 +147,78 @@ export default {
 
   methods: {
     getStatistic() {
-      this.chart = true
+      this.chart = false
       const datePeriod = {
-        startDate: this.dateFrom,
-        endDate: this.dateTo
+        filter: {
+          timeFrom: "2024-01-01T13:00:00Z",
+          timeTo: "2024-12-31T13:00:00Z"
+        }
       }
-      this.data.labels = [];
-      this.data.datasets = [];
+      this.data = { datasets: [], labels: [] };
 
       axios
-          .post(`/api/statistic/${this.statType}`, datePeriod)
+          .post(`/api/stats/${this.statType}`, datePeriod)
           .then((response) => {
             if (this.statType === 'plants') {
               const plantsCount = response.data.count;
               this.options.plugins.title.text = `Данные по опубликованным растениям. Количество записей: ${plantsCount}`;
-              this.data.datasets = [
-                {
-                  label: 'Опубликовано',
-                  backgroundColor: '#89A758',
-                  data: []
+
+              const speciesMap = {};  // Объект для хранения данных по датам
+              this.data.labels = [];  // Очистим метки для оси X
+              this.data.datasets = [];  // Очистим наборы данных
+
+              // Обрабатываем данные
+              response.data.stats.forEach(elem => {
+                const date = elem.date.split('T')[0];  // Форматируем дату, чтобы брать только часть до T
+
+                // Если такой даты нет, создаем новый массив для этой даты
+                if (!speciesMap[date]) {
+                  speciesMap[date] = [];
                 }
-              ];
-              response.data.statistic.forEach(elem => {
-                this.data.labels.push(elem.species);
-                this.data.datasets.data.push(elem.count);
+
+                // Добавляем вид растения для данной даты
+                speciesMap[date].push(elem.species);
               });
+
+              // Создаем метки и столбцы
+              const allSpecies = [];  // Для хранения всех уникальных видов растений
+
+              for (let date in speciesMap) {
+                this.data.labels.push(date);  // Дата для оси X
+
+                // Для каждой даты создаем столбец для каждого вида растения
+                const speciesCounts = speciesMap[date];
+                const uniqueSpecies = [...new Set(speciesCounts)];  // Уникальные виды растений для этой даты
+
+                // Добавляем данные для каждого вида
+                uniqueSpecies.forEach(species => {
+                  if (!allSpecies.includes(species)) {
+                    allSpecies.push(species);  // Добавляем вид в список всех видов
+                  }
+                });
+
+                // Количество столбцов для данной даты
+                this.data.datasets.push({
+                  label: date,
+                  backgroundColor: '#89A758',
+                  data: uniqueSpecies.map(species => speciesCounts.filter(s => s === species).length)  // Количество каждого вида
+                });
+              }
+
+              // Заполняем метки для каждого вида
+              this.data.labels = allSpecies;
+
+              // Настройка подсказок
+              this.options.plugins.tooltip.callbacks = {
+                label: function (tooltipItem) {
+                  const datasetIndex = tooltipItem.datasetIndex;
+                  const species = allSpecies[datasetIndex];  // Вид растения
+                  const count = tooltipItem.raw;  // Количество для этого вида
+                  return `${species}: ${count}`;
+                }
+              };
+
+              this.chart = true;
             } else if (this.statType === 'buy') {
               const plantsCount = response.data.count;
               this.options.plugins.title.text = `Данные по продажам. Количество записей: ${plantsCount}`;
@@ -180,7 +230,7 @@ export default {
                 }
               ];
               response.data.statistic.forEach(elem => {
-                this.data.labels.push(elem.species);
+                this.data.labels.push(elem.date);
                 this.data.datasets.data.push(elem.count);
               });
             } else {
@@ -189,11 +239,27 @@ export default {
               let pend = [];
               let accept = [];
               let reject = [];
-              response.data.statistic.forEach(elem => {
-                this.data.labels.push(elem.species);
-                pend.push(elem.pend);
-                accept.push(elem.accept);
-                reject.push(elem.reject);
+              response.data.stats.forEach(elem => {
+                const label = elem.date;
+                let labelInd = this.data.labels.indexOf(label);
+                if (labelInd === -1) {
+                  labelInd = this.data.labels.length;
+                }
+                this.data.labels[labelInd] = elem.date;
+                const tradeStatus = elem.status;
+                if (tradeStatus === "1") {
+                  pend[labelInd] = elem.count;
+                  accept[labelInd] = (accept[labelInd] === 0 || !accept[labelInd]) ? 0 : accept[labelInd] ;
+                  reject[labelInd] = (reject[labelInd] === 0 || !reject[labelInd]) ? 0 : reject[labelInd] ;
+                } else if (tradeStatus === "2") {
+                  pend[labelInd] = (pend[labelInd] === 0 || !pend[labelInd]) ? 0 : pend[labelInd] ;
+                  accept[labelInd] = elem.count;
+                  reject[labelInd] = (reject[labelInd] === 0 || !reject[labelInd]) ? 0 : reject[labelInd] ;
+                } else {
+                  pend[labelInd] = (pend[labelInd] === 0 || !pend[labelInd]) ? 0 : pend[labelInd] ;
+                  accept[labelInd] = (accept[labelInd] === 0 || !accept[labelInd]) ? 0 : accept[labelInd] ;
+                  reject[labelInd] = elem.count;
+                }
               });
               this.data.datasets = [
                 {
@@ -208,10 +274,11 @@ export default {
                 },
                 {
                   label: 'Отменено',
-                  backgroundColor: 'rgba(137,167,88,0.11)',
+                  backgroundColor: 'rgb(88,105,58)',
                   data: reject
                 },
               ];
+              this.chart = true
             }
           })
     },
