@@ -41,5 +41,5 @@ oleg_secure123
 
 **После сборки перейти по ссылке**
 ```
-http://localhost:8081/plants/start
+http://127.0.0.1:8081/plants/start
 ```

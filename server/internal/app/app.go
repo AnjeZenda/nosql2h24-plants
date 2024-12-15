@@ -14,10 +14,12 @@ import (
 	"plants/internal/config"
 	"plants/internal/handlers/data"
 	"plants/internal/handlers/plants"
+	"plants/internal/handlers/stats"
 	"plants/internal/handlers/trades"
 	"plants/internal/handlers/users"
 	dataAPI "plants/internal/pkg/pb/data/v1"
 	plantsAPI "plants/internal/pkg/pb/plants/v1"
+	statsAPI "plants/internal/pkg/pb/stats/v1"
 	tradesAPI "plants/internal/pkg/pb/trades/v1"
 	usersAPI "plants/internal/pkg/pb/users/v1"
 	"plants/internal/storage"
@@ -52,6 +54,9 @@ func Run(cfg *config.Config) error {
 	dataHandler := data.New(repo)
 	dataAPI.RegisterDataAPIServer(gRPCServer, dataHandler)
 
+	statsHandler := stats.New(repo)
+	statsAPI.RegisterStatsAPIServer(gRPCServer, statsHandler)
+
 	mux := runtime.NewServeMux()
 	if err = plantsAPI.RegisterPlantsAPIHandlerServer(ctx, mux, plantsHandler); err != nil {
 		return err
@@ -65,6 +70,9 @@ func Run(cfg *config.Config) error {
 		return err
 	}
 	if err = dataAPI.RegisterDataAPIHandlerServer(ctx, mux, dataHandler); err != nil {
+		return err
+	}
+	if err = statsAPI.RegisterStatsAPIHandlerServer(ctx, mux, statsHandler); err != nil {
 		return err
 	}
 
