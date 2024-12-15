@@ -47,8 +47,8 @@
           </div>
 
           <button type="submit" class="white-button-green-text">Сохранить изменения</button>
-          <button class="green-button-white-text" style="margin-top: 1%">Выход</button>
         </form>
+        <button class="green-button-white-text" style="margin-top: 1%" @click="entrance">Выход</button>
       </div>
     </div>
 
@@ -220,6 +220,11 @@ export default {
   },
 
   methods: {
+    entrance() {
+      this.$router.push(`/plants/start`);
+      sessionStorage.clear();
+    },
+
     async getUser() {
       const id = this.user.userId;
       axios
