@@ -101,7 +101,7 @@ db.plants.insertMany([
     "species": "Кокосовая пальма",
     "created_at": ISODate("2024-08-27T15:00:00Z"),
     "place": "Нижний Новгород",
-    "sold_at":ISODate("2024-09-01T13:47:00Z")
+    "sold_at":ISODate("2024-02-22T10:00:00Z")
   },
   {
     "_id": ObjectId("5f1d7c1d1d8e2f1a1a2b3c53"),
@@ -390,7 +390,7 @@ db.plants.insertMany([
     "species": "Аглаонема",
     "created_at": ISODate("2024-09-24T17:40:00Z"),
     "place": "Хабаровск",
-    "sold_at": ISODate("2024-10-01T12:00:00Z")
+    "sold_at": ISODate("0001-01-01T00:00:00Z")
   },
   {
     "_id": ObjectId("5f2d7c1d1d8e2f1a1a2b3c14"),
@@ -560,7 +560,7 @@ db.plants.insertMany([
     "species": "Филодендрон",
     "created_at": ISODate("2024-10-04T12:50:00Z"),
     "place": "Уфа",
-    "sold_at": ISODate("2024-10-06T17:30:00Z")
+    "sold_at": ISODate("2024-06-07T10:00:00Z")
   },
   {
     "_id": ObjectId("5f2d7c1d1d8e2f1a1a2b3c24"),
@@ -1043,7 +1043,6 @@ db.trades.insertMany([
         "_id": ObjectId("5f2d7c1d1d8e2f1a1a2b3c13"),
         "species": "Аглаонема",
         "image": "https://i.pinimg.com/736x/ee/fb/b5/eefbb5048bb4c4e6c913b1bd44aa8c97.jpg",
-
       }
     },
     "accepter": {
@@ -1059,7 +1058,7 @@ db.trades.insertMany([
     },
     "created_at": ISODate("2024-08-11T10:00:00Z"),
     "updated_at": ISODate("2024-08-28T10:00:00Z"),
-    "status": 2,
+    "status": 3,
     "type": "trade",
   },
   {
@@ -1111,8 +1110,8 @@ db.trades.insertMany([
       "_id": ObjectId("5f2d8c1d1d8e2f1a1a2b3c7a"),
       "plant": {}
     },
-    "created_at": ISODate("2024-08-11T10:00:00Z"),
-    "updated_at": ISODate("2024-08-28T10:00:00Z"),
+    "created_at": ISODate("2024-02-22T10:00:00Z"),
+    "updated_at": ISODate("2024-02-22T10:00:00Z"),
     "status": 2,
     "type": "buy",
   },
@@ -1137,7 +1136,7 @@ db.trades.insertMany([
       "plant": {}
     },
     "created_at": ISODate("2024-08-11T10:00:00Z"),
-    "updated_at": ISODate("2024-08-28T10:00:00Z"),
+    "updated_at": ISODate("2024-08-11T10:00:00Z"),
     "status": 2,
     "type": "buy",
   },
@@ -1161,8 +1160,8 @@ db.trades.insertMany([
       "_id": ObjectId("5f2d8c1d1d8e2f1a1a2b3c7a"),
       "plant": {}
     },
-    "created_at": ISODate("2024-08-11T10:00:00Z"),
-    "updated_at": ISODate("2024-08-28T10:00:00Z"),
+    "created_at": ISODate("2024-06-07T10:00:00Z"),
+    "updated_at": ISODate("2024-06-07T10:00:00Z"),
     "status": 2,
     "type": "buy",
   }
@@ -1365,7 +1364,7 @@ db.users.insertMany([
         "species": "Кокосовая пальма",
         "created_at": ISODate("2024-08-27T15:00:00Z"),
         "place": "Нижний Новгород",
-        "sold_at": ISODate("0001-01-01T00:00:00Z")
+        "sold_at": ISODate("2024-02-22T10:00:00Z")
       },
       {
         "_id": ObjectId("5f2d7c1d1d8e2f1a1a2b3c11"),
@@ -1397,7 +1396,7 @@ db.users.insertMany([
         "species": "Филодендрон",
         "created_at": ISODate("2024-10-04T12:50:00Z"),
         "place": "Уфа",
-        "sold_at": ISODate("0001-01-01T00:00:00Z")
+        "sold_at": ISODate("2024-06-07T10:00:00Z")
       }
     ],
     "trades": [
@@ -1550,7 +1549,7 @@ db.users.insertMany([
         "species": "Аглаонема",
         "created_at": ISODate("2024-09-24T17:40:00Z"),
         "place": "Хабаровск",
-        "sold_at": ISODate("2024-10-01T12:00:00Z")
+        "sold_at": ISODate("0001-01-01T00:00:00Z")
       }
     ],
     "trades": [
