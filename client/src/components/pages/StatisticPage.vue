@@ -14,6 +14,7 @@
           <select class="custom-select-stat" v-model="statType">
             <option disabled value="">Статистика</option>
             <option value="plants">По растениям</option>
+            <option value="ads">По объявлениям</option>
             <option value="buy">По продажам</option>
             <option value="trade">По обменам</option>
           </select>
@@ -23,11 +24,26 @@
           <div style="display: flex; justify-content: space-between">
             <div style="display: flex; flex-direction: column; margin-right: 1%">
               <label style="font-weight: 500; font-size: 13px">С</label>
-              <input class="inputs" v-model="dateFrom" type="date"/>
+              <input
+                  class="inputs"
+                  v-model="dateFrom"
+                  id="dateFrom"
+                  type="date"
+                  :max="new Date().toISOString().split('T')[0]"
+                  @change="updateDateLimits()"
+              />
             </div>
             <div style="display: flex; flex-direction: column">
               <label style="font-weight: 500; font-size: 13px">По</label>
-              <input class="inputs" v-model="dateTo" type="date"/>
+              <input
+                  class="inputs"
+                  v-model="dateTo"
+                  id="dateTo"
+                  type="date"
+                  min=""
+                  max=""
+                  disabled
+              />
             </div>
           </div>
         </div>
@@ -119,9 +135,6 @@ export default {
               enabled: true,
               mode: 'x'
             }
-          },
-          tooltip: {
-            callback: {}
           }
         },
         scales: {
@@ -146,12 +159,35 @@ export default {
   },
 
   methods: {
+    updateDateLimits() {
+      const today = new Date().toISOString().split("T")[0];
+      const dateFrom = document.getElementById("dateFrom");
+      const dateTo = document.getElementById("dateTo");
+      dateFrom.setAttribute("max", today);
+
+      if (dateFrom.value) {
+        dateTo.removeAttribute("disabled");
+        dateTo.setAttribute("min", dateFrom.value);
+        dateTo.setAttribute("max", today);
+      } else {
+        dateTo.setAttribute("disabled", true);
+      }
+    },
+
+    formatTimeFrom(dateString) {
+      return `${dateString}T00:00:00Z`;
+    },
+
+    formatTimeTo(dateString) {
+      return `${dateString}T23:59:59Z`;
+    },
+
     getStatistic() {
       this.chart = false
       const datePeriod = {
         filter: {
-          timeFrom: "2024-01-01T13:00:00Z",
-          timeTo: "2024-12-31T13:00:00Z"
+          timeFrom: this.formatTimeFrom(this.dateFrom),
+          timeTo: this.formatTimeTo(this.dateTo)
         }
       }
       this.data = { datasets: [], labels: [] };
@@ -160,66 +196,51 @@ export default {
           .post(`/api/stats/${this.statType}`, datePeriod)
           .then((response) => {
             if (this.statType === 'plants') {
-              const plantsCount = response.data.count;
-              this.options.plugins.title.text = `Данные по опубликованным растениям. Количество записей: ${plantsCount}`;
-
-              const speciesMap = {};  // Объект для хранения данных по датам
-              this.data.labels = [];  // Очистим метки для оси X
-              this.data.datasets = [];  // Очистим наборы данных
-
-              // Обрабатываем данные
-              response.data.stats.forEach(elem => {
-                const date = elem.date.split('T')[0];  // Форматируем дату, чтобы брать только часть до T
-
-                // Если такой даты нет, создаем новый массив для этой даты
-                if (!speciesMap[date]) {
-                  speciesMap[date] = [];
-                }
-
-                // Добавляем вид растения для данной даты
-                speciesMap[date].push(elem.species);
-              });
-
-              // Создаем метки и столбцы
-              const allSpecies = [];  // Для хранения всех уникальных видов растений
-
-              for (let date in speciesMap) {
-                this.data.labels.push(date);  // Дата для оси X
-
-                // Для каждой даты создаем столбец для каждого вида растения
-                const speciesCounts = speciesMap[date];
-                const uniqueSpecies = [...new Set(speciesCounts)];  // Уникальные виды растений для этой даты
-
-                // Добавляем данные для каждого вида
-                uniqueSpecies.forEach(species => {
-                  if (!allSpecies.includes(species)) {
-                    allSpecies.push(species);  // Добавляем вид в список всех видов
-                  }
-                });
-
-                // Количество столбцов для данной даты
-                this.data.datasets.push({
-                  label: date,
-                  backgroundColor: '#89A758',
-                  data: uniqueSpecies.map(species => speciesCounts.filter(s => s === species).length)  // Количество каждого вида
-                });
+              if (Object.keys(response.data).length === 0) {
+                this.options.plugins.title.text = `Данных за указанный период не найдено!`;
+                this.chart = true
+                return;
               }
-
-              // Заполняем метки для каждого вида
-              this.data.labels = allSpecies;
-
-              // Настройка подсказок
-              this.options.plugins.tooltip.callbacks = {
-                label: function (tooltipItem) {
-                  const datasetIndex = tooltipItem.datasetIndex;
-                  const species = allSpecies[datasetIndex];  // Вид растения
-                  const count = tooltipItem.raw;  // Количество для этого вида
-                  return `${species}: ${count}`;
+              const plantsCount = response.data.count;
+              this.options.plugins.title.text = `Данные по видам публикуемых растений. Количество записей: ${plantsCount}`;
+              this.data.datasets = [
+                {
+                  label: 'Растения',
+                  backgroundColor: '#89A758',
+                  data: []
                 }
-              };
-
-              this.chart = true;
+              ];
+              response.data.stats.forEach(elem => {
+                this.data.datasets[0].data.push(elem.count);
+                this.data.labels.push(elem.species)
+              });
+              this.chart = true
+            } else if (this.statType === 'ads') {
+              if (Object.keys(response.data).length  === 0) {
+                this.options.plugins.title.text = `Данных за указанный период не найдено!`;
+                this.chart = true
+                return;
+              }
+              const plantsCount = response.data.count;
+              this.options.plugins.title.text = `Данные по опубликованным объявлениям. Количество записей: ${plantsCount}`;
+              this.data.datasets = [
+                {
+                  label: 'Объявления',
+                  backgroundColor: '#89A758',
+                  data: []
+                }
+              ];
+              response.data.stats.forEach(elem => {
+                this.data.datasets[0].data.push(elem.count);
+                this.data.labels.push(elem.date.split('T')[0])
+              });
+              this.chart = true
             } else if (this.statType === 'buy') {
+              if (Object.keys(response.data).length  === 0) {
+                this.options.plugins.title.text = `Данных за указанный период не найдено!`;
+                this.chart = true
+                return;
+              }
               const plantsCount = response.data.count;
               this.options.plugins.title.text = `Данные по продажам. Количество записей: ${plantsCount}`;
               this.data.datasets = [
@@ -229,23 +250,29 @@ export default {
                   data: []
                 }
               ];
-              response.data.statistic.forEach(elem => {
-                this.data.labels.push(elem.date);
-                this.data.datasets.data.push(elem.count);
+              response.data.stats.forEach(elem => {
+                this.data.labels.push(elem.date.split('T')[0]);
+                this.data.datasets[0].data.push(elem.count);
               });
+              this.chart = true
             } else {
+              if (Object.keys(response.data).length  === 0) {
+                this.options.plugins.title.text = `Данных за указанный период не найдено!`;
+                this.chart = true
+                return;
+              }
               const plantsCount = response.data.count;
               this.options.plugins.title.text = `Данные по обменам. Количество записей: ${plantsCount}`;
               let pend = [];
               let accept = [];
               let reject = [];
               response.data.stats.forEach(elem => {
-                const label = elem.date;
+                const label = elem.date.split('T')[0];
                 let labelInd = this.data.labels.indexOf(label);
                 if (labelInd === -1) {
                   labelInd = this.data.labels.length;
                 }
-                this.data.labels[labelInd] = elem.date;
+                this.data.labels[labelInd] = elem.date.split('T')[0];
                 const tradeStatus = elem.status;
                 if (tradeStatus === "1") {
                   pend[labelInd] = elem.count;
