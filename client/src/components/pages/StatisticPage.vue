@@ -47,6 +47,13 @@
             </div>
           </div>
         </div>
+
+        <div class="inputs-labels">Условия освещения</div>
+        <label class="checkbox-labels"><input v-model="lighting" type="checkbox" value="Тенелюбивые" :disabled="statType !== 'plants'"/> Тенелюбивые</label>
+        <br>
+        <label class="checkbox-labels"><input v-model="lighting" type="checkbox" value="Полутеневые" :disabled="statType !== 'plants'"/> Полутеневые</label>
+        <br>
+        <label class="checkbox-labels"><input v-model="lighting" type="checkbox" value="Светолюбивые" :disabled="statType !== 'plants'"/> Светолюбивые</label>
         <button style="margin-top: 2%" class="green-button-white-text" @click="getStatistic">Отобразить</button>
         <div class="inputs-labels">
           Работа с базой данных
@@ -94,6 +101,7 @@ export default {
       statType: '',
       dateFrom: '',
       dateTo: '',
+      lighting: [],
       chart: false,
       data: {
         labels: [],
