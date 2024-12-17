@@ -191,17 +191,27 @@ export default {
     },
 
     getStatistic() {
-      this.chart = false
-      const datePeriod = {
-        filter: {
-          timeFrom: this.formatTimeFrom(this.dateFrom),
-          timeTo: this.formatTimeTo(this.dateTo)
+      this.chart = false;
+      let filter = {};
+      if (this.statType === "plants") {
+        filter = {
+          filter: {
+            timeFrom: this.formatTimeFrom(this.dateFrom),
+            timeTo: this.formatTimeTo(this.dateTo),
+            light: this.lighting
+          }
+        }
+      } else {
+        filter = {
+          filter: {
+            timeFrom: this.formatTimeFrom(this.dateFrom),
+            timeTo: this.formatTimeTo(this.dateTo)
+          }
         }
       }
       this.data = { datasets: [], labels: [] };
-
       axios
-          .post(`/api/stats/${this.statType}`, datePeriod)
+          .post(`/api/stats/${this.statType}`, filter)
           .then((response) => {
             if (this.statType === 'plants') {
               if (Object.keys(response.data).length === 0) {
