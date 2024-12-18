@@ -87,7 +87,7 @@ service PlantsAPI {
     };
     rpc ListPlantTypesV1(GetPlantTypesV1Request) returns (GetPlantTypesV1Response) {
         option (google.api.http) = {
-            get: "/api/plants/types"
+            get: "/api/plants/types/typesArray"
         };
     };
 }
