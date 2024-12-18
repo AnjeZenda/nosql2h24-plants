@@ -1403,7 +1403,7 @@ var (
 
 	pattern_PlantsAPI_GetArchivedPlantsV1_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"api", "plants", "archive", "userId"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_PlantsAPI_ListPlantTypesV1_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "plants", "types"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_PlantsAPI_ListPlantTypesV1_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 2, 3}, []string{"api", "plants", "types", "typesArray"}, "", runtime.AssumeColonVerbOpt(true)))
 )
 
 var (
