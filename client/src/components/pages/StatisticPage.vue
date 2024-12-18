@@ -47,7 +47,13 @@
             </div>
           </div>
         </div>
-
+        <div class="inputs-labels">Типы растений</div>
+        <div class="scrollable-checkboxes">
+          <label v-for="type in types" :key="type" class="checkbox-labels">
+            <input v-model="selectedTypes" type="checkbox" :value="type" :disabled="statType !== 'plants'" />
+            {{ type }}
+          </label>
+        </div>
         <div class="inputs-labels">Условия освещения</div>
         <label class="checkbox-labels"><input v-model="lighting" type="checkbox" value="Тенелюбивые" :disabled="statType !== 'plants'"/> Тенелюбивые</label>
         <br>
@@ -103,6 +109,8 @@ export default {
       dateTo: '',
       lighting: [],
       chart: false,
+      types: [],
+      selectedTypes: [],
       data: {
         labels: [],
         datasets: []
@@ -166,6 +174,16 @@ export default {
     };
   },
 
+  created() {
+    axios
+        .get(`/api/plants/types/typesArray`)
+        .then((response) => {
+          response.data.types.forEach(elem => {
+            this.types.push(elem);
+          });
+        })
+  },
+
   methods: {
     updateDateLimits() {
       const today = new Date().toISOString().split("T")[0];
@@ -198,8 +216,9 @@ export default {
           filter: {
             timeFrom: this.formatTimeFrom(this.dateFrom),
             timeTo: this.formatTimeTo(this.dateTo),
-            light: this.lighting
-          }
+          },
+          type: this.selectedTypes,
+          lightCondition: this.lighting
         }
       } else {
         filter = {
@@ -466,4 +485,17 @@ export default {
   padding: 10px;
   background-color: #FFFFFF;
 }
+
+.scrollable-checkboxes {
+  max-height: 120px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 4px;
+}
+.checkbox-labels {
+  display: block;
+  margin-bottom: 5px;
+}
+
 </style>
