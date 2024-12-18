@@ -493,9 +493,4 @@ export default {
   padding: 10px;
   border-radius: 4px;
 }
-.checkbox-labels {
-  display: block;
-  margin-bottom: 5px;
-}
-
 </style>
