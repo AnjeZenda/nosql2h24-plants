@@ -243,16 +243,29 @@ func (s *Storage) GetTradeStats(ctx context.Context, filter map[string]interface
 func (s *Storage) GetPlantsStats(ctx context.Context, filter map[string]interface{}) (*models.PlantsStats, error) {
 	var stats models.PlantsStats
 	collection := s.DataBase.Collection("plants")
+	fltr := bson.D{
+		{"created_at", bson.D{
+			{"$gte", filter["from"]},
+			{"$lte", filter["to"]},
+		}},
+	}
+	if v, ok := filter["type"]; ok {
+		switch vt := v.(type) {
+		case []string:
+			fltr = append(fltr, createOrFilter("type", vt)...)
+		}
+	}
+	if v, ok := filter["light_condition"]; ok {
+		switch vt := v.(type) {
+		case []string:
+			fltr = append(fltr, createOrFilter("light_condition", vt)...)
+		}
+	}
 	pipeline := []bson.D{
 		{
 			{
-				Key: "$match",
-				Value: bson.D{
-					{"created_at", bson.D{
-						{"$gte", filter["from"]},
-						{"$lte", filter["to"]},
-					}},
-				},
+				Key:   "$match",
+				Value: fltr,
 			},
 		},
 		{

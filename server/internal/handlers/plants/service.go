@@ -27,6 +27,7 @@ type Storage interface {
 	AddTradeToUser(ctx context.Context, userId, tradeId primitive.ObjectID) error
 	GetPlantsByUserId(ctx context.Context, userId string, isSold bool) ([]*models.Plant, error)
 	AddPlantToUser(ctx context.Context, plant *models.Plant) error
+	GetTypes(ctx context.Context) ([]string, error)
 }
 
 type Handler struct {

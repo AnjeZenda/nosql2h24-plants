@@ -268,6 +268,54 @@ func (s *Storage) GetPlantsByUserId(ctx context.Context, userId string, isSold b
 	return plants, nil
 }
 
+func (s *Storage) GetTypes(ctx context.Context) ([]string, error) {
+	type Type struct {
+		Name string `bson:"type" json:"name"`
+	}
+	collection := s.DataBase.Collection("plants")
+	cur, err := collection.Aggregate(ctx, []bson.D{
+		{
+			{
+				"$group",
+				bson.D{
+					{
+						"_id",
+						"$type",
+					},
+				},
+			},
+		},
+		{
+			{
+				"$project",
+				bson.D{
+					{
+						"_id", 0,
+					},
+					{
+						"type", "$_id",
+					},
+				},
+			},
+		},
+	})
+	if err != nil {
+		return nil, err
+	}
+	var (
+		t     Type
+		types []string
+	)
+
+	for cur.Next(ctx) {
+		if err = cur.Decode(&t); err != nil {
+			return nil, err
+		}
+		types = append(types, t.Name)
+	}
+	return types, nil
+}
+
 func parseSortType(isDesc bool) int8 {
 	if isDesc {
 		return -1

@@ -85,6 +85,11 @@ service PlantsAPI {
             get: "/api/plants/archive/{userId}"
         };
     };
+    rpc ListPlantTypesV1(GetPlantTypesV1Request) returns (GetPlantTypesV1Response) {
+        option (google.api.http) = {
+            get: "/api/plants/types/typesArray"
+        };
+    };
 }
 
 message Filter {
@@ -285,4 +290,12 @@ message GetArchivedPlantsV1Request{
 }
 message GetArchivedPlantsV1Response{
     repeated Plant plants = 1;
+}
+
+message GetPlantTypesV1Request {
+    
+}
+
+message GetPlantTypesV1Response {
+    repeated string types = 1;
 }

@@ -31,6 +31,7 @@
                   type="date"
                   :max="new Date().toISOString().split('T')[0]"
                   @change="updateDateLimits()"
+                  required
               />
             </div>
             <div style="display: flex; flex-direction: column">
@@ -43,9 +44,26 @@
                   min=""
                   max=""
                   disabled
+                  required
               />
             </div>
           </div>
+        </div>
+        <div v-if="statType === 'plants'">
+          <div class="inputs-labels">Типы растений</div>
+          <div class="scrollable-checkboxes">
+            <label v-for="type in types" :key="type" class="checkbox-labels">
+              <input v-model="selectedTypes" type="checkbox" :value="type" :disabled="statType !== 'plants'" />
+              {{ type }}
+              <br>
+            </label>
+          </div>
+          <div class="inputs-labels">Условия освещения</div>
+          <label class="checkbox-labels"><input v-model="lighting" type="checkbox" value="Тенелюбивые" :disabled="statType !== 'plants'"/> Тенелюбивые</label>
+          <br>
+          <label class="checkbox-labels"><input v-model="lighting" type="checkbox" value="Полутеневые" :disabled="statType !== 'plants'"/> Полутеневые</label>
+          <br>
+          <label class="checkbox-labels"><input v-model="lighting" type="checkbox" value="Светолюбивые" :disabled="statType !== 'plants'"/> Светолюбивые</label>
         </div>
         <button style="margin-top: 2%" class="green-button-white-text" @click="getStatistic">Отобразить</button>
         <div class="inputs-labels">
@@ -94,7 +112,10 @@ export default {
       statType: '',
       dateFrom: '',
       dateTo: '',
+      lighting: [],
       chart: false,
+      types: [],
+      selectedTypes: [],
       data: {
         labels: [],
         datasets: []
@@ -158,6 +179,16 @@ export default {
     };
   },
 
+  created() {
+    axios
+        .get(`/api/plants/types/typesArray`)
+        .then((response) => {
+          response.data.types.forEach(elem => {
+            this.types.push(elem);
+          });
+        })
+  },
+
   methods: {
     updateDateLimits() {
       const today = new Date().toISOString().split("T")[0];
@@ -183,17 +214,28 @@ export default {
     },
 
     getStatistic() {
-      this.chart = false
-      const datePeriod = {
-        filter: {
-          timeFrom: this.formatTimeFrom(this.dateFrom),
-          timeTo: this.formatTimeTo(this.dateTo)
+      this.chart = false;
+      let filter = {};
+      if (this.statType === "plants") {
+        filter = {
+          filter: {
+            timeFrom: this.formatTimeFrom(this.dateFrom),
+            timeTo: this.formatTimeTo(this.dateTo),
+          },
+          type: this.selectedTypes,
+          lightCondition: this.lighting
+        }
+      } else {
+        filter = {
+          filter: {
+            timeFrom: this.formatTimeFrom(this.dateFrom),
+            timeTo: this.formatTimeTo(this.dateTo)
+          }
         }
       }
       this.data = { datasets: [], labels: [] };
-
       axios
-          .post(`/api/stats/${this.statType}`, datePeriod)
+          .post(`/api/stats/${this.statType}`, filter)
           .then((response) => {
             if (this.statType === 'plants') {
               if (Object.keys(response.data).length === 0) {
@@ -447,5 +489,13 @@ export default {
   color: #000000;
   padding: 10px;
   background-color: #FFFFFF;
+}
+
+.scrollable-checkboxes {
+  max-height: 120px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 4px;
 }
 </style>

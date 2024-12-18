@@ -41,6 +41,8 @@ service StatsAPI {
 
 message GetPlantsStatsV1Request{
     TimeFilter filter = 1;
+    repeated string type = 2;
+    repeated string lightCondition = 3;
 }
 message GetPlantsStatsV1Response{
     message StatsInfo {
