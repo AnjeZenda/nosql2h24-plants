@@ -31,6 +31,7 @@
                   type="date"
                   :max="new Date().toISOString().split('T')[0]"
                   @change="updateDateLimits()"
+                  required
               />
             </div>
             <div style="display: flex; flex-direction: column">
@@ -43,23 +44,27 @@
                   min=""
                   max=""
                   disabled
+                  required
               />
             </div>
           </div>
         </div>
-        <div class="inputs-labels">Типы растений</div>
-        <div class="scrollable-checkboxes">
-          <label v-for="type in types" :key="type" class="checkbox-labels">
-            <input v-model="selectedTypes" type="checkbox" :value="type" :disabled="statType !== 'plants'" />
-            {{ type }}
-          </label>
+        <div v-if="statType === 'plants'">
+          <div class="inputs-labels">Типы растений</div>
+          <div class="scrollable-checkboxes">
+            <label v-for="type in types" :key="type" class="checkbox-labels">
+              <input v-model="selectedTypes" type="checkbox" :value="type" :disabled="statType !== 'plants'" />
+              {{ type }}
+              <br>
+            </label>
+          </div>
+          <div class="inputs-labels">Условия освещения</div>
+          <label class="checkbox-labels"><input v-model="lighting" type="checkbox" value="Тенелюбивые" :disabled="statType !== 'plants'"/> Тенелюбивые</label>
+          <br>
+          <label class="checkbox-labels"><input v-model="lighting" type="checkbox" value="Полутеневые" :disabled="statType !== 'plants'"/> Полутеневые</label>
+          <br>
+          <label class="checkbox-labels"><input v-model="lighting" type="checkbox" value="Светолюбивые" :disabled="statType !== 'plants'"/> Светолюбивые</label>
         </div>
-        <div class="inputs-labels">Условия освещения</div>
-        <label class="checkbox-labels"><input v-model="lighting" type="checkbox" value="Тенелюбивые" :disabled="statType !== 'plants'"/> Тенелюбивые</label>
-        <br>
-        <label class="checkbox-labels"><input v-model="lighting" type="checkbox" value="Полутеневые" :disabled="statType !== 'plants'"/> Полутеневые</label>
-        <br>
-        <label class="checkbox-labels"><input v-model="lighting" type="checkbox" value="Светолюбивые" :disabled="statType !== 'plants'"/> Светолюбивые</label>
         <button style="margin-top: 2%" class="green-button-white-text" @click="getStatistic">Отобразить</button>
         <div class="inputs-labels">
           Работа с базой данных
